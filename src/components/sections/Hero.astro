@@ -19,6 +19,38 @@ const cast = ['human', 'agent', 'troupe', 'agent', 'human'] as const;
     <p><span class="badge">{copy.badge}</span></p>
   </div>
 </section>
+<script>
+  import { createCastIdle } from '../../scripts/cast-idle';
+
+  const cast = document.querySelector<HTMLElement>('[data-cast]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  if (cast) {
+    if (reduce.matches) {
+      cast.dataset.idle = 'off';
+    } else {
+      const shown = () => [...cast.querySelectorAll<SVGElement>('.character')].filter((el) => el.getClientRects().length > 0);
+      let onScreen = true;
+      const idle = createCastIdle({
+        count: shown().length,
+        bow: (i) => {
+          const list = shown();
+          const el = list[i % list.length];
+          el.classList.add('is-bowing');
+          setTimeout(() => el.classList.remove('is-bowing'), 700);
+          cast.dataset.idle = idle.state;
+        },
+      });
+      const sync = () => { idle.setVisible(onScreen && !document.hidden); cast.dataset.idle = idle.state; };
+      cast.dataset.idle = idle.state;
+      cast.addEventListener('pointerover', (e) => {
+        if ((e.target as Element).closest('.character')) idle.hover();
+      });
+      new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; sync(); }).observe(cast);
+      document.addEventListener('visibilitychange', sync);
+      reduce.addEventListener('change', () => { if (reduce.matches) { idle.stop(); cast.dataset.idle = 'off'; } });
+    }
+  }
+</script>
 <style>
   .hero { text-align: center; padding: 32px 0 40px;
     background: radial-gradient(ellipse 70% 60% at 50% 0%, color-mix(in srgb, var(--sunflower) 22%, transparent), transparent 70%); }
