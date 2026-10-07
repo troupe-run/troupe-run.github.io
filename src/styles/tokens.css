@@ -15,7 +15,7 @@
   --bg: #1A1830; --surface: #24213F; --ink: #FFF4E2; --muted: #C9C2D8;
   --line: #FFF4E21C; --soft: #FFF4E23D;
   --tomato-text: #FF8E76; --teal-text: #3CC7BC; --lilac-text: #A79AF0;
-  --inverse-accent: #CE3D21;
+  --inverse-accent: #C23A1F;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
@@ -23,6 +23,6 @@
     --bg: #1A1830; --surface: #24213F; --ink: #FFF4E2; --muted: #C9C2D8;
     --line: #FFF4E21C; --soft: #FFF4E23D;
     --tomato-text: #FF8E76; --teal-text: #3CC7BC; --lilac-text: #A79AF0;
-    --inverse-accent: #CE3D21;
+    --inverse-accent: #C23A1F;
   }
 }

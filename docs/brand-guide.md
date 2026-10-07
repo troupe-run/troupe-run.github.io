@@ -64,6 +64,7 @@ an explicit dark theme.
 | `--lilac` | Humans. Shapes | `#7461D9` | `#7461D9` |
 | `--lilac-text` | Lilac for text | `#715ED8` | `#A79AF0` |
 | `--sunflower` | Highlights, the curtain trim, badges | `#FFC93C` | `#FFC93C` |
+| `--inverse-accent` | Accent text on an ink (inverted) panel | `#FFC93C` | `#C23A1F` |
 
 | `--soft` | Faint borders (icon tiles) | `#1D1B2F33` | `#FFF4E23D` |
 | `--line` | Card borders | `#1D1B2F14` | `#FFF4E21C` |
@@ -87,6 +88,8 @@ would pass as text in dark mode unchanged, but gets a lighter `-text` shade too,
   - If white text is needed, fill with `--tomato-text` instead (4.9:1).
 - **Sunflower is decoration only:** no text on the cream background, and never the only signal of meaning.
   Ink text on a sunflower badge is fine (10.9:1).
+- **Sunflower text on an ink panel (10.9:1) is the one sanctioned use of sunflower as text.** It is carried by
+  `--inverse-accent`; in dark mode that token is `#C23A1F` (4.92:1 on the cream `--ink` card).
 - **The `-text` token values were adjusted on 2026-10-07.**
   - The original "text-safe" values from the Matinee direction were `#D63F22` (4.34:1 on `--bg`), and
     teal and lilac at 4.25 and 4.47. All three failed WCAG AA for body-size text.
