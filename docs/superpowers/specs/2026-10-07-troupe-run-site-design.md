@@ -1,0 +1,300 @@
+# troupe.run site: landing page and docs, design
+
+- **Date:** 2026-10-07
+- **Status:** Draft for the owner's review
+- **Repo:** `troupe-run/troupe-run.github.io` (public), local at `~/Projects/troupe/troupe-run.github.io`
+- **Brand reference:** [`docs/brand-guide.md`](../../brand-guide.md) (v0.2). This spec doesn't restate the brand; it
+  says how the site applies it.
+
+## 1. Purpose
+
+troupe has no public face yet. This site gives it one:
+
+- a **landing page** at `https://troupe.run` that says what troupe is and why it exists, and asks people to
+  follow the build on GitHub;
+- **docs** at `https://troupe.run/docs` whose structure is visible from day one, with real content only where
+  we can honestly write it.
+
+**Audience** (from discovery, Q1 A+B+D):
+- solo developers who already run AI coding agents;
+- small teams who want those agents to follow a real process with accountable sign-off;
+- people following the build.
+
+**Success for v1:**
+- someone landing on the page can say in one sentence what troupe does;
+- they can follow it on GitHub;
+- they can see where the docs are heading;
+- they can fix a docs page in two clicks.
+
+## 2. Decisions this spec rests on
+
+All are recorded with times in the brainstorm's decisions log.
+
+| Area | Decision |
+|---|---|
+| Claims | Principles and intent only. Nothing unbuilt is described as working |
+| Calls to action | GitHub (watch or star) now. Install when something ships, shown as "Install: coming" |
+| Licence statements | The site shows its own licences (MIT for code, CC BY 4.0 for content). The product's licence (Apache-2.0 plus a CLA) is stated only in docs → Licensing, as intent, until the core repo is published |
+| Theatre metaphor | Theatre in headings and visuals, plain words in body copy. One stage device per section |
+| Voice | Dry and precise, with a thread of warm wry humour |
+| Look and feel | Matinee, per the brand guide |
+| Attribution | "a project by hps.gd" in the footer. No mention of predecessor projects |
+| Analytics | GoatCounter: cookieless, no consent banner |
+| Domain | Apex `troupe.run` is canonical, `www` redirects, docs are at `/docs`. DNS is done |
+| Build | Astro, with Starlight for `/docs`, deployed by GitHub Actions to GitHub Pages |
+| Revisit trigger | If customising Starlight turns into fighting it, revisit a hand-built docs layout. The criteria are in §6.4 |
+| Bake-off write-up | After the results, not in v1 |
+
+## 3. Landing page
+
+One page, top to bottom. The copy is drafted in the brand voice and **approved by the owner before launch**
+(§8).
+
+1. **Header:**
+   - the lock-up (mark plus wordmark), linking to `/`;
+   - navigation: How it works · Principles · Docs · GitHub;
+   - a theme toggle;
+   - a status pill, "pre-alpha · building in the open".
+2. **Hero:**
+   - the curtain-call cast: human, agent, troupe (the triangle, centred), agent, human, each with its
+     reflection, and a bow on hover;
+   - eyebrow, H1 (draft: "Your agents need a director.") and a subhead;
+   - main call to action "★ Watch on GitHub", and a disabled "Install: coming".
+3. **Problem:** four cards:
+   - one agent, one line;
+   - one bottleneck;
+   - no homework;
+   - no record.
+
+   The layout is **provisional**: the owner judges its height in context before launch.
+4. **How it works:** "A long run, not one night."
+   - The loop is Cast → Perform → Cue → Notes → back to the start ("↺ and again, every showing").
+   - Step labels use the eyebrow style.
+   - Any config shown is labelled "illustrative".
+5. **Principles:** six cards, each with a topic line icon in a faint-bordered tile:
+   - local-first, everything in your repo;
+   - humans are roles, not a loop;
+   - escalation that does its homework;
+   - full lineage from the first event;
+   - config that survives hand-editing;
+   - bring your own agent.
+6. **Closing call to action:** "Watch on GitHub to follow the build."
+7. **Footer:**
+   - "a project by hps.gd";
+   - links to GitHub and the docs;
+   - the privacy line ("No cookies. Cookieless page counts via GoatCounter.");
+   - the site licence line;
+   - copyright HPS.GD PTY LTD.
+
+**Layout rules:**
+- Mobile first.
+- Usable from 320px wide, with no horizontal scroll.
+- A 16px minimum side gutter.
+- The cast shrinks to three characters below 480px.
+
+## 4. Docs
+
+### 4.1 Structure
+
+The sidebar uses the theatre section labels. Page titles are plain.
+
+| Section | Pages |
+|---|---|
+| Programme | What is troupe? · Status and roadmap · Principles |
+| Opening night | Install · Your first theatre · Your first performance |
+| The company | Theatres · Roles and actors · Performances and runs · Flows: fork, join, swarm, loop · Gates and decisions · Escalation · Notes: improving between runs · Lineage · Guests (packs) · The house (daemon, name TBC) |
+| Stagecraft | Configure roles and people · Route decisions to the right person · Build a flow · Bring your own agent · Hand-edit config safely · Write a guest · Read the lineage |
+| Prompt book | CLI · Config schema · Events · Guest manifest · Glossary |
+| Backstage | Contributing · Licensing · Changelog |
+
+### 4.2 Written pages and stubs
+
+- **Written in v1:**
+  - What is troupe?
+  - Status and roadmap
+  - Principles
+  - Glossary (from the brand guide's vocabulary table)
+  - Licensing (the per-component table and the CLA intent)
+  - Contributing
+- **Every other page is a stub.**
+  - It is a real page in the sidebar, carrying a one-paragraph statement of what it will cover.
+  - It has a "Planned: not written yet" note.
+  - It has a "Help write this page" link (§4.3).
+  - Stubs are marked as such in frontmatter (`status: planned`), so they can be listed and counted.
+- **Every page, written or stub, carries a status note** until the feature it describes ships. The note reads
+  "Pre-alpha: this page describes intended behaviour", and is driven by frontmatter, not hand-typed.
+
+### 4.3 "Improve this page"
+
+- Every docs page links to its own source on GitHub, using Starlight's built-in edit link.
+  - It points at `https://github.com/troupe-run/troupe-run.github.io/edit/main/<path to the page>`.
+  - The label is "Improve this page".
+- On GitHub, that opens the file in the web editor. Someone without write access gets a fork and a pull request
+  made for them, so they never clone anything.
+- On stubs, the same link is shown inside the "Planned" note, labelled "Help write this page".
+- Starlight's "last updated" date (from git) is shown on each page.
+- **Contributions to the site repo** are accepted under the repo's own licences: MIT for code and CC BY 4.0 for
+  content. This is "inbound = outbound", the same terms going in as coming out. The site repo does **not**
+  require the CLA, which is for the core product repo. `CONTRIBUTING.md` says so.
+
+### 4.4 Styling
+
+- Starlight's colour variables are mapped onto the brand tokens (§5.1).
+- The sidebar section labels use Bricolage Grotesque 800, 17px, `--tomato-text`, with a 2px divider and about
+  26px of space above. There is no second-level subtitle.
+- Page headings use the display face, and body text uses DM Sans.
+- These changes are made through Starlight's CSS layer and, where necessary, its documented component
+  overrides. Nothing is forked.
+
+## 5. Architecture
+
+```
+troupe-run.github.io/
+├─ astro.config.mjs          Astro + Starlight (mounted under /docs), site: https://troupe.run
+├─ brand/                    Source SVGs: mark, lock-up, triangle, characters, icons
+├─ scripts/render-assets.mjs SVG → favicon PNG/ICO, social and repo previews, avatar
+├─ public/                   CNAME, rendered assets
+├─ src/
+│  ├─ styles/tokens.css      The one source of colour and type tokens (light and dark)
+│  ├─ styles/starlight.css   Maps Starlight's variables onto tokens.css
+│  ├─ components/            Header, Hero, Problem, HowItWorks, Principles, ClosingCta, Footer,
+│  │                         Character, Mark, TopicIcon, ThemeToggle
+│  ├─ content/copy/          Landing-page copy, one file per section (what the owner reviews)
+│  ├─ content/docs/docs/     Docs pages (served at /docs/…)
+│  └─ pages/index.astro      The landing page
+├─ tests/                    Playwright smoke tests + axe accessibility checks
+└─ .github/workflows/        ci.yml (pull requests), deploy.yml (push to main → Pages)
+```
+
+### 5.1 Tokens
+
+- `tokens.css` defines every token from the brand guide for light mode and dark mode.
+  - Dark mode applies under `prefers-color-scheme: dark`, unless the visitor has chosen light.
+  - It also applies whenever `[data-theme="dark"]` is set.
+- Components use only tokens, never hex values. A test checks this (§7).
+
+### 5.2 Characters, mark and icons
+
+- **`Character.astro`** takes `kind` (human, agent or troupe), and optionally `size` and `bow`.
+  - It draws the head and eyes.
+  - It draws the reflection: the same shape, inverted, fading from 45% opacity to transparent by about 75% of
+    its height.
+  - The bow on hover is turned off under `prefers-reduced-motion`.
+- **`Mark.astro`** draws the mark (circle, triangle, square, with round eyes) and the lock-up.
+- **`TopicIcon.astro`** draws the topic line icons, in a 36px tile with a `--soft` border and `--tomato-text`
+  strokes.
+- All of these are inline SVG, so they inherit the tokens and switch with the theme.
+
+### 5.3 Brand assets
+
+- The source SVGs are in `brand/`.
+- `scripts/render-assets.mjs` renders them with `@resvg/resvg-js` into `public/`:
+  - favicon: SVG, plus 32px ICO and 180px apple-touch PNG, all the triangle with eyes;
+  - social preview: 1200×630;
+  - GitHub org avatar: 500×500;
+  - repo social previews: 1280×640;
+  - README banner: SVG.
+- The rendered files are committed, so a deploy never depends on the renderer.
+- CI re-runs the script and fails if the output differs from what's committed.
+- Uploading the org avatar and the repo previews to GitHub is a manual step for the owner. GitHub has no API for
+  either.
+
+### 5.4 Theme
+
+- The default follows the system setting.
+- The toggle in the landing-page header and Starlight's own toggle **share one stored preference**: Starlight's
+  `starlight-theme` key in localStorage. A choice made on either side holds on the other.
+- Reading and writing that key are wrapped so the site still works if storage is unavailable.
+- An inline script in the head sets the theme before first paint, so the page never flashes the wrong theme.
+
+### 5.5 Fonts and analytics
+
+- Bricolage Grotesque, DM Sans and DM Mono are self-hosted from the Fontsource packages. There are no requests
+  to Google Fonts.
+- GoatCounter is loaded as one script tag, on production builds only.
+
+## 6. Build and deploy
+
+### 6.1 CI (`ci.yml`, on pull requests and on pushes to main)
+
+1. `astro check`
+2. `astro build`
+3. The asset-render check (§5.3)
+4. A link check over the built site, internal links only. External links are checked weekly and only warn
+5. Playwright smoke tests with axe (§7)
+
+### 6.2 Deploy (`deploy.yml`, on pushes to main)
+
+- `withastro/action` builds the site.
+- `actions/deploy-pages` publishes it to GitHub Pages.
+- Pages source is set to "GitHub Actions".
+- Deploy runs only after CI passes on the same commit.
+
+### 6.3 Domain
+
+- `public/CNAME` contains `troupe.run`. DNS at Gandi is done:
+  - apex A and AAAA records point at GitHub Pages;
+  - `www` is a CNAME to `troupe-run.github.io.`;
+  - the org domain is verified.
+- "Enforce HTTPS" is switched on once the certificate is issued.
+
+### 6.4 When to revisit Starlight
+
+We move to a hand-built docs layout if any of these happens:
+
+- the approved sidebar or page style needs more than a handful of component overrides;
+- an override breaks on a minor Starlight upgrade;
+- a docs feature we need fights Starlight's routing. The landing page is outside Starlight, so it isn't a
+  trigger.
+
+## 7. Testing
+
+- **Playwright smoke tests:**
+  - the landing page renders every section;
+  - the GitHub call to action has a real URL;
+  - the "Install: coming" button is disabled;
+  - the theme toggle switches theme, and the choice holds across a reload and between the landing page and
+    the docs;
+  - a docs page and a stub page both render;
+  - the stub shows its "Planned" note and its "Help write this page" link;
+  - every docs page has an "Improve this page" link pointing at its own source file.
+- **Accessibility:**
+  - axe runs on the landing page, a written docs page and a stub, in both light and dark mode, with zero
+    serious or critical violations;
+  - this includes colour contrast, so a token change that fails WCAG AA fails the build.
+- **Viewport:** at 320px and 390px wide, the page doesn't scroll horizontally.
+- **Reduced motion:** with reduced motion emulated, hovering a character doesn't animate it.
+- **Token discipline:** no hex colour values appear in `src/components/` or `src/pages/`. Only `tokens.css`
+  holds them.
+- **Test naming:** each test's name says exactly what its assertions check, and no more.
+
+## 8. Copy and review flow
+
+- All landing-page copy is in `src/content/copy/`, one Markdown file per section, so the owner can review it as
+  text.
+- The written docs pages are reviewed the same way.
+- Nothing launches until the owner has approved the copy.
+- The problem section's layout gets an in-context review at the same time.
+
+## 9. Out of scope for v1
+
+- A build log or blog
+- The bake-off write-up
+- An install snippet
+- A guest directory
+- A public `/brand` page (the brand guide stays in the repo)
+- An email waitlist
+- Search beyond Starlight's built-in Pagefind search
+- Translations
+
+## 10. Open points
+
+- **Where "Watch on GitHub" points.** Today the only public troupe-run repo is this site. The options:
+  1. make the `troupe.run` product repo public now, with a README that says it's pre-alpha;
+  2. point the call to action at the org page (`github.com/troupe-run`) and say "Follow on GitHub";
+  3. point it at this site repo.
+
+  **To decide before launch.**
+- **Problem-section layout:** in-context review before launch (§3).
+- **Pushing the local brand-guide commits:** these are held until the owner has read the guide.
+- **"The house" and "house rules":** not yet agreed as names. The docs page title carries "name TBC".
