@@ -21,7 +21,7 @@ const copy = await getCopy('how');
   </div>
 </section>
 <style>
-  .how { padding-bottom: 40px; }
+  .how { padding-bottom: 40px; background: var(--surface); }
   .curtain { height: 16px; background: repeating-linear-gradient(90deg, var(--tomato) 0 14px, var(--tomato-shadow) 14px 18px); border-bottom: 3px solid var(--sunflower); }
   .inner { padding-top: 28px; }
   h2 { font-size: clamp(24px, 4vw, 34px); margin: 6px 0; }
@@ -41,7 +41,7 @@ const copy = await getCopy('how');
       content: ''; position: absolute; inset: 40px 12%; border: 3px dashed color-mix(in srgb, var(--teal) 45%, transparent);
       border-radius: 50%; pointer-events: none;
     }
-    .step { position: relative; max-width: 22ch; background: var(--bg); padding: 6px 8px; }
+    .step { position: relative; max-width: 22ch; background: var(--surface); padding: 6px 8px; }
     .step:nth-child(1) { grid-column: 2; grid-row: 1; }
     .step:nth-child(2) { grid-column: 3; grid-row: 2; }
     .step:nth-child(3) { grid-column: 2; grid-row: 3; }

@@ -78,7 +78,12 @@ One page, top to bottom. The copy is drafted in the brand voice and **approved b
    - below that, the four problems as a small grid with no boxes (a dot, a bold title and muted body text):
      one agent, one line · one bottleneck · no homework · no record. It has four columns at 1024px and above,
      two from 600 to 1023px, and one below 600px.
-4. **How it works:** "A season, not a single show." (owner review 2026-10-08; was "A long run, not one night.") A **loop diagram**, with no boxes:
+   - owner review 2026-10-08 (round 3): the four problems are dark cards (ink background, page-colour text, 14px
+     radius, 16px padding, no border, 12px gap, equal height per row). Titles use the display face in the
+     inverse accent. There are no bullet dots.
+4. **How it works:** "A season, not a single show." (owner review 2026-10-08; was "A long run, not one night.") A **loop diagram**, with no boxes. The whole
+   section has a full-bleed `--surface` background under the curtain stripe (owner review 2026-10-08, round 3), and the
+   step labels use the same colour to mask the dashed track:
    - the four steps, Cast → Perform → Cue → Notes, sit around a circular track, with the troupe triangle in the
      centre and "↺ and again, every showing" beneath;
    - step labels use the eyebrow style, with one plain line of body text per step;

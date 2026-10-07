@@ -90,19 +90,50 @@ test('page has exactly one h1, and it is the hero title', async ({ page }) => {
   await expect(page.locator('#top h1')).toHaveText('Your agents need a director.');
 });
 
-test('problem items are a grid with no card background, border or shadow', async ({ page }) => {
+for (const theme of ['light', 'dark'] as const) {
+  test(`problem items are dark cards (background equals --ink, no border or shadow) with no bullet dots (${theme})`, async ({ page }) => {
+    await page.addInitScript((t) => localStorage.setItem('starlight-theme', t), theme);
+    await page.goto('/');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
+    await expect(page.locator('#problem .problem-list > li')).toHaveCount(4);
+    const list = page.locator('#problem .problem-list');
+    expect(await list.evaluate((e) => getComputedStyle(e).display)).toBe('grid');
+    const ink = await page.evaluate(() => {
+      const probe = document.createElement('i');
+      probe.style.color = 'var(--ink)';
+      document.body.append(probe);
+      const c = getComputedStyle(probe).color;
+      probe.remove();
+      return c;
+    });
+    const items = await list.locator('> li').evaluateAll((els) => els.map((e) => {
+      const s = getComputedStyle(e);
+      return { bg: s.backgroundColor, border: [s.borderTopWidth, s.borderLeftWidth, s.borderRightWidth, s.borderBottomWidth], radius: s.borderTopLeftRadius, shadow: s.boxShadow };
+    }));
+    for (const i of items) {
+      expect(i.bg).toBe(ink);
+      expect(i.border).toEqual(['0px', '0px', '0px', '0px']);
+      expect(i.radius).toBe('14px');
+      expect(i.shadow).toBe('none');
+    }
+    await expect(page.locator('#problem .dot')).toHaveCount(0);
+  });
+}
+
+test('the how-it-works section and its step labels share the --surface background', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/');
-  await expect(page.locator('#problem .problem-list > li')).toHaveCount(4);
-  const list = page.locator('#problem .problem-list');
-  expect(await list.evaluate((e) => getComputedStyle(e).display)).toBe('grid');
-  const items = await list.locator('> li').evaluateAll((els) => els.map((e) => {
-    const s = getComputedStyle(e);
-    return { bg: s.backgroundColor, top: s.borderTopWidth, left: s.borderLeftWidth, right: s.borderRightWidth, bottom: s.borderBottomWidth, shadow: s.boxShadow };
-  }));
-  for (const i of items) {
-    expect(i.bg).toBe('rgba(0, 0, 0, 0)');
-    expect([i.top, i.left, i.right, i.bottom, i.shadow]).toEqual(['0px', '0px', '0px', '0px', 'none']);
-  }
+  const bgs = await page.evaluate(() => {
+    const probe = document.createElement('i');
+    probe.style.color = 'var(--surface)';
+    document.body.append(probe);
+    const surface = getComputedStyle(probe).color;
+    probe.remove();
+    const step = (el: Element) => getComputedStyle(el).backgroundColor;
+    return { surface, section: step(document.querySelector('#how-it-works')!), steps: [...document.querySelectorAll('#how-it-works .step')].map(step) };
+  });
+  expect(bgs.section).toBe(bgs.surface);
+  expect(bgs.steps).toEqual(Array(4).fill(bgs.surface));
 });
 
 for (const [width, columns] of [[1280, 4], [800, 2], [390, 1]] as const) {
