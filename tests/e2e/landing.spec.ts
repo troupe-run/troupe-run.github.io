@@ -104,19 +104,31 @@ test('at 1280px the how-it-works steps sit around a ring with troupe in the cent
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/');
   await expect(page.locator('#how-it-works .character--troupe')).toBeVisible();
-  const boxes = await page.locator('#how-it-works .step').evaluateAll((els) => els.map((e) => e.getBoundingClientRect()));
+  const boxes = await page.locator('#how-it-works .step').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().toJSON()));
   const [cast, perform, cue, notes] = boxes;
   expect(cast.top).toBeLessThan(perform.top);
   expect(cue.top).toBeGreaterThan(perform.top);
   expect(notes.left).toBeLessThan(cast.left);
   expect(perform.left).toBeGreaterThan(cast.left);
+  const cx = (r: { left: number; width: number }) => r.left + r.width / 2;
+  const cy = (r: { top: number; height: number }) => r.top + r.height / 2;
+  const t = await page.locator('#how-it-works .character--troupe').evaluate((e) => e.getBoundingClientRect().toJSON());
+  expect(cx(t)).toBeGreaterThan(cx(notes));
+  expect(cx(t)).toBeLessThan(cx(perform));
+  expect(cy(t)).toBeGreaterThan(cy(cast));
+  expect(cy(t)).toBeLessThan(cy(cue));
+  const track = await page.locator('#how-it-works ol.steps').evaluate((e) => getComputedStyle(e, '::before').borderTopStyle);
+  expect(track).toBe('dashed');
 });
 
 test('at 390px the how-it-works steps stack vertically in order', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 900 });
   await page.goto('/');
-  const tops = await page.locator('#how-it-works .step').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().top));
-  expect([...tops].sort((a, b) => a - b)).toEqual(tops);
+  const rects = await page.locator('#how-it-works .step').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().toJSON()));
+  for (let i = 1; i < rects.length; i++) {
+    expect(rects[i].top).toBeGreaterThanOrEqual(rects[i - 1].bottom);
+    expect(Math.abs(rects[i].left - rects[0].left)).toBeLessThanOrEqual(1);
+  }
   await expect(page.locator('#how-it-works .character--troupe')).toBeHidden();
 });
 
@@ -125,6 +137,11 @@ test('"in your repo" band shows the illustrative snippet and caption', async ({ 
   const band = page.locator('#in-your-repo');
   await expect(band.locator('pre code')).toContainText('# .troupe/theatre.yaml (illustrative)');
   await expect(band).toContainText('Illustrative: the syntax isn’t final.');
+  const colours = await band.locator('pre code').evaluate((code) => {
+    const comment = code.querySelector('.comment') as HTMLElement;
+    return [getComputedStyle(comment).color, getComputedStyle(code).color];
+  });
+  expect(colours[0]).not.toBe(colours[1]);
 });
 
 test('sections appear in the order hero, problem, how, in-your-repo, principles, follow', async ({ page }) => {

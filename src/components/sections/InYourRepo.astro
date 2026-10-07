@@ -1,6 +1,7 @@
 ---
 import { getCopy } from '../../lib/copy';
 const copy = await getCopy('repo');
+const lines = copy.snippet.replace(/\n$/, '').split('\n');
 ---
 <section id="in-your-repo" class="repo" aria-labelledby="repo-title">
   <div class="wrap grid">
@@ -10,7 +11,7 @@ const copy = await getCopy('repo');
       <p class="body">{copy.body}</p>
     </div>
     <div class="code">
-      <pre tabindex="0"><code>{copy.snippet}</code></pre>
+      <pre tabindex="0"><code>{lines.map((l, i) => (<Fragment>{l.trim().startsWith('#') ? <span class="comment">{l}</span> : l}{i < lines.length - 1 ? '\n' : ''}</Fragment>))}</code></pre>
       <p class="caption">{copy.caption}</p>
     </div>
   </div>
@@ -25,5 +26,6 @@ const copy = await getCopy('repo');
   .body { margin: 0; }
   pre { margin: 0; background: color-mix(in srgb, var(--bg) 8%, var(--ink)); border-radius: 12px; padding: 16px; overflow-x: auto; font-family: var(--font-mono); font-size: 14px; line-height: 1.6; }
   code { font-family: inherit; }
+  .comment { color: color-mix(in srgb, var(--bg) 70%, var(--ink)); }
   .caption { margin: 10px 0 0; font-size: 13px; color: color-mix(in srgb, var(--bg) 70%, var(--ink)); }
 </style>
