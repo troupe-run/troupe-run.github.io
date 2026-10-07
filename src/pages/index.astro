@@ -1,7 +1,18 @@
 ---
 import Landing from '../layouts/Landing.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
+import Header from '../components/sections/Header.astro';
+import Hero from '../components/sections/Hero.astro';
+import Problem from '../components/sections/Problem.astro';
+import HowItWorks from '../components/sections/HowItWorks.astro';
+import Principles from '../components/sections/Principles.astro';
+import ClosingCta from '../components/sections/ClosingCta.astro';
+import Footer from '../components/sections/Footer.astro';
 ---
-<Landing title="troupe" description="Agents and people in named roles, running your development process.">
-  <main class="wrap"><h1>troupe</h1><ThemeToggle /></main>
+<Landing title="troupe: agents and people in named roles"
+         description="troupe runs your development process with agents and people in named roles. Pre-alpha, building in the open.">
+  <Header />
+  <main>
+    <Hero /><Problem /><HowItWorks /><Principles /><ClosingCta />
+  </main>
+  <Footer />
 </Landing>

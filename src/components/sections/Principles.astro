@@ -1,0 +1,28 @@
+---
+import TopicIcon from '../TopicIcon.astro';
+import { getCopy } from '../../lib/copy';
+const copy = await getCopy('principles');
+---
+<section id="principles" class="principles" aria-labelledby="principles-title">
+  <div class="wrap">
+    <p class="eyebrow">{copy.eyebrow}</p>
+    <h2 id="principles-title">{copy.title}</h2>
+    <p class="intro">{copy.intro}</p>
+    <ul class="grid">
+      {copy.items.map((p) => (
+        <li class="principle"><TopicIcon name={p.icon} /><h3>{p.title}</h3><p>{p.body}</p></li>
+      ))}
+    </ul>
+  </div>
+</section>
+<style>
+  .principles { padding: 40px 0; }
+  h2 { font-size: clamp(24px, 4vw, 34px); margin: 6px 0; }
+  .intro { color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; list-style: none; padding: 0; margin: 18px 0 0; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 479px) { .grid { grid-template-columns: 1fr; } }
+  .principle { background: var(--surface); border: 2px solid var(--line); border-radius: 14px; padding: 16px; }
+  .principle h3 { font-size: 17px; font-weight: 700; margin: 10px 0 4px; }
+  .principle p { margin: 0; color: var(--muted); font-size: 15px; }
+</style>

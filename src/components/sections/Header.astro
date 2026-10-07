@@ -1,0 +1,27 @@
+---
+import Mark from '../Mark.astro';
+import ThemeToggle from '../ThemeToggle.astro';
+import { getCopy } from '../../lib/copy';
+const copy = await getCopy('header');
+---
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="home" href="/" aria-label="troupe home"><Mark wordmark height={20} /></a>
+    <nav aria-label="Main">
+      <ul>{copy.nav.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+    </nav>
+    <div class="tools">
+      <span class="pill">{copy.status}</span>
+      <ThemeToggle />
+    </div>
+  </div>
+</header>
+<style>
+  .bar { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; padding-block: 14px; }
+  .home { text-decoration: none; }
+  ul { display: flex; flex-wrap: wrap; gap: 4px 16px; list-style: none; margin: 0; padding: 0; }
+  nav a { color: var(--ink); text-decoration: none; font-size: 15px; }
+  nav a:hover { color: var(--tomato-text); text-decoration: underline; }
+  .tools { display: flex; gap: 10px; align-items: center; }
+  .pill { font-family: var(--font-mono); font-size: 12px; background: var(--sunflower); color: var(--on-accent); padding: 3px 8px; border-radius: 6px; }
+</style>
