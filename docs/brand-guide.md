@@ -97,7 +97,7 @@ an explicit dark theme.
 - **Eyebrows** (the small label above a section heading): DM Mono, 11–12px, uppercase, tracking +0.06em,
   `--tomato-text`.
 - **Docs sidebar section labels** ("Programme", "Opening night", and so on):
-  - DM Mono 500, 17px, `--tomato-text`, sentence case;
+  - Bricolage Grotesque 800, 17px, `--tomato-text`, sentence case;
   - a 2px divider and roughly 26px of space above each label;
   - no subtitle under the label.
 - All three faces are on Google Fonts under the OFL licence. Self-host them in the site build.
