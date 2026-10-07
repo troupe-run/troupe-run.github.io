@@ -35,13 +35,22 @@ describe('Character', () => {
 });
 
 describe('CastDefs', () => {
-  it('defines one fade gradient per kind, fading to opacity 0 at offset 0.75', async () => {
+  it('defines one fade mask per kind whose gradient runs from 45% alpha at the head to 0 at 0.75', async () => {
     const html = await c.renderToString(CastDefs);
-    for (const k of ['human', 'agent', 'troupe']) expect(html).toContain(`id="cast-fade-${k}"`);
     for (const k of ['human', 'agent', 'troupe']) {
-      const grad = html.split(`id="cast-fade-${k}"`)[1].split('</linearGradient>')[0];
-      expect(grad).toMatch(/<stop offset="0" [^>]*stop-opacity: \.45/);
-      expect(grad).toMatch(/<stop offset="0\.75" [^>]*stop-opacity: 0"/);
+      expect(html).toContain(`<mask id="cast-fade-${k}"`);
+      const mask = html.split(`<mask id="cast-fade-${k}"`)[1].split('</mask>')[0];
+      expect(mask).toMatch(/<stop offset="0" [^>]*stop-opacity="\.45"/);
+      expect(mask).toMatch(/<stop offset="0\.75" [^>]*stop-opacity="0"/);
+      expect(mask).toContain(`fill="url(#cast-fade-grad-${k})"`);
+    }
+  });
+
+  it('each character masks its whole reflection group once, rather than painting fill and stroke with a fade', async () => {
+    for (const kind of ['human', 'agent', 'troupe']) {
+      const html = await c.renderToString(Character, { props: { kind } });
+      expect(html).toMatch(new RegExp(`class="reflection"[^>]*mask="url\\(#cast-fade-${kind}\\)"`));
+      expect(html).not.toContain('url(#cast-fade-grad');
     }
   });
 });

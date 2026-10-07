@@ -87,7 +87,7 @@ One page, top to bottom. The copy is drafted in the brand voice and **approved b
    dial**:
    - a tab strip of the four step labels (Cast, Perform, Cue, Notes) in the eyebrow style, the current one
      highlighted; on the right a loop dial (a ring with four dots at 12, 3, 6 and 9 o'clock, the current one
-     tomato, with a small arrowhead showing the direction of travel). There are no previous, next or
+     tomato; the ring has no arrowhead, owner review 2026-10-08, round 6). There are no previous, next or
      pause/play buttons (owner amendment 2026-10-08, "just automate it");
    - one slide at a time, as a card with the step label, title, body and a small scene of characters. The
      troupe triangle is in every scene at a different position: left (Cast), right (Perform), centre (Cue), top
@@ -107,7 +107,10 @@ One page, top to bottom. The copy is drafted in the brand voice and **approved b
      second one enters from the left onto Cast. The tab label colour changes in sync. The loop dial's current dot is
      one moving dot that travels the ring in the same 500ms: clockwise for forward moves (the wrap continues from 9
      to 12 o'clock), anticlockwise for a jump to an earlier step, over four faint static marks. The caption
-     glyph is "↻" to match the clockwise direction (owner review 2026-10-08, round 6). Under
+     glyph is "↻" to match the clockwise direction (owner review 2026-10-08, round 6).
+     Reflections: each character's reflection group is drawn in the solid colour and faded by one alpha mask
+     (45% at the head to 0 at 75% of its height), so the triangle's fill and stroke no longer double up into a
+     darker rim (owner review 2026-10-08). Under
      `prefers-reduced-motion` there is no sliding: the card swaps and the indicator jumps at once;
    - accessibility: a group with `aria-roledescription="carousel"`, a `tablist` with roving tabindex and
      Left/Right/Home/End keys, `tabpanel` slides labelled "N of 4: Step", and a live region that is `off` while

@@ -136,7 +136,8 @@ would pass as text in dark mode unchanged, but gets a lighter `-text` shade too,
   - flat geometry, with no outlines or drop shadows;
   - **reflections:** each character's body is a copy of its head at the same size, flipped upside down
     below it. It starts at 45% opacity and fades to transparent by about 75% of its height. This is the only
-    gradient in the style;
+    gradient in the style. It is drawn in the solid colour and faded by a single alpha mask, so a
+    stroked shape (the triangle) shows no darker rim where fill and stroke overlap;
   - faces are optional and minimal: two round eyes, never shaped to match the head;
   - props (a tick, a diff, a clipboard) are simple shapes in `--ink` or `--sunflower`.
 - **Characters are not icons.** Topic icons (for example on feature cards) are separate line icons:
