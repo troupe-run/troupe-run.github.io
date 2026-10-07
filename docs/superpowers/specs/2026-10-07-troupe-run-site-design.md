@@ -96,8 +96,16 @@ One page, top to bottom. The copy is drafted in the brand voice and **approved b
      screen or with the tab hidden. Under `prefers-reduced-motion` it never advances on its own. Activating a
      tab or a dial dot (or using the arrow, Home and End keys on the tablist) jumps to that step and stops the
      auto-advance for the rest of the page view. That is the WCAG 2.2.2 stop mechanism, as in the APG carousel
-     pattern where rotation stops once the user activates a control. The slide change is a 250ms fade and
-     slide, and none under reduced motion;
+     pattern where rotation stops once the user activates a control;
+   - motion (owner review 2026-10-08, round 5): on each advance the current card slides out to the left while the
+     next slides in from the right, in parallel, over 500ms with ease-in-out. The wrap from Notes to Cast keeps
+     the same direction. A jump to an earlier tab reverses it (current exits right, target enters from the left);
+     a jump to a later tab goes left. All cards share one grid cell, so the stage is as tall as the tallest card
+     and the stage clips the track (`overflow: hidden`): nothing shifts and the page never scrolls sideways.
+     Off-stage cards are `inert` and `aria-hidden`. A single underline indicator slides to the active tab in
+     parallel, with the same duration and easing; on the wrap it runs off the right end of the strip while a
+     second one enters from the left onto Cast. The tab label colour changes in sync. Under
+     `prefers-reduced-motion` there is no sliding: the card swaps and the indicator jumps at once;
    - accessibility: a group with `aria-roledescription="carousel"`, a `tablist` with roving tabindex and
      Left/Right/Home/End keys, `tabpanel` slides labelled "N of 4: Step", and a live region that is `off` while
      rotating and `polite` once it has stopped;

@@ -1,7 +1,7 @@
 export interface SeasonCarouselOptions {
   count: number;
-  /** Called whenever the shown step changes (not on creation). */
-  onChange: (index: number) => void;
+  /** Called whenever the shown step changes (not on creation). `cause` says whether the timer or the user moved it. */
+  onChange: (index: number, cause: 'auto' | 'user') => void;
   /** Called whenever `rotating` or `userPaused` may have changed. */
   onState?: (state: SeasonCarouselState) => void;
   intervalMs?: number;
@@ -51,21 +51,21 @@ export function createSeasonCarousel(opts: SeasonCarouselOptions): SeasonCarouse
     if (rotating()) {
       timer = setTimeout(() => {
         timer = undefined;
-        move((index + 1) % opts.count);
+        move((index + 1) % opts.count, 'auto');
       }, intervalMs);
     }
     opts.onState?.(state());
   };
 
-  function move(to: number) {
+  function move(to: number, cause: 'auto' | 'user') {
     index = ((to % opts.count) + opts.count) % opts.count;
-    opts.onChange(index);
+    opts.onChange(index, cause);
     schedule();
   }
 
   schedule();
   return {
-    activate(i) { userPaused = true; move(i); },
+    activate(i) { userPaused = true; move(i, 'user'); },
     setHovered(h) { hovered = h; schedule(); },
     setFocused(f) { focused = f; schedule(); },
     setVisible(v) { visible = v; schedule(); },

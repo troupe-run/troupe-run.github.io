@@ -6,8 +6,9 @@ afterEach(() => vi.useRealTimers());
 
 const make = (extra: { startPaused?: boolean } = {}) => {
   const shown: number[] = [];
-  const c = createSeasonCarousel({ count: 4, onChange: (i) => shown.push(i), ...extra });
-  return { c, shown };
+  const causes: string[] = [];
+  const c = createSeasonCarousel({ count: 4, onChange: (i, cause) => { shown.push(i); causes.push(cause); }, ...extra });
+  return { c, shown, causes };
 };
 
 describe('createSeasonCarousel', () => {
@@ -65,6 +66,13 @@ describe('createSeasonCarousel', () => {
     vi.advanceTimersByTime(60000);
     expect(shown).toEqual([]);
     expect(c.state).toEqual({ index: 0, rotating: false, userPaused: true });
+  });
+
+  it('reports timer moves as "auto" and chosen steps as "user"', () => {
+    const { c, causes } = make();
+    vi.advanceTimersByTime(6000);
+    c.activate(0);
+    expect(causes).toEqual(['auto', 'user']);
   });
 
   it('reports the index of the shown step as it advances', () => {

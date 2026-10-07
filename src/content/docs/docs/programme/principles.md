@@ -8,7 +8,7 @@ The ideas troupe is built on.
 
 ## Local-first, everything in your project
 
-Roles, history and decisions live in git, on your machine. troupe doesn't need a hosted service to work.
+Config, history and decisions live in git, on your machine. troupe doesn't need a hosted service to work.
 
 ## Work that branches
 

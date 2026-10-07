@@ -83,7 +83,6 @@ test('keyboard focus on a control stops the steps advancing', async ({ page }) =
   await page.clock.install();
   await open(page);
   await page.getByRole('tab', { name: 'Cast' }).focus();
-  await page.keyboard.press('Tab'); // moves to the next control with keyboard focus, still inside the carousel
   await page.clock.runFor(20000);
   await expect(current(page)).toHaveText('Cast');
 });
@@ -180,3 +179,125 @@ for (const width of [320, 390]) {
     }
   });
 }
+
+// --- Motion (owner round 5): slide in parallel, a sliding tab indicator, no layout shift ---
+const slideX = (page: Page, i: number) =>
+  page.locator(`${CAROUSEL} [data-slide="${i}"]`).evaluate((e) => new DOMMatrix(getComputedStyle(e).transform).m41);
+const indicatorBox = (page: Page) => page.locator(`${CAROUSEL} [data-indicator]`).evaluate((e) => e.getBoundingClientRect().toJSON());
+const tabBox = (page: Page, i: number) => page.locator(`${CAROUSEL} [data-tab="${i}"]`).evaluate((e) => e.getBoundingClientRect().toJSON());
+
+test('mid-transition (+250ms) the outgoing card has moved left of its place and the incoming card is still right of it', async ({ page }) => {
+  await page.clock.install();
+  await open(page);
+  await page.clock.runFor(6000 + 250);
+  expect(await slideX(page, 0)).toBeLessThan(0);
+  expect(await slideX(page, 1)).toBeGreaterThan(0);
+});
+
+test('mid-transition both cards are on stage together, and after 500ms only the active card is visible', async ({ page }) => {
+  await page.clock.install();
+  await open(page);
+  await page.clock.runFor(6000 + 250);
+  await expect(page.locator(`${CAROUSEL} .slide:visible`)).toHaveCount(2);
+  await page.clock.runFor(400);
+  await expect(page.locator(`${CAROUSEL} .slide:visible`)).toHaveCount(1);
+  expect(await slideX(page, 1)).toBe(0);
+});
+
+test('a jump to an earlier tab reverses direction: the current card exits right and the target enters from the left', async ({ page }) => {
+  await page.clock.install();
+  await open(page);
+  await page.getByRole('tab', { name: 'Cue' }).click();
+  await page.clock.runFor(600);
+  await page.getByRole('tab', { name: 'Perform' }).click();
+  await page.clock.runFor(250);
+  expect(await slideX(page, 2)).toBeGreaterThan(0);
+  expect(await slideX(page, 1)).toBeLessThan(0);
+});
+
+test('a jump to a later tab slides left like auto-advance: the current card exits left and the target enters from the right', async ({ page }) => {
+  await page.clock.install();
+  await open(page);
+  await page.getByRole('tab', { name: 'Cue' }).click();
+  await page.clock.runFor(250);
+  expect(await slideX(page, 0)).toBeLessThan(0);
+  expect(await slideX(page, 2)).toBeGreaterThan(0);
+});
+
+test('wrapping from Notes to Cast continues in the same direction: Cast enters from the right', async ({ page }) => {
+  await page.clock.install();
+  await open(page);
+  await page.clock.runFor(6100 * 3 + 600);
+  await expect(current(page)).toHaveText('Notes');
+  await page.clock.runFor(5350); // Notes arrived at 18s; the wrap starts at 24s, so this is 250ms in
+  expect(await slideX(page, 3)).toBeLessThan(0);
+  expect(await slideX(page, 0)).toBeGreaterThan(0);
+});
+
+test('the stage keeps one height through a transition, so nothing below it shifts', async ({ page }) => {
+  await page.clock.install();
+  await open(page);
+  const heights: number[] = [];
+  const stage = page.locator(`${CAROUSEL} .slides`);
+  const loop = page.locator('#how-it-works .loop');
+  const tops: number[] = [];
+  for (let i = 0; i < 6; i++) {
+    heights.push((await stage.boundingBox())!.height);
+    tops.push((await loop.boundingBox())!.y);
+    await page.clock.runFor(1500);
+  }
+  expect(new Set(heights.map(Math.round)).size).toBe(1);
+  expect(new Set(tops.map(Math.round)).size).toBe(1);
+});
+
+test('off-stage cards are inert and aria-hidden, so they cannot be focused or read', async ({ page }) => {
+  await open(page);
+  const state = await page.locator(`${CAROUSEL} .slide`).evaluateAll((els) => els.map((e) => [e.hasAttribute('inert'), e.getAttribute('aria-hidden')]));
+  expect(state).toEqual([[false, 'false'], [true, 'true'], [true, 'true'], [true, 'true']]);
+});
+
+test('the tab indicator slides right from Cast to Perform and lands on the active tab (±2px)', async ({ page }) => {
+  await page.clock.install();
+  await open(page);
+  const start = await indicatorBox(page);
+  expect(Math.abs(start.left - (await tabBox(page, 0)).left)).toBeLessThanOrEqual(2);
+  await page.clock.runFor(6000 + 250);
+  const mid = await indicatorBox(page);
+  expect(mid.left).toBeGreaterThan(start.left);
+  await page.clock.runFor(400);
+  const end = await indicatorBox(page);
+  expect(end.left).toBeGreaterThan(mid.left);
+  const perform = await tabBox(page, 1);
+  expect(Math.abs(end.left - perform.left)).toBeLessThanOrEqual(2);
+  expect(Math.abs(end.width - perform.width)).toBeLessThanOrEqual(2);
+});
+
+test('on the wrap the indicator runs off the right end of the strip while a second one enters from the left onto Cast', async ({ page }) => {
+  await page.clock.install();
+  await open(page);
+  await page.clock.runFor(6100 * 3 + 600);
+  await expect(current(page)).toHaveText('Notes');
+  const notes = await tabBox(page, 3);
+  const cast = await tabBox(page, 0);
+  await page.clock.runFor(5350); // 250ms into the wrap that starts at 24s
+  const ghost = page.locator(`${CAROUSEL} [data-ghost]`);
+  await expect(ghost).toBeVisible();
+  expect((await indicatorBox(page)).left).toBeGreaterThan(notes.left);
+  expect((await ghost.evaluate((e) => e.getBoundingClientRect().left))).toBeLessThan(cast.left);
+  await page.clock.runFor(400);
+  await expect(ghost).toBeHidden();
+  expect(Math.abs((await indicatorBox(page)).left - cast.left)).toBeLessThanOrEqual(2);
+});
+
+test('with prefers-reduced-motion a tab click swaps the card at once, with no transform, and the indicator lands at once', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.clock.install();
+  await open(page);
+  await page.getByRole('tab', { name: 'Cue' }).click();
+  expect(await slideX(page, 2)).toBe(0);
+  expect(await slideX(page, 0)).toBe(0);
+  await expect(page.locator(`${CAROUSEL} .slide:visible`)).toHaveCount(1);
+  const box = await indicatorBox(page);
+  expect(Math.abs(box.left - (await tabBox(page, 2)).left)).toBeLessThanOrEqual(2);
+  expect(await page.locator(`${CAROUSEL} [data-tab="2"]`).evaluate((e) => getComputedStyle(e).transitionDuration)).toBe('0s');
+});

@@ -21,6 +21,7 @@ const n = copy.steps.length;
     <div class="carousel" role="group" aria-roledescription="carousel" aria-label="The four steps of a run" data-carousel>
       <div class="controls" hidden data-controls>
         <div class="tabs" role="tablist" aria-label="Steps">
+          <span class="rail" aria-hidden="true"><span class="indicator" data-indicator></span><span class="indicator ghost" data-ghost hidden></span></span>
           {copy.steps.map((s, i) => (
             <button class="tab eyebrow" type="button" role="tab" id={`step-tab-${i}`} aria-controls={`step-panel-${i}`}
                     aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-tab={i}>{s.label}</button>
@@ -68,17 +69,93 @@ const n = copy.steps.length;
     const reduce = matchMedia('(prefers-reduced-motion: reduce)');
     const total = slides.length;
 
-    const show = (index: number) => {
+    const indicator = root.querySelector<HTMLElement>('[data-indicator]')!;
+    const ghost = root.querySelector<HTMLElement>('[data-ghost]')!;
+    const tabsEl = root.querySelector<HTMLElement>('.tabs')!;
+    const DURATION = 500;
+    const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+    const box = (i: number) => ({ x: tabs[i].offsetLeft, w: tabs[i].offsetWidth });
+    const put = (el: HTMLElement, x: number, w: number) => {
+      el.style.width = `${w}px`;
+      el.style.transform = `translateX(${x}px)`;
+    };
+
+    let shownIndex = 0;
+    let running: { finish: () => void } | null = null;
+
+    const settle = (index: number) => {
       slides.forEach((s, i) => {
         s.classList.toggle('is-current', i === index);
-        s.setAttribute('aria-label', `${i + 1} of ${total}: ${tabs[i].textContent?.trim()}`);
+        s.classList.remove('is-moving');
+        s.style.transform = '';
+        s.toggleAttribute('inert', i !== index);
+        s.setAttribute('aria-hidden', String(i !== index));
       });
+      ghost.hidden = true;
+      const { x, w } = box(index);
+      put(indicator, x, w);
+    };
+
+    const show = (index: number, cause: 'auto' | 'user') => {
+      running?.finish();
+      const from = shownIndex;
+      shownIndex = index;
+      slides.forEach((s, i) => s.setAttribute('aria-label', `${i + 1} of ${total}: ${tabs[i].textContent?.trim()}`));
       tabs.forEach((t, i) => {
         t.setAttribute('aria-selected', String(i === index));
         t.tabIndex = i === index ? 0 : -1;
       });
       dots.forEach((d, i) => (i === index ? d.setAttribute('aria-current', 'true') : d.removeAttribute('aria-current')));
       root.dataset.index = String(index);
+      if (index === from) return;
+      if (reduce.matches) { settle(index); return; }
+
+      // Later steps (and the Notes -> Cast wrap) slide left, earlier ones slide right.
+      const dir = cause === 'auto' || index > from ? 1 : -1;
+      const wrap = dir > 0 && index < from;
+      slides[from].classList.remove('is-current');
+      slides[from].classList.add('is-moving');
+      slides[from].setAttribute('inert', '');
+      slides[from].setAttribute('aria-hidden', 'true');
+      slides[index].classList.add('is-current', 'is-moving');
+      slides[index].removeAttribute('inert');
+      slides[index].setAttribute('aria-hidden', 'false');
+      const f = box(from);
+      const t = box(index);
+      const railW = tabsEl.offsetWidth;
+      ghost.hidden = !wrap;
+
+      const frame = (p: number) => {
+        const e = ease(p);
+        slides[from].style.transform = `translateX(${-dir * 100 * e}%)`;
+        slides[index].style.transform = `translateX(${dir * 100 * (1 - e)}%)`;
+        if (wrap) {
+          // Continue off the right end of the strip and re-enter from the left onto Cast.
+          put(indicator, lerp(f.x, railW, e), f.w);
+          put(ghost, lerp(-t.w, t.x, e), t.w);
+        } else {
+          put(indicator, lerp(f.x, t.x, e), lerp(f.w, t.w, e));
+        }
+      };
+      const start = performance.now();
+      let raf = 0;
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        cancelAnimationFrame(raf);
+        running = null;
+        settle(shownIndex);
+      };
+      const tick = () => {
+        const p = Math.min(1, (performance.now() - start) / DURATION);
+        frame(p);
+        if (p >= 1) finish(); else raf = requestAnimationFrame(tick);
+      };
+      running = { finish };
+      frame(0);
+      raf = requestAnimationFrame(tick);
     };
 
     const carousel = createSeasonCarousel({
@@ -91,8 +168,10 @@ const n = copy.steps.length;
     });
 
     root.dataset.enhanced = '';
-    root.querySelectorAll<HTMLElement>('[hidden]').forEach((e) => e.removeAttribute('hidden'));
-    show(0);
+    root.querySelectorAll<HTMLElement>('[data-controls]').forEach((e) => e.removeAttribute('hidden'));
+    settle(0);
+    show(0, 'user');
+    new ResizeObserver(() => { if (!running) settle(shownIndex); }).observe(tabsEl);
 
     // WCAG 2.2.2: choosing a step shows it and stops the auto-advance for the rest of the page view (as in the
     // APG carousel pattern, rotation stops once the user activates a control). There is no Play button.
@@ -134,10 +213,14 @@ const n = copy.steps.length;
   .carousel { margin-top: 18px; }
   .controls[hidden] { display: none; }
   .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 6px; margin-bottom: 12px; }
-  .tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-right: auto; }
-  .tab { appearance: none; background: none; border: 0; border-bottom: 2px solid transparent; cursor: pointer; padding: 8px 10px; min-height: 24px; color: var(--muted); }
-  .tab[aria-selected='true'] { color: var(--tomato-text); border-bottom-color: var(--tomato-text); }
+  .tabs { position: relative; display: flex; flex-wrap: nowrap; gap: 2px; margin-right: auto; }
+  .tab { appearance: none; background: none; border: 0; cursor: pointer; padding: 8px 8px 10px; min-height: 24px; color: var(--muted); transition: color 500ms ease-in-out; }
+  .tab[aria-selected='true'] { color: var(--tomato-text); }
   .tab:hover { color: var(--ink); }
+  .rail { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; overflow: hidden; background: var(--line); pointer-events: none; }
+  .indicator { position: absolute; left: 0; top: 0; height: 2px; width: 0; background: var(--tomato-text); }
+  .indicator[hidden] { display: none; }
+  @media (prefers-reduced-motion: reduce) { .tab { transition: none; } }
   .dial { position: relative; width: 56px; height: 56px; margin-right: 6px; }
   .ring { position: absolute; inset: 0; }
   .dot { position: absolute; width: 24px; height: 24px; padding: 0; border: 0; background: none; cursor: pointer; margin: -12px 0 0 -12px; }
@@ -149,10 +232,10 @@ const n = copy.steps.length;
   .dot[data-pos='3'] { left: 8px; top: 28px; }
   .slides { display: grid; gap: 16px; }
   .slide { background: var(--bg); border: 1px solid var(--line); border-radius: 16px; padding: 24px; display: grid; grid-template-columns: 1fr auto; gap: 16px 24px; align-items: center; }
-  [data-enhanced] .slide:not(.is-current) { display: none; }
-  [data-enhanced] .slide.is-current { animation: slide-in 250ms ease-out; }
-  @keyframes slide-in { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: none; } }
-  @media (prefers-reduced-motion: reduce) { [data-enhanced] .slide.is-current { animation: none; } }
+  /* Enhanced: every card shares one grid cell, so the stage is as tall as the tallest card and never jumps. */
+  [data-enhanced] .slides { overflow: hidden; gap: 0; }
+  [data-enhanced] .slide { grid-area: 1 / 1; }
+  [data-enhanced] .slide:not(.is-current):not(.is-moving) { visibility: hidden; }
   .slide h3 { font-size: 22px; margin: 4px 0; }
   .slide .body { margin: 0; color: var(--muted); max-width: 46ch; }
   .scene { display: flex; align-items: flex-end; gap: 12px; width: 220px; min-height: 120px; padding-bottom: 28px; }
