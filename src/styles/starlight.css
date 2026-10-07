@@ -22,3 +22,15 @@
 .sl-markdown-content h1, .sl-markdown-content h2, .sl-markdown-content h3, h1#_top {
   font-family: var(--font-display); font-weight: 800; letter-spacing: -.02em;
 }
+.sidebar-content .top-level > li + li { margin-top: 26px; padding-top: 14px; border-top: 2px solid var(--line); }
+.sidebar-content .top-level > li > details > summary .large {
+  font-family: var(--font-display); font-weight: 800; font-size: 17px; letter-spacing: -.01em;
+  color: var(--tomato-text);
+}
+.doc-note {
+  border-left: 4px solid var(--teal); background: color-mix(in srgb, var(--teal) 10%, var(--bg));
+  border-radius: 6px; padding: 10px 14px; margin-bottom: 1.5rem; color: var(--ink);
+}
+.doc-note--planned { border-left-color: var(--sunflower); background: color-mix(in srgb, var(--sunflower) 14%, var(--bg)); }
+.doc-note p { margin: 0; }
+.doc-note p + p { margin-top: 6px; }

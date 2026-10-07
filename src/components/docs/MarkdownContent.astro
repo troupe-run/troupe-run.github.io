@@ -1,0 +1,18 @@
+---
+import Default from '@astrojs/starlight/components/MarkdownContent.astro';
+const { entry, editUrl } = Astro.locals.starlightRoute;
+const isDoc = entry.id.startsWith('docs/');
+const { status, prerelease, purpose } = entry.data;
+---
+{isDoc && status === 'planned' && (
+  <aside class="doc-note doc-note--planned" data-doc-note="planned">
+    <p><strong>Planned: not written yet.</strong> {purpose}</p>
+    {editUrl && <p><a href={editUrl.href}>Help write this page</a></p>}
+  </aside>
+)}
+{isDoc && status === 'written' && prerelease && (
+  <aside class="doc-note" data-doc-note="prerelease">
+    <p>Pre-alpha: this page describes intended behaviour.</p>
+  </aside>
+)}
+<Default><slot /></Default>
