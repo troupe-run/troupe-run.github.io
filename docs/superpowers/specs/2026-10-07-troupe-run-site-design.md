@@ -44,6 +44,7 @@ All are recorded with times in the brainstorm's decisions log.
 | Build | Astro, with Starlight for `/docs`, deployed by GitHub Actions to GitHub Pages |
 | Revisit trigger | If customising Starlight turns into fighting it, revisit a hand-built docs layout. The criteria are in §6.4 |
 | Bake-off write-up | After the results, not in v1 |
+| GitHub call to action target | `https://github.com/troupe-run/troupe.run`, the product repo. It doesn't exist publicly yet and will be published later. No traffic is driven to the site before then (owner, 2026-10-07) |
 
 ## 3. Landing page
 
@@ -305,12 +306,9 @@ We move to a hand-built docs layout if any of these happens:
 
 ## 10. Open points
 
-- **Where "Watch on GitHub" points.** Today the only public troupe-run repo is this site. The options:
-  1. make the `troupe.run` product repo public now, with a README that says it's pre-alpha;
-  2. point the call to action at the org page (`github.com/troupe-run`) and say "Follow on GitHub";
-  3. point it at this site repo.
-
-  **To decide before launch.**
+- **Before driving any traffic to the site,** `github.com/troupe-run/troupe.run` must exist and be public.
+  - Until then, the GitHub call to action leads to a 404. That's accepted (§2).
+  - The link checker excludes that one URL until the repo is published.
 - **Problem-section layout:** in-context review before launch (§3).
 - **Pushing the local brand-guide commits:** these are held until the owner has read the guide.
 - **"The house" and "house rules":** not yet agreed as names. The docs page title carries "name TBC".
