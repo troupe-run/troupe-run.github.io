@@ -1,5 +1,7 @@
 ---
 import Character from './Character.astro';
+interface Props { caption: string }
+const { caption } = Astro.props;
 ---
 <figure class="queue">
   <div class="line" aria-hidden="true">
@@ -8,7 +10,7 @@ import Character from './Character.astro';
     <Character kind="agent" size={40} /><span class="arrow">→</span>
     <span class="human"><Character kind="human" size={56} /></span>
   </div>
-  <figcaption>Agents in single file, all waiting on one person.</figcaption>
+  <figcaption>{caption}</figcaption>
 </figure>
 <style>
   .queue { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px; }

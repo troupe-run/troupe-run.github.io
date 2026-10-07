@@ -18,7 +18,8 @@ const copySchema = z.discriminatedUnion('section', [
   z.object({
     section: z.literal('problem'),
     eyebrow: z.string(), title: z.string(),
-    cards: z.array(z.object({ title: z.string(), body: z.string() })).length(4),
+    queueCaption: z.string(),
+    items: z.array(z.object({ title: z.string(), body: z.string() })).length(4),
   }),
   z.object({
     section: z.literal('how'),

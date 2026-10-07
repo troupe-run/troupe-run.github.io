@@ -8,9 +8,9 @@ const copy = await getCopy('problem');
     <p class="eyebrow">{copy.eyebrow}</p>
     <h2 id="problem-title">{copy.title}</h2>
     <div class="grid">
-      <ProblemQueue />
+      <ProblemQueue caption={copy.queueCaption} />
       <ul class="problem-list">
-        {copy.cards.map((c) => (
+        {copy.items.map((c) => (
           <li><span class="dot" aria-hidden="true"></span><div><strong>{c.title}</strong><span class="body">{c.body}</span></div></li>
         ))}
       </ul>
