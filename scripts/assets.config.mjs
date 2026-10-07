@@ -13,6 +13,6 @@ export const COPIES = [
 ];
 export const ICO = { from: 'brand/out/favicon-32.png', to: 'public/favicon.ico' };
 export const SOURCES = [
-  'brand/favicon.svg', 'brand/mark.svg', 'brand/templates/base.css',
+  'scripts/assets.config.mjs', 'brand/favicon.svg', 'brand/mark.svg', 'brand/templates/base.css',
   ...[...new Set(ASSETS.map((a) => a.template))].map((t) => `brand/templates/${t}`),
 ];
