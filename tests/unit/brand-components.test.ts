@@ -38,7 +38,11 @@ describe('CastDefs', () => {
   it('defines one fade gradient per kind, fading to opacity 0 at offset 0.75', async () => {
     const html = await c.renderToString(CastDefs);
     for (const k of ['human', 'agent', 'troupe']) expect(html).toContain(`id="cast-fade-${k}"`);
-    expect(count(html, /offset="0\.75"/g)).toBe(3);
+    for (const k of ['human', 'agent', 'troupe']) {
+      const grad = html.split(`id="cast-fade-${k}"`)[1].split('</linearGradient>')[0];
+      expect(grad).toMatch(/<stop offset="0" [^>]*stop-opacity: \.45/);
+      expect(grad).toMatch(/<stop offset="0\.75" [^>]*stop-opacity: 0"/);
+    }
   });
 });
 
@@ -51,7 +55,11 @@ describe('Mark', () => {
     expect(iCircle).toBeGreaterThan(-1);
     expect(iCircle).toBeLessThan(iTri);
     expect(iTri).toBeLessThan(iSq);
-    expect(count(html, /<circle[^>]*class="eye"/g)).toBe(6);
+    // exactly two eyes sit between each shape and the next in document order (and after the last)
+    const eyes = (from: number, to: number) => count(html.slice(from, to), /<circle[^>]*class="eye"/g);
+    expect(eyes(iCircle, iTri)).toBe(2);
+    expect(eyes(iTri, iSq)).toBe(2);
+    expect(eyes(iSq, html.length)).toBe(2);
   });
   it('shows the wordmark "troupe" only when asked', async () => {
     expect(await c.renderToString(Mark)).not.toContain('>troupe<');
@@ -61,12 +69,20 @@ describe('Mark', () => {
 
 describe('TopicIcon', () => {
   for (const name of TOPIC_ICONS) {
-    it(`renders "${name}" as a stroked line icon inside a tile`, async () => {
+    it(`renders "${name}" as a currentColor-stroked tile`, async () => {
       const html = await c.renderToString(TopicIcon, { props: { name } });
       expect(html).toContain('class="topic-icon"');
       expect(html).toContain('stroke="currentColor"');
     });
   }
+  it('renders a different drawing for every icon name', async () => {
+    const drawings = new Set<string>();
+    for (const name of TOPIC_ICONS) {
+      const html = await c.renderToString(TopicIcon, { props: { name } });
+      drawings.add(html.split('<svg')[1].split('</svg>')[0].replace(/\s+/g, ' '));
+    }
+    expect(drawings.size).toBe(TOPIC_ICONS.length);
+  });
   it('throws for an unknown icon name', async () => {
     await expect(c.renderToString(TopicIcon, { props: { name: 'nope' } })).rejects.toThrow('Unknown topic icon: nope');
   });

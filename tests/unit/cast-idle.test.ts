@@ -29,6 +29,7 @@ describe('createCastIdle', () => {
     const picks: number[] = [];
     createCastIdle({ count: 5, bow: (i) => picks.push(i), random: () => 0.5 });
     vi.advanceTimersByTime(30_000);
+    expect(picks).toHaveLength(6);
     for (let i = 1; i < picks.length; i++) expect(picks[i]).not.toBe(picks[i - 1]);
   });
 
