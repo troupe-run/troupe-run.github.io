@@ -4,8 +4,8 @@ This is the reference for anything that carries the troupe brand: the site, the 
 social posts. If something here is wrong or missing, fix this file first, then the thing you were making.
 
 - **Direction:** "Matinee". Playful, characterful and warm, with geometric characters, light by default.
-- **Status:** v0.1, 2026-10-07. The colours, type, metaphor rule and voice are decided. The mark's exact
-  geometry is set when its SVG is first drawn; the values below are the starting point.
+- **Status:** v0.2, 2026-10-07. Colours, type, the mark, characters, the metaphor rule and voice are decided.
+  Final SVG coordinates are set when the asset files are drawn; the geometry below is what they must meet.
 - **Owner:** hps.gd.
 
 ## 1. Name
@@ -17,20 +17,27 @@ social posts. If something here is wrong or missing, fix this file first, then t
 
 ## 2. The mark and wordmark
 
-- **The mark** is three heads in a row, like a cast at a curtain call:
+- **The mark** is three heads in a row, like a cast at a curtain call, each with eyes:
   1. a **lilac circle**: a human;
-  2. a **teal rounded square**: an agent;
-  3. a **tomato circle**: the brand colour.
+  2. a **tomato rounded triangle**, in the middle: troupe itself;
+  3. a **teal rounded square**: an agent.
 - **The wordmark** is "troupe" in Bricolage Grotesque, weight 800, lowercase, tracking −0.02em.
 - **Lock-up:** the mark sits to the left of the wordmark, centred vertically on the x-height.
-- **Starting geometry**, where h is the height of one head:
-  - all three heads are the same height, h, and share a baseline;
-  - the gap between heads is 0.25h;
+- **Geometry**, where h is the height of the circle and the square:
+  - the circle and the square are h tall and h wide, and all three heads share a baseline;
+  - the triangle is equilateral, with rounded corners, and about 1.04h tall. The small overshoot is
+    deliberate: a pointed shape looks smaller than it measures. Being equilateral, it is slightly wider than h;
+  - the gap between heads is about 0.1h–0.15h;
   - the corner radius of the agent square is 0.28h.
+- **Eyes:**
+  - two white dots on the circle and the triangle, and two small white rounded rectangles on the square;
+  - the triangle's eyes sit lower, in the wide part of the shape. That reads as deliberate with the triangle in
+    the middle, which is why it goes there.
 - **Clear space:** keep one head's width (h) clear on every side of the mark or lock-up.
-- **Small sizes:**
-  - Below 24px wide, use the **two-head mark**: the lilac circle and the teal square.
-  - The favicon is always the two-head mark.
+- **Small sizes and the favicon:**
+  - Below 24px wide, use the **triangle alone, with eyes**. The circle and square are too hard to tell apart
+    at that size.
+  - The favicon is always the triangle with eyes.
 - **Don't:**
   - recolour the heads, or change their order or shapes;
   - add outlines, shadows or gradients;
@@ -49,16 +56,24 @@ an explicit dark theme.
 | `--surface` | Cards and panels | `#FFFFFF` | `#24213F` |
 | `--ink` | Body text, headings | `#1D1B2F` | `#FFF4E2` |
 | `--muted` | Secondary text | `#4A4760` | `#C9C2D8` |
-| `--tomato` | Brand. Fills, large shapes, curtain | `#FF5A3C` | `#FF7A5F` |
+| `--tomato` | Brand and troupe itself. Fills, shapes, the curtain | `#FF5A3C` | `#FF5A3C` |
 | `--tomato-text` | Tomato for text and small UI | `#CE3D21` | `#FF8E76` |
-| `--teal` | Agents | `#14857D` | `#3CC7BC` |
+| `--teal` | Agents. Shapes | `#14857D` | `#14857D` |
 | `--teal-text` | Teal for text | `#137E76` | `#3CC7BC` |
-| `--lilac` | Humans | `#7461D9` | `#A79AF0` |
+| `--lilac` | Humans. Shapes | `#7461D9` | `#7461D9` |
 | `--lilac-text` | Lilac for text | `#715ED8` | `#A79AF0` |
-| `--sunflower` | Highlights, the curtain trim, badges | `#FFC93C` | `#FFD666` |
+| `--sunflower` | Highlights, the curtain trim, badges | `#FFC93C` | `#FFC93C` |
+
+| `--soft` | Faint borders (icon tiles) | `#1D1B2F33` | `#FFF4E23D` |
+| `--line` | Card borders | `#1D1B2F14` | `#FFF4E21C` |
+
+**One pattern for every accent:** the shape colour is identical in light and dark mode, so the mark and the
+characters never change. Each accent also has a `-text` token per mode, because no single shade of teal or
+lilac reaches 4.5:1 on both the cream and the navy backgrounds (the best possible is about 3.8:1). Tomato
+would pass as text in dark mode unchanged, but gets a lighter `-text` shade too, so the rule has no exception.
 
 **Rules:**
-- **Teal means agents and lilac means humans, everywhere.** Never swap them, and don't use either one for
+- **Teal means agents, lilac means humans, and tomato is troupe itself, everywhere.** Never swap them, and don't use either one for
   anything unrelated to agents or humans.
 - **Tomato is the brand and the call to action.** Use it for one primary action per view.
 - **Text colour:**
@@ -84,7 +99,10 @@ an explicit dark theme.
 | `--muted` | 8.4 | `--lilac-text` | 4.64 |
 | `--tomato-text` | 4.62 | `--tomato` (shapes only) | 2.94 |
 
-**Dark mode:** every listed text colour measures above 6:1 on both dark backgrounds.
+**Dark mode:**
+- Every `-text` token measures above 6:1 on both dark backgrounds.
+- The shape colours stay above the 3:1 needed for graphics: tomato 5.0, sunflower 10.0, teal 3.4 and lilac
+  3.3 on the darker surface.
 
 ## 4. Type
 
@@ -94,8 +112,8 @@ an explicit dark theme.
 | Body, UI | **DM Sans** | 400, 600 | Line-height about 1.55, measure at most 65ch |
 | Code, labels, eyebrows | **DM Mono** | 400, 500 | 500 is the heaviest cut that exists; don't fake bold |
 
-- **Eyebrows** (the small label above a section heading): DM Mono, 11–12px, uppercase, tracking +0.06em,
-  `--tomato-text`.
+- **Eyebrows** (the small label above a section heading): DM Mono 400, 11–12px, uppercase, tracking +0.06em,
+  `--tomato-text`. Step labels (for example "Cast", "Perform", "Cue", "Notes") use the same style.
 - **Docs sidebar section labels** ("Programme", "Opening night", and so on):
   - Bricolage Grotesque 800, 17px, `--tomato-text`, sentence case;
   - a 2px divider and roughly 26px of space above each label;
@@ -106,12 +124,23 @@ an explicit dark theme.
 
 - **The cast:**
   - humans are **circles**, in lilac;
-  - agents are **rounded squares**, in teal.
+  - agents are **rounded squares**, in teal;
+  - troupe itself is an **equilateral rounded triangle**, in tomato. It appears at most once in a scene,
+    usually in the middle.
   - The shape tells you which is which, and so does the colour; never rely on colour alone.
 - **Style:**
-  - flat geometry, with no outlines, gradients or drop shadows;
+  - flat geometry, with no outlines or drop shadows;
+  - **reflections:** each character's body is a copy of its head at the same size, flipped upside down
+    below it. It starts at 45% opacity and fades to transparent by about 75% of its height. This is the only
+    gradient in the style;
   - faces are optional and minimal: two dots at most;
   - props (a tick, a diff, a clipboard) are simple shapes in `--ink` or `--sunflower`.
+- **Characters are not icons.** Topic icons (for example on feature cards) are separate line icons:
+  - 2px strokes in `--tomato-text`;
+  - in a 36px tile with a `--surface` fill, a 2px `--soft` border and a 10px radius, matching the
+    secondary button;
+  - they never reuse the brand shapes;
+  - they never use teal or lilac, because those colours mean agents and humans.
 - **One character per section, doing that section's job.** For example, a reviewer circle holding a tick,
   or an agent square carrying a diff.
 - **Stage devices** are the curtain (a tomato and tomato-text stripe with a sunflower trim), the spotlight (a
@@ -174,9 +203,9 @@ check.
 | Asset | Formats | Status |
 |---|---|---|
 | Mark (three heads), light and dark | SVG | To make |
-| Two-head mark | SVG | To make |
+| Triangle with eyes (small-size mark) | SVG | To make |
 | Lock-up (mark plus wordmark), light and dark | SVG | To make |
-| Favicon set (two-head mark) | SVG, ICO, 180px apple-touch | To make |
+| Favicon set (triangle with eyes) | SVG, ICO, 180px apple-touch | To make |
 | Social preview for the site | PNG 1200×630 | To make |
 | GitHub org avatar | PNG 500×500 | To make |
 | Repo social previews | PNG 1280×640 | To make |
@@ -194,11 +223,5 @@ The source SVGs live in this repo under `brand/`. The built copies the site serv
 
 ## 10. Open points
 
-- **The tomato head's shape.**
-  - Under the character rule, a circle reads as a human, so the mark currently says "human, agent, human".
-  - The options:
-    - keep that (two people and an agent, "humans and agents together");
-    - or make the tomato head a distinct, non-role shape.
-  - Decide when the SVG is drawn.
 - **Problem-section layout on the landing page:** parked until it can be judged in context.
 - **"The house" and "house rules":** not yet agreed as names.
