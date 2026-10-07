@@ -4,11 +4,15 @@ description: What troupe is being built toward.
 status: written
 ---
 
-These are commitments, not shipped features.
+The ideas troupe is built on.
 
 ## Local-first, everything in your project
 
-Config, history and decisions live in git, on your machine. troupe doesn't need a hosted service to work.
+Roles, history and decisions live in git, on your machine. troupe doesn't need a hosted service to work.
+
+## Work that branches
+
+Tasks fork, join, swarm and loop, instead of one agent working in a line.
 
 ## Built for teams of agents and people
 

@@ -27,13 +27,15 @@ const copySchema = z.discriminatedUnion('section', [
     steps: z.array(z.object({ label: z.string(), title: z.string(), body: z.string() })).length(4),
   }),
   z.object({
-    section: z.literal('repo'),
-    eyebrow: z.string(), title: z.string(), body: z.string(), caption: z.string(), snippet: z.string(),
+    section: z.literal('cast'),
+    eyebrow: z.string(), title: z.string(), body: z.string(),
+    rows: z.array(z.object({ role: z.string(), holder: z.string(), kind: z.enum(['human', 'agent']) })).length(4),
+    gate: z.string(), note: z.string(),
   }),
   z.object({
     section: z.literal('principles'),
     eyebrow: z.string(), title: z.string(), intro: z.string(),
-    items: z.array(z.object({ icon: z.enum(TOPIC_ICONS), title: z.string(), body: z.string() })).length(5),
+    items: z.array(z.object({ icon: z.enum(TOPIC_ICONS), title: z.string(), body: z.string() })).length(6),
   }),
   z.object({
     section: z.literal('closing'),

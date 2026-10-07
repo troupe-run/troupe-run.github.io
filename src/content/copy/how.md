@@ -1,7 +1,7 @@
 ---
 section: how
 eyebrow: "How the show runs"
-title: "A long run, not one night."
+title: "A season, not a single show."
 intro: "Your process runs again and again. Each run gets better."
 loop: "↺ and again, every showing"
 steps:

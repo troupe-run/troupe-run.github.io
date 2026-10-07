@@ -78,25 +78,28 @@ One page, top to bottom. The copy is drafted in the brand voice and **approved b
    - below that, the four problems as a small grid with no boxes (a dot, a bold title and muted body text):
      one agent, one line · one bottleneck · no homework · no record. It has four columns at 1024px and above,
      two from 600 to 1023px, and one below 600px.
-4. **How it works:** "A long run, not one night." A **loop diagram**, with no boxes:
+4. **How it works:** "A season, not a single show." (owner review 2026-10-08; was "A long run, not one night.") A **loop diagram**, with no boxes:
    - the four steps, Cast → Perform → Cue → Notes, sit around a circular track, with the troupe triangle in the
      centre and "↺ and again, every showing" beneath;
    - step labels use the eyebrow style, with one plain line of body text per step;
    - below 720px, the ring is replaced by a vertical list with a connecting line.
-5. **In your repo (new):** a dark ink band with two columns:
-   - **left:** the heading "Your process, as plain config." and a short paragraph;
-   - **right:** a short YAML snippet showing roles, who holds them and where a decision goes.
-   - It's labelled "illustrative: the syntax isn't final" in both the caption and the snippet's first comment.
-6. **Principles:** five cards (a sixth is pending an owner decision, owner review 2026-10-08), each with a topic line icon in a faint-bordered tile. This is the only card grid
+5. **The cast (replaces "In your repo", owner review 2026-10-08):** a dark ink band with two columns, id `#the-cast`:
+   - **left:** the eyebrow "The cast", the heading "Your process, as a cast list." and a short paragraph;
+   - **right:** a playbill-style list of four roles (product owner, engineer, reviewer, QA). Each row has a
+     small shape (lilac circle for a person, teal rounded square for an agent), the role name, a dotted
+     leader and the holder's name. Under the rows sit the gate line ("Release: decided by the product owner")
+     in the eyebrow style and a small "Example cast" note. The shapes are static and never idle-bow;
+   - it replaces the YAML snippet, so the page invents no config syntax and says no "repo" or "YAML".
+6. **Principles:** six cards (owner review 2026-10-08), each with a topic line icon in a faint-bordered tile. This is the only card grid
    on the page:
    - local-first, everything in your project;
+   - work that branches (new, owner review 2026-10-08);
    - built for teams of agents and people;
    - escalation that does its homework;
    - lineage for every decision;
    - bring your own agent.
 
-   The heading is "What we're building." The cards are centred, three then two, so five never leaves a lone
-   orphan. "Config that survives hand-editing" was removed (owner review 2026-10-08).
+   The heading is "What we're building." The intro is "The ideas troupe is built on." The principles are present tense, with no commitments caveat; "Install: coming" is the landing page's pre-alpha signal. The cards sit three by two. "Config that survives hand-editing" was removed (owner review 2026-10-08).
 7. **Closing call to action:** "Watch on GitHub to follow the build."
 8. **Footer:**
    - "a project by hps.gd", linking to https://hps.gd (new tab);
@@ -106,7 +109,7 @@ One page, top to bottom. The copy is drafted in the brand voice and **approved b
 
 **Owner review 2026-10-08 (round 1):** landing copy says "project", not "repo", "YAML" or "config" (see the
 brand guide, section 7). The Cast step reads "Agents and people, each in a named role." Pending owner decisions:
-the "How it works" heading, the "In your repo" band, a sixth principle and the principles intro sentence.
+all four were then decided (owner review 2026-10-08, round 2): the heading "A season, not a single show."; a cast-list band replacing the YAML band; a sixth principle, "Work that branches"; and present-tense principles with "Install: coming" as the pre-alpha signal. The closing body reads "Follow along on GitHub."
 
 **Layout rules:**
 - Each section has a different shape, so no two neighbouring sections repeat a row of boxes (owner,

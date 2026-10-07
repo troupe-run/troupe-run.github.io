@@ -1,6 +1,6 @@
 import { test, expect, BLOCKED_EXTERNAL } from './fixtures';
 
-const SECTIONS = ['#top', '#problem', '#how-it-works', '#in-your-repo', '#principles', '#follow'];
+const SECTIONS = ['#top', '#problem', '#how-it-works', '#the-cast', '#principles', '#follow'];
 const REPO = 'https://github.com/troupe-run/troupe.run';
 
 test('renders the header, the six landing sections and the footer', async ({ page }) => {
@@ -39,11 +39,11 @@ test('hero cast is human, agent, troupe, agent, human', async ({ page }) => {
   expect(kinds).toEqual(['human', 'agent', 'troupe', 'agent', 'human']);
 });
 
-test('principles section shows five cards, each with exactly one topic icon', async ({ page }) => {
+test('principles section shows six cards, each with exactly one topic icon', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('#principles .principle')).toHaveCount(5);
+  await expect(page.locator('#principles .principle')).toHaveCount(6);
   const perCard = await page.locator('#principles .principle').evaluateAll((els) => els.map((e) => e.querySelectorAll('.topic-icon').length));
-  expect(perCard).toEqual([1, 1, 1, 1, 1]);
+  expect(perCard).toEqual([1, 1, 1, 1, 1, 1]);
 });
 
 test('how it works shows the four steps in order Cast, Perform, Cue, Notes', async ({ page }) => {
@@ -154,22 +154,59 @@ test('at 390px the how-it-works steps stack vertically in order', async ({ page 
   await expect(page.locator('#how-it-works .character--troupe')).toBeHidden();
 });
 
-test('"in your repo" band shows the illustrative snippet and caption', async ({ page }) => {
+test('the cast band lists four roles in order with their holders', async ({ page }) => {
   await page.goto('/');
-  const band = page.locator('#in-your-repo');
-  await expect(band.locator('pre code')).toContainText('# .troupe/theatre.yaml (illustrative)');
-  await expect(band).toContainText('Illustrative: the syntax isn’t final.');
-  const colours = await band.locator('pre code').evaluate((code) => {
-    const comment = code.querySelector('.comment') as HTMLElement;
-    return [getComputedStyle(comment).color, getComputedStyle(code).color];
-  });
-  expect(colours[0]).not.toBe(colours[1]);
+  const rows = await page.locator('#the-cast .row').evaluateAll((els) => els.map((e) => [
+    e.querySelector('.role')?.textContent, e.querySelector('.holder')?.textContent,
+  ]));
+  expect(rows).toEqual([['Product owner', 'Alex'], ['Engineer', 'Build agent'], ['Reviewer', 'Review agent'], ['QA', 'Sam']]);
 });
 
-test('sections appear in the order hero, problem, how, in-your-repo, principles, follow', async ({ page }) => {
+test('each cast row shows a lilac circle for a person and a teal rounded square for an agent', async ({ page }) => {
+  await page.goto('/');
+  const shapes = await page.locator('#the-cast .row .shape').evaluateAll((els) => els.map((e) => {
+    const s = getComputedStyle(e);
+    const probe = document.createElement('i');
+    document.body.append(probe);
+    probe.style.color = `var(--${e.dataset.kind === 'human' ? 'lilac' : 'teal'})`;
+    const token = getComputedStyle(probe).color;
+    probe.remove();
+    return { kind: e.getAttribute('data-kind'), bg: s.backgroundColor, token, round: s.borderTopLeftRadius };
+  }));
+  expect(shapes.map((s) => s.kind)).toEqual(['human', 'agent', 'agent', 'human']);
+  for (const s of shapes) {
+    expect(s.bg).toBe(s.token);
+    expect(s.round).toBe(s.kind === 'human' ? '50%' : '5px');
+  }
+});
+
+test('the cast band shows the release gate line and the "Example cast" note', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#the-cast .gate')).toHaveText('Release: decided by the product owner');
+  await expect(page.locator('#the-cast .note')).toHaveText('Example cast');
+});
+
+test('the cast band does not animate: its shapes are not hero characters and nothing in it bows', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#the-cast .character')).toHaveCount(0);
+  await expect(page.locator('#the-cast [data-cast]')).toHaveCount(0);
+});
+
+test('the landing page says "project", not repo, YAML or config, in its copy sections', async ({ page }) => {
+  await page.goto('/');
+  const text = await page.locator('main').innerText();
+  expect(text).not.toMatch(/\b(repo|YAML|config)\b/i);
+});
+
+test('the how-it-works heading reads "A season, not a single show."', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#how-it-works h2')).toHaveText('A season, not a single show.');
+});
+
+test('sections appear in the order hero, problem, how, the-cast, principles, follow', async ({ page }) => {
   await page.goto('/');
   const ids = await page.locator('main > section').evaluateAll((els) => els.map((e) => e.id));
-  expect(ids).toEqual(['top', 'problem', 'how-it-works', 'in-your-repo', 'principles', 'follow']);
+  expect(ids).toEqual(['top', 'problem', 'how-it-works', 'the-cast', 'principles', 'follow']);
 });
 
 test('the hero has no eyebrow line, no status badge and the header has no status pill', async ({ page }) => {
@@ -215,10 +252,10 @@ test('the footer drops the privacy and licence lines and links hps.gd twice, in 
   await expect(footer.getByRole('link', { name: '© 2026 HPS.GD PTY LTD' })).toHaveAttribute('rel', /noopener/);
 });
 
-test('five principles lay out without a lone orphan row at 1280px (three then two)', async ({ page }) => {
+test('six principles lay out as two rows of three at 1280px', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/');
   const tops = await page.locator('#principles .principle').evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
   const rows = [...new Set(tops)].map((t) => tops.filter((x) => x === t).length);
-  expect(rows).toEqual([3, 2]);
+  expect(rows).toEqual([3, 3]);
 });

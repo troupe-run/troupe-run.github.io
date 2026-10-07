@@ -191,7 +191,9 @@ check.
   - name the real problem: one agent working in a line, one person answering everything, no research done,
     no record kept;
   - label anything unbuilt as intent ("pre-alpha", "illustrative");
-  - allow one wry line per section at most.
+  - allow one wry line per section at most;
+  - write principles in the present tense, as what troupe does, with no commitments caveat. "Install: coming"
+    is the landing page's pre-alpha signal (owner review, 2026-10-08).
   - say "project", not "repo", "YAML" or "config", in user-facing copy, except where the technical term is
     genuinely necessary (owner review, 2026-10-08);
 - **Don't:**
@@ -202,7 +204,7 @@ check.
 - **Examples:**
   - Yes: "Decisions go to whoever owns them, with the research done."
   - No: "Supercharge your AI workflow with intelligent human-in-the-loop orchestration!"
-  - Yes, the wry thread: "A long run, not one night."
+  - Yes, the wry thread: "A season, not a single show."
 - **Before 1.0, claims are principles and intent only.** No benchmarks, no customer claims, no licence or
   pricing statements beyond what has been decided and published.
 
