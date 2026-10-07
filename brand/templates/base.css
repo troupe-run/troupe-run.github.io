@@ -1,0 +1,12 @@
+@import url('../../node_modules/@fontsource-variable/bricolage-grotesque/index.css');
+@import url('../../node_modules/@fontsource-variable/dm-sans/index.css');
+@import url('../../node_modules/@fontsource/dm-mono/400.css');
+html, body { margin: 0; width: 100%; height: 100%; }
+body { font-family: 'DM Sans Variable', sans-serif; color: #1D1B2F; background: #FFF8EE; display: flex; align-items: center; justify-content: center; }
+body.dark { color: #FFF4E2; background: #1A1830; }
+body.none { background: transparent; }
+.wordmark { font-family: 'Bricolage Grotesque Variable', sans-serif; font-weight: 800; letter-spacing: -.02em; }
+.tag { font-family: 'Bricolage Grotesque Variable', sans-serif; font-weight: 800; letter-spacing: -.03em; line-height: 1.02; }
+.url { font-family: 'DM Mono', monospace; color: #CE3D21; }
+.cast { display: flex; gap: 22px; align-items: flex-end; }
+.spot { background: radial-gradient(ellipse 70% 60% at 50% 0%, #FFC93C38, transparent 70%), #FFF8EE; }

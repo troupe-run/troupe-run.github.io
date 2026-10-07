@@ -10,6 +10,14 @@ export default defineConfig({
       title: 'troupe docs',
       editLink: { baseUrl: 'https://github.com/troupe-run/troupe-run.github.io/edit/main/' },
       lastUpdated: true,
+      favicon: '/favicon.svg',
+      head: [
+        { tag: 'link', attrs: { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' } },
+        { tag: 'link', attrs: { rel: 'icon', href: '/favicon.ico', sizes: '32x32' } },
+        { tag: 'link', attrs: { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' } },
+        { tag: 'meta', attrs: { property: 'og:image', content: 'https://troupe.run/og.png' } },
+        { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
+      ],
       customCss: [
         '@fontsource-variable/bricolage-grotesque',
         '@fontsource-variable/dm-sans',

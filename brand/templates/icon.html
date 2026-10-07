@@ -1,0 +1,12 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css"></head>
+<body>
+  <img id="i" src="../favicon.svg" alt="">
+  <script>
+    const q = new URLSearchParams(location.search);
+    const size = Number(q.get('size'));
+    const img = document.getElementById('i');
+    const inset = q.get('bg') === 'cream' ? Math.round(size * 0.14) : 0;
+    img.width = size - inset * 2; img.height = size - inset * 2;
+    if (q.get('bg') === 'none') document.body.classList.add('none');
+  </script>
+</body></html>
