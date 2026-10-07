@@ -2920,12 +2920,159 @@ Claude-Session: https://claude.ai/code/session_01ASzaj4mttbfmLs561Bca3g"
 
 ---
 
+### Task 11: Landing layout v2 (owner-chosen "Rhythm" with problem layout P2). Runs after Task 9, before Task 10
+
+**Why:** the owner found the page repetitive ("the several rows of 4 boxes is repetitive") and chose layout A,
+"Rhythm", with problem layout P2 (2026-10-07 23:57). See spec §3, items 3–6. Mockups (visual reference only):
+https://claude.ai/artifact/NDgFxrEV1cp1Tta63bfjgJ (option A, plus "P2 · Picture and list").
+
+**Files:**
+- Modify:
+  - `src/components/sections/Problem.astro`;
+  - `src/components/sections/HowItWorks.astro`;
+  - `src/content.config.ts` (add the `repo` copy section);
+  - `src/pages/index.astro`;
+  - `tests/e2e/landing.spec.ts`.
+- Create:
+  - `src/components/sections/InYourRepo.astro`;
+  - `src/content/copy/repo.md`;
+  - `src/components/ProblemQueue.astro` (the illustration).
+
+**Interfaces:**
+- Consumes: `Character` (Task 3; use `kind="agent"` and `kind="human"`, sized via `size`), `getCopy`, the tokens
+  and the `copy` schema.
+- Produces: the anchor `#in-your-repo` (a new section between `#how-it-works` and `#principles`). The anchors
+  `#problem` and `#how-it-works` are unchanged.
+
+**Requirements:**
+1. **Problem (P2):**
+   - The `h2` spans the full width of `.wrap`, with a max width of 24ch.
+   - Below it is a two-column grid (`1fr 1fr`, gap 32px), which stacks to one column below 720px:
+     - **left:** `<ProblemQueue />`, an `aria-hidden` illustration on a `--surface` panel with a `--line` border,
+       radius 14px and 24px padding. It shows three agent characters (`size` 40) in single file, a `→` in
+       `--muted` between each, and a larger human character (`size` 56) at the end with a 4px ring in
+       `color-mix(in srgb, var(--sunflower) 55%, transparent)`. Under that is a caption in `--muted`, 13px:
+       "Agents in single file, all waiting on one person." The caption is visible text; the svgs are
+       `aria-hidden`.
+     - **right:** the four problems from the existing `problem` copy as a `<ul class="problem-list">`. Each
+       `<li>` holds a tomato dot (8px circle in `--tomato`, `aria-hidden`), `<strong>` title in the display face,
+       and body text in `--muted`. Rows are separated by a 1px `--line` border. There are no card backgrounds.
+   - The `.cards` styles and the `--inverse-accent` usage are removed from Problem.
+2. **How it works (loop):**
+   - The heading and intro are as now.
+   - From 720px wide, the `ol.steps` is a 2×2 grid placed over a dashed circular track:
+     - The track is a `::before` on the `ol`: an `inset` ellipse with a 3px dashed border in
+       `color-mix(in srgb, var(--teal) 45%, transparent)` and `border-radius: 50%`.
+     - The four steps sit at the top, right, bottom and left positions (absolutely positioned, or a 3×3 grid with
+       empty corners — implementer's choice).
+     - A `Character kind="troupe" size={56}` sits in the centre.
+     - Each step has no box: its eyebrow label, an `h3` and one line of body text, centred, at most 22ch wide.
+   - Below 720px, the steps are a vertical list with a 2px `--line` connecting rule on the left, and no ring or
+     centre character.
+   - `li.step` and `.step .eyebrow` keep their classes, so the existing order test still applies.
+   - The loop caption stays.
+   - `CastDefs` must be present for the centre character's reflection. Render a `<CastDefs />` in HowItWorks,
+     or move the single `CastDefs` to `index.astro` so it serves both. Gradient ids must stay unique in the
+     document, so render it exactly once per page.
+3. **In your repo (new section):**
+   - A full-bleed band with `background: var(--ink); color: var(--bg)`. Inside `.wrap` is a two-column grid
+     (`1fr 1.1fr`) that stacks below 720px.
+   - **Left:** an eyebrow ("In your repo", coloured `--inverse-accent`), an `h2` ("Your process, as plain
+     config."), and a paragraph.
+   - **Right:** `<pre><code>` with the snippet. Styling:
+     - `background: color-mix(in srgb, var(--bg) 8%, var(--ink))`, radius 12px, padding 16px;
+     - `--font-mono`, 14px, `overflow-x: auto` on the `pre`, and `min-width: 0` on the grid child;
+     - comment lines in `color-mix(in srgb, var(--bg) 70%, var(--ink))`.
+   - The snippet's first line is the comment `# .troupe/theatre.yaml (illustrative)`.
+   - Contrast must pass AA in both themes. The band inverts the theme (ink background), and Task 8's axe
+     checks will verify it.
+4. **Copy:**
+   - Add a `repo` variant to the `copySchema` discriminated union in `src/content.config.ts`:
+     `{ section: 'repo', eyebrow, title, body, caption, snippet: string }`.
+   - Create `src/content/copy/repo.md` with exactly:
+     ```md
+     ---
+     section: repo
+     eyebrow: "In your repo"
+     title: "Your process, as plain config."
+     body: "Roles, who holds them, and where each decision goes, in YAML you can read in a diff and edit by hand."
+     caption: "Illustrative: the syntax isn’t final."
+     snippet: |
+       # .troupe/theatre.yaml (illustrative)
+       roles:
+         product-owner: { held-by: you }
+         engineer:      { held-by: agent/claude-code }
+         reviewer:      { held-by: agent/claude-code }
+       gates:
+         release: { decided-by: product-owner }
+     ---
+     ```
+5. **`index.astro` order:** Hero, Problem, HowItWorks, InYourRepo, Principles, ClosingCta.
+6. **Header nav:** unchanged.
+
+**Tests**, added to `tests/e2e/landing.spec.ts`. Write them first and see them fail.
+```ts
+test('problem section lists four problems as a plain list, with no card grid', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#problem .problem-list > li')).toHaveCount(4);
+  await expect(page.locator('#problem .cards')).toHaveCount(0);
+});
+
+test('problem section shows the queue illustration with its caption', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#problem .character')).toHaveCount(4);
+  await expect(page.locator('#problem')).toContainText('Agents in single file, all waiting on one person.');
+});
+
+test('at 1280px the how-it-works steps sit around a ring with troupe in the centre', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+  await expect(page.locator('#how-it-works .character--troupe')).toBeVisible();
+  const boxes = await page.locator('#how-it-works .step').evaluateAll((els) => els.map((e) => e.getBoundingClientRect()));
+  const [cast, perform, cue, notes] = boxes;
+  expect(cast.top).toBeLessThan(perform.top);   // Cast at the top
+  expect(cue.top).toBeGreaterThan(perform.top); // Cue at the bottom
+  expect(notes.left).toBeLessThan(cast.left);   // Notes on the left
+  expect(perform.left).toBeGreaterThan(cast.left); // Perform on the right
+});
+
+test('at 390px the how-it-works steps stack vertically in order', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 900 });
+  await page.goto('/');
+  const tops = await page.locator('#how-it-works .step').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().top));
+  expect([...tops].sort((a, b) => a - b)).toEqual(tops);
+  await expect(page.locator('#how-it-works .character--troupe')).toBeHidden();
+});
+
+test('"in your repo" band shows the illustrative snippet and caption', async ({ page }) => {
+  await page.goto('/');
+  const band = page.locator('#in-your-repo');
+  await expect(band.locator('pre code')).toContainText('# .troupe/theatre.yaml (illustrative)');
+  await expect(band).toContainText('Illustrative: the syntax isn’t final.');
+});
+
+test('sections appear in the order hero, problem, how, in-your-repo, principles, follow', async ({ page }) => {
+  await page.goto('/');
+  const ids = await page.locator('main > section').evaluateAll((els) => els.map((e) => e.id));
+  expect(ids).toEqual(['top', 'problem', 'how-it-works', 'in-your-repo', 'principles', 'follow']);
+});
+```
+
+**Verify:** `npm run check && npm run test:unit && env -u AI_AGENT -u CLAUDECODE npm run test:e2e`. Everything
+passes, including the existing 320px and 390px no-horizontal-scroll tests and the axe checks from Task 8 in
+both themes. Then take a full-page screenshot at 1280px in light and dark mode, and at 390px in light mode, and
+attach their paths in your report.
+
+**Commit:** "Landing layout v2: problem queue, loop diagram, in-your-repo band"
+
+---
+
 ### Task 10: Owner review, then launch (owner-gated: no subagent runs this task)
 
 This task is run by the controlling session, with the owner, one gate at a time. Every step that changes
 something outside this machine needs the owner's explicit go-ahead at the time it's done.
 
-- [ ] **Step 1: Copy and layout review.**
+- [ ] **Step 1: Copy and layout review** (after Task 11).
   - Run `npm run dev`.
   - The owner reviews:
     - every file in `src/content/copy/`;

@@ -68,26 +68,32 @@ One page, top to bottom. The copy is drafted in the brand voice and **approved b
      - it is off entirely under `prefers-reduced-motion`;
    - eyebrow, H1 (draft: "Your agents need a director.") and a subhead;
    - main call to action "★ Watch on GitHub", and a disabled "Install: coming".
-3. **Problem:** four cards:
-   - one agent, one line;
-   - one bottleneck;
-   - no homework;
-   - no record.
-
-   The layout is **provisional**: the owner judges its height in context before launch.
-4. **How it works:** "A long run, not one night."
-   - The loop is Cast → Perform → Cue → Notes → back to the start ("↺ and again, every showing").
-   - Step labels use the eyebrow style.
-   - Any config shown is labelled "illustrative".
-5. **Principles:** six cards, each with a topic line icon in a faint-bordered tile:
+3. **Problem** (layout "P2", owner 2026-10-07):
+   - the heading spans the full width;
+   - below it, two columns:
+     - **left:** an illustration in the cast style: agents in single file, each passing work to the next, all
+       waiting on one highlighted person;
+     - **right:** the four problems as a plain list, with no boxes: one agent, one line · one bottleneck · no
+       homework · no record.
+4. **How it works:** "A long run, not one night." A **loop diagram**, with no boxes:
+   - the four steps, Cast → Perform → Cue → Notes, sit around a circular track, with the troupe triangle in the
+     centre and "↺ and again, every showing" beneath;
+   - step labels use the eyebrow style, with one plain line of body text per step;
+   - below 720px, the ring is replaced by a vertical list with a connecting line.
+5. **In your repo (new):** a dark ink band with two columns:
+   - **left:** the heading "Your process, as plain config." and a short paragraph;
+   - **right:** a short YAML snippet showing roles, who holds them and where a decision goes.
+   - It's labelled "illustrative: the syntax isn't final" in both the caption and the snippet's first comment.
+6. **Principles:** six cards, each with a topic line icon in a faint-bordered tile. This is the only card grid
+   on the page:
    - local-first, everything in your repo;
    - humans are roles, not a loop;
    - escalation that does its homework;
    - full lineage from the first event;
    - config that survives hand-editing;
    - bring your own agent.
-6. **Closing call to action:** "Watch on GitHub to follow the build."
-7. **Footer:**
+7. **Closing call to action:** "Watch on GitHub to follow the build."
+8. **Footer:**
    - "a project by hps.gd";
    - links to GitHub and the docs;
    - the privacy line ("No cookies. Cookieless page counts via GoatCounter.");
@@ -95,6 +101,8 @@ One page, top to bottom. The copy is drafted in the brand voice and **approved b
    - copyright HPS.GD PTY LTD.
 
 **Layout rules:**
+- Each section has a different shape, so no two neighbouring sections repeat a row of boxes (owner,
+  2026-10-07: "the several rows of 4 boxes is repetitive").
 - Mobile first.
 - Usable from 320px wide, with no horizontal scroll.
 - A 16px minimum side gutter.
@@ -309,6 +317,5 @@ We move to a hand-built docs layout if any of these happens:
 - **Before driving any traffic to the site,** `github.com/troupe-run/troupe.run` must exist and be public.
   - Until then, the GitHub call to action leads to a 404. That's accepted (§2).
   - The link checker excludes that one URL until the repo is published.
-- **Problem-section layout:** in-context review before launch (§3).
 - **Pushing the local brand-guide commits:** these are held until the owner has read the guide.
 - **"The house" and "house rules":** not yet agreed as names. The docs page title carries "name TBC".
