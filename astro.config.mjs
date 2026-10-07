@@ -27,6 +27,7 @@ export default defineConfig({
         './src/styles/starlight.css',
       ],
       components: {
+        Head: './src/components/docs/Head.astro',
         MarkdownContent: './src/components/docs/MarkdownContent.astro',
       },
       sidebar: [

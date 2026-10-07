@@ -3,6 +3,11 @@
 # troupe-run.github.io
 troupe.run — website and landing page
 
+## Development
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Design: `docs/superpowers/specs/2026-10-07-troupe-run-site-design.md`.
+Brand: `docs/brand-guide.md`.
+
 ## Licence
 
 - **Site code** (templates, components, styles, scripts, build config): [MIT](LICENSE).
