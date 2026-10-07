@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import type { Page } from '@playwright/test';
 
 const bowing = (page: Page) => page.locator('[data-cast] .character.is-bowing');

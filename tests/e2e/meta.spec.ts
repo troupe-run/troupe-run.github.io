@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 
 test('landing page declares og:image as https://troupe.run/og.png', async ({ page }) => {
   await page.goto('/');

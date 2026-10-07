@@ -11,7 +11,7 @@ GitHub makes a fork and a pull request for you.
 
 - Node 22 or later, then `npm install`.
 - `npm run dev` serves the site at http://localhost:4321.
-- `npm run test:unit` and `npm run test:e2e` run the tests. The e2e suite builds the site first.
+- `npm run test:unit` and `npm run test:e2e` run the tests. The e2e suite builds the site and serves it on its own port (4329), so it never reuses your dev server. `npm run preview` serves a build on 4321 for you.
 - Brand images are rendered from `brand/`. If you change anything there, run `npm run assets:render` and commit
   the results. CI checks they match.
 

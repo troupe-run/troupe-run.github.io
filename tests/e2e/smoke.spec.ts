@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 
 test('landing page responds 200 with an h1', async ({ page }) => {
   const res = await page.goto('/');

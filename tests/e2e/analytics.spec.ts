@@ -1,6 +1,4 @@
-import { test, expect } from '@playwright/test';
-
-test.beforeEach(async ({ page }) => { await page.route('**/gc.zgo.at/**', (r) => r.abort()); });
+import { test, expect } from './fixtures';
 
 for (const path of ['/', '/docs/programme/what-is-troupe/']) {
   test(`${path} (production build) includes exactly one GoatCounter script for troupe-run`, async ({ page }) => {

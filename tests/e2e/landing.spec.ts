@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, BLOCKED_EXTERNAL } from './fixtures';
 
 const SECTIONS = ['#top', '#problem', '#how-it-works', '#in-your-repo', '#principles', '#follow'];
 const REPO = 'https://github.com/troupe-run/troupe.run';
@@ -12,6 +12,7 @@ test('renders the header, the six landing sections and the footer', async ({ pag
 
 test('renders all sections with JavaScript disabled', async ({ browser }) => {
   const ctx = await browser.newContext({ javaScriptEnabled: false, colorScheme: 'dark' });
+  await ctx.route(BLOCKED_EXTERNAL, (r) => r.abort());
   const page = await ctx.newPage();
   await page.goto('/');
   for (const id of SECTIONS) await expect(page.locator(id)).toBeVisible();
@@ -38,10 +39,11 @@ test('hero cast is human, agent, troupe, agent, human', async ({ page }) => {
   expect(kinds).toEqual(['human', 'agent', 'troupe', 'agent', 'human']);
 });
 
-test('principles section shows six cards, each with a topic icon', async ({ page }) => {
+test('principles section shows six cards, each with exactly one topic icon', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#principles .principle')).toHaveCount(6);
-  await expect(page.locator('#principles .principle .topic-icon')).toHaveCount(6);
+  const perCard = await page.locator('#principles .principle').evaluateAll((els) => els.map((e) => e.querySelectorAll('.topic-icon').length));
+  expect(perCard).toEqual([1, 1, 1, 1, 1, 1]);
 });
 
 test('how it works shows the four steps in order Cast, Perform, Cue, Notes', async ({ page }) => {
@@ -88,10 +90,19 @@ test('page has exactly one h1, and it is the hero title', async ({ page }) => {
   await expect(page.locator('#top h1')).toHaveText('Your agents need a director.');
 });
 
-test('problem section lists four problems as a plain list, with no card grid', async ({ page }) => {
+test('problem section lists four problems as a plain list: not a grid, and items have no card background, border or shadow', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#problem .problem-list > li')).toHaveCount(4);
-  await expect(page.locator('#problem .cards')).toHaveCount(0);
+  const list = page.locator('#problem .problem-list');
+  expect(await list.evaluate((e) => getComputedStyle(e).display)).not.toMatch(/grid/);
+  const items = await list.locator('> li').evaluateAll((els) => els.map((e) => {
+    const s = getComputedStyle(e);
+    return { bg: s.backgroundColor, top: s.borderTopWidth, left: s.borderLeftWidth, right: s.borderRightWidth, shadow: s.boxShadow };
+  }));
+  for (const i of items) {
+    expect(i.bg).toBe('rgba(0, 0, 0, 0)');
+    expect([i.top, i.left, i.right, i.shadow]).toEqual(['0px', '0px', '0px', 'none']);
+  }
 });
 
 test('problem section shows the queue illustration with its caption', async ({ page }) => {
