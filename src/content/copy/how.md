@@ -3,7 +3,7 @@ section: how
 eyebrow: "How the show runs"
 title: "A season, not a single show."
 intro: "Your process runs again and again. Each run gets better."
-loop: "↺ and again, every showing"
+loop: "↻ and again, every showing"
 steps:
   - { label: "Cast", title: "Assign the roles", body: "Agents and people, each in a named role." }
   - { label: "Perform", title: "Run the work", body: "Tasks fork, join, swarm and loop. Not one agent in a line." }

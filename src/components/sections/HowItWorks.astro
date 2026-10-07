@@ -32,6 +32,7 @@ const n = copy.steps.length;
             <circle cx="28" cy="28" r="20" fill="none" stroke="var(--soft)" stroke-width="2" />
             <path d="M28 8 l-5 -4 M28 8 l-5 4" fill="none" stroke="var(--soft)" stroke-width="2" stroke-linecap="round" transform="rotate(45 28 28)" />
           </svg>
+          <span class="mover" data-mover aria-hidden="true"></span>
           {copy.steps.map((s, i) => (
             <button class="dot" type="button" tabindex="-1" data-dot={i} data-pos={i}
                     aria-label={`Go to step ${i + 1} of ${n}: ${s.label}`} aria-current={i === 0 ? 'true' : undefined}></button>
@@ -81,6 +82,14 @@ const n = copy.steps.length;
       el.style.transform = `translateX(${x}px)`;
     };
 
+    const mover = root.querySelector<HTMLElement>('[data-mover]')!;
+    // The dial: four marks at 0/90/180/270 degrees clockwise from 12 o'clock on a circle of radius 20 in a 56px box.
+    const placeMover = (deg: number) => {
+      const r = (deg * Math.PI) / 180;
+      mover.style.left = `${28 + 20 * Math.sin(r)}px`;
+      mover.style.top = `${28 - 20 * Math.cos(r)}px`;
+    };
+
     let shownIndex = 0;
     let running: { finish: () => void } | null = null;
 
@@ -95,6 +104,7 @@ const n = copy.steps.length;
       ghost.hidden = true;
       const { x, w } = box(index);
       put(indicator, x, w);
+      placeMover(index * 90);
     };
 
     const show = (index: number, cause: 'auto' | 'user') => {
@@ -126,8 +136,13 @@ const n = copy.steps.length;
       const railW = tabsEl.offsetWidth;
       ghost.hidden = !wrap;
 
+      // The dot travels the way the slide does: forward is clockwise (Notes -> Cast continues on from 9 to 12),
+      // a jump to an earlier step goes anticlockwise.
+      const fromDeg = from * 90;
+      const toDeg = dir > 0 ? fromDeg + (((index - from + total) % total) * 90) : fromDeg - (((from - index + total) % total) * 90);
       const frame = (p: number) => {
         const e = ease(p);
+        placeMover(lerp(fromDeg, toDeg, e));
         slides[from].style.transform = `translateX(${-dir * 100 * e}%)`;
         slides[index].style.transform = `translateX(${dir * 100 * (1 - e)}%)`;
         if (wrap) {
@@ -225,7 +240,7 @@ const n = copy.steps.length;
   .ring { position: absolute; inset: 0; }
   .dot { position: absolute; width: 24px; height: 24px; padding: 0; border: 0; background: none; cursor: pointer; margin: -12px 0 0 -12px; }
   .dot::after { content: ''; position: absolute; inset: 7px; border-radius: 50%; background: var(--soft); }
-  .dot[aria-current='true']::after { background: var(--tomato); }
+  .mover { position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--tomato); pointer-events: none; z-index: 1; left: 28px; top: 8px; }
   .dot[data-pos='0'] { left: 28px; top: 8px; }
   .dot[data-pos='1'] { left: 48px; top: 28px; }
   .dot[data-pos='2'] { left: 28px; top: 48px; }

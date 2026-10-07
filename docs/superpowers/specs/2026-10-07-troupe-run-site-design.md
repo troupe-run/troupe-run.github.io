@@ -104,13 +104,16 @@ One page, top to bottom. The copy is drafted in the brand voice and **approved b
      and the stage clips the track (`overflow: hidden`): nothing shifts and the page never scrolls sideways.
      Off-stage cards are `inert` and `aria-hidden`. A single underline indicator slides to the active tab in
      parallel, with the same duration and easing; on the wrap it runs off the right end of the strip while a
-     second one enters from the left onto Cast. The tab label colour changes in sync. Under
+     second one enters from the left onto Cast. The tab label colour changes in sync. The loop dial's current dot is
+     one moving dot that travels the ring in the same 500ms: clockwise for forward moves (the wrap continues from 9
+     to 12 o'clock), anticlockwise for a jump to an earlier step, over four faint static marks. The caption
+     glyph is "↻" to match the clockwise direction (owner review 2026-10-08, round 6). Under
      `prefers-reduced-motion` there is no sliding: the card swaps and the indicator jumps at once;
    - accessibility: a group with `aria-roledescription="carousel"`, a `tablist` with roving tabindex and
      Left/Right/Home/End keys, `tabpanel` slides labelled "N of 4: Step", and a live region that is `off` while
      rotating and `polite` once it has stopped;
    - without JavaScript all four slides show stacked and the controls are hidden;
-   - "↺ and again, every showing" stays beneath the carousel.
+   - "↻ and again, every showing" stays beneath the carousel.
 5. **The cast (replaces "In your repo", owner review 2026-10-08):** a dark ink band with two columns, id `#the-cast`:
    - **left:** the eyebrow "The cast", the heading "Your process, as a cast list." and a short paragraph;
    - **right:** a playbill-style list of four roles (product owner, engineer, reviewer, QA). Each row has a

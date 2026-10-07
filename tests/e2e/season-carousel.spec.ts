@@ -301,3 +301,79 @@ test('with prefers-reduced-motion a tab click swaps the card at once, with no tr
   expect(Math.abs(box.left - (await tabBox(page, 2)).left)).toBeLessThanOrEqual(2);
   expect(await page.locator(`${CAROUSEL} [data-tab="2"]`).evaluate((e) => getComputedStyle(e).transitionDuration)).toBe('0s');
 });
+
+// --- Loop dial (owner round 6): one moving dot travelling the ring ---
+// Angle of the moving dot in degrees clockwise from 12 o'clock, measured around the centre of the dial.
+const dotAngle = (page: Page) => page.locator(`${CAROUSEL} .dial`).evaluate((dial) => {
+  const d = dial.getBoundingClientRect();
+  const m = dial.querySelector('[data-mover]')!.getBoundingClientRect();
+  const dx = m.left + m.width / 2 - (d.left + d.width / 2);
+  const dy = m.top + m.height / 2 - (d.top + d.height / 2);
+  return ((Math.atan2(dx, -dy) * 180) / Math.PI + 360) % 360;
+});
+const dotOffMark = (page: Page, i: number) => page.locator(`${CAROUSEL} .dial`).evaluate((dial, n) => {
+  const mover = dial.querySelector('[data-mover]')!.getBoundingClientRect();
+  const mark = dial.querySelectorAll('.dot')[n].getBoundingClientRect();
+  return Math.hypot(mover.left + mover.width / 2 - (mark.left + mark.width / 2), mover.top + mover.height / 2 - (mark.top + mark.height / 2));
+}, i);
+
+test('the dial has one moving dot over four static marks, and the dot starts on the 12 o’clock mark', async ({ page }) => {
+  await open(page);
+  await expect(page.locator(`${CAROUSEL} [data-mover]`)).toHaveCount(1);
+  await expect(page.locator(`${CAROUSEL} .dot`)).toHaveCount(4);
+  expect(await dotOffMark(page, 0)).toBeLessThanOrEqual(1);
+});
+
+test('mid-transition from Cast to Perform the moving dot lies strictly between 0 and 90 degrees on the clockwise arc', async ({ page }) => {
+  await page.clock.install();
+  await open(page);
+  await page.clock.runFor(6000 + 250);
+  const a = await dotAngle(page);
+  expect(a).toBeGreaterThan(0);
+  expect(a).toBeLessThan(90);
+});
+
+test('after the transition the moving dot sits on the target mark (±1px)', async ({ page }) => {
+  await page.clock.install();
+  await open(page);
+  await page.clock.runFor(6000 + 600);
+  expect(await dotOffMark(page, 1)).toBeLessThanOrEqual(1);
+});
+
+test('on the Notes to Cast wrap the dot passes through the 9 to 12 arc (270 to 360 degrees), not back through 6 or 3', async ({ page }) => {
+  await page.clock.install();
+  await open(page);
+  await page.clock.runFor(6100 * 3 + 600);
+  expect(await dotOffMark(page, 3)).toBeLessThanOrEqual(1);
+  await page.clock.runFor(5350); // 250ms into the wrap that starts at 24s
+  const a = await dotAngle(page);
+  expect(a).toBeGreaterThan(270);
+  expect(a).toBeLessThan(360);
+  await page.clock.runFor(400);
+  expect(await dotOffMark(page, 0)).toBeLessThanOrEqual(1);
+});
+
+test('a jump from Cue back to Perform moves the dot anticlockwise, strictly between 90 and 180 degrees', async ({ page }) => {
+  await page.clock.install();
+  await open(page);
+  await page.getByRole('tab', { name: 'Cue' }).click();
+  await page.clock.runFor(600);
+  await page.getByRole('tab', { name: 'Perform' }).click();
+  await page.clock.runFor(250);
+  const a = await dotAngle(page);
+  expect(a).toBeGreaterThan(90);
+  expect(a).toBeLessThan(180);
+});
+
+test('with prefers-reduced-motion the dial dot lands on the target mark at once', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.clock.install();
+  await open(page);
+  await page.getByRole('tab', { name: 'Cue' }).click();
+  expect(await dotOffMark(page, 2)).toBeLessThanOrEqual(1);
+});
+
+test('the caption glyph is the clockwise arrow ↻', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#how-it-works .loop')).toHaveText('↻ and again, every showing');
+});
