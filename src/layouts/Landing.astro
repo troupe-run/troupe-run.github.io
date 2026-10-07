@@ -1,0 +1,34 @@
+---
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/dm-sans';
+import '@fontsource/dm-mono/400.css';
+import '@fontsource/dm-mono/500.css';
+import '../styles/tokens.css';
+import '../styles/global.css';
+interface Props { title: string; description: string }
+const { title, description } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <script is:inline>
+      (() => {
+        let stored = null;
+        try { stored = localStorage.getItem('starlight-theme'); } catch {}
+        const theme = stored === 'light' || stored === 'dark'
+          ? stored
+          : (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <slot name="head" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

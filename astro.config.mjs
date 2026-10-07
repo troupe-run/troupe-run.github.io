@@ -10,6 +10,14 @@ export default defineConfig({
       title: 'troupe docs',
       editLink: { baseUrl: 'https://github.com/troupe-run/troupe-run.github.io/edit/main/' },
       lastUpdated: true,
+      customCss: [
+        '@fontsource-variable/bricolage-grotesque',
+        '@fontsource-variable/dm-sans',
+        '@fontsource/dm-mono/400.css',
+        '@fontsource/dm-mono/500.css',
+        './src/styles/tokens.css',
+        './src/styles/starlight.css',
+      ],
       sidebar: [
         { label: 'Programme', items: [{ slug: 'docs/programme/what-is-troupe' }] },
       ],

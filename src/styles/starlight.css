@@ -1,0 +1,24 @@
+:root, :root[data-theme='light'], :root[data-theme='dark'] {
+  --sl-font: var(--font-body);
+  --sl-font-mono: var(--font-mono);
+  --sl-color-white: var(--ink);
+  --sl-color-gray-1: color-mix(in srgb, var(--ink) 90%, var(--bg));
+  --sl-color-gray-2: color-mix(in srgb, var(--ink) 80%, var(--bg));
+  --sl-color-gray-3: var(--muted);
+  --sl-color-gray-4: color-mix(in srgb, var(--ink) 45%, var(--bg));
+  --sl-color-gray-5: color-mix(in srgb, var(--ink) 18%, var(--bg));
+  --sl-color-gray-6: color-mix(in srgb, var(--ink) 7%, var(--bg));
+  --sl-color-gray-7: color-mix(in srgb, var(--ink) 3%, var(--bg));
+  --sl-color-black: var(--bg);
+  --sl-color-accent-low: color-mix(in srgb, var(--tomato) 18%, var(--bg));
+  --sl-color-accent: var(--tomato-text);
+  --sl-color-accent-high: var(--tomato-text);
+  --sl-color-text: var(--ink);
+  --sl-color-text-accent: var(--tomato-text);
+  --sl-color-bg: var(--bg);
+  --sl-color-bg-nav: var(--surface);
+  --sl-color-bg-sidebar: var(--surface);
+}
+.sl-markdown-content h1, .sl-markdown-content h2, .sl-markdown-content h3, h1#_top {
+  font-family: var(--font-display); font-weight: 800; letter-spacing: -.02em;
+}
