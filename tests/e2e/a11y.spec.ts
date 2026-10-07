@@ -10,10 +10,11 @@ const PAGES = [
 
 for (const theme of ['light', 'dark'] as const) {
   for (const [name, path] of PAGES) {
-    test(`axe finds no serious or critical WCAG 2.2 AA violations on the ${name} (${theme})`, async ({ page }) => {
+    test(`axe reports no serious or critical violations (WCAG 2.2 AA rule tags) on the ${name} (${theme})`, async ({ page }) => {
       await page.addInitScript((t) => localStorage.setItem('starlight-theme', t), theme);
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.goto(path);
+      await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
       const results = await new AxeBuilder({ page })
         .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
         .analyze();
@@ -25,15 +26,21 @@ for (const theme of ['light', 'dark'] as const) {
 
 test('every interactive element on the landing page is reachable by Tab', async ({ page }) => {
   await page.goto('/');
-  const expected = await page.locator('a[href], select, button:not([disabled])').count();
-  const seen = new Set<string>();
-  for (let i = 0; i < expected + 5; i++) {
+  // Mark each visible, non-tabindex=-1 interactive element with a stable identity.
+  const expected = await page.evaluate(() => {
+    const els = [...document.querySelectorAll<HTMLElement>('a[href], select, button:not([disabled])')].filter(
+      (el) => el.getAttribute('tabindex') !== '-1' && el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden',
+    );
+    els.forEach((el, i) => el.setAttribute('data-tab-id', String(i)));
+    return els.map((el, i) => `${i}|${el.tagName}|${el.getAttribute('href') ?? ''}|${el.textContent?.trim().slice(0, 30)}`);
+  });
+  expect(expected.length).toBeGreaterThan(0);
+  const focused = new Set<number>();
+  for (let i = 0; i < expected.length + 5; i++) {
     await page.keyboard.press('Tab');
-    const id = await page.evaluate(() => {
-      const el = document.activeElement as HTMLElement | null;
-      return el ? `${el.tagName}|${el.getAttribute('href') ?? ''}|${el.textContent?.trim().slice(0, 30)}|${[...document.querySelectorAll('*')].indexOf(el)}` : '';
-    });
-    if (id) seen.add(id);
+    const id = await page.evaluate(() => document.activeElement?.getAttribute('data-tab-id') ?? null);
+    if (id !== null) focused.add(Number(id));
   }
-  expect(seen.size).toBeGreaterThanOrEqual(expected);
+  const missed = expected.filter((_, i) => !focused.has(i));
+  expect(missed).toEqual([]);
 });
