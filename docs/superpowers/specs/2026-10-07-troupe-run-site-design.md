@@ -58,6 +58,13 @@ One page, top to bottom. The copy is drafted in the brand voice and **approved b
 2. **Hero:**
    - the curtain-call cast: human, agent, troupe (the triangle, centred), agent, human, each with its
      reflection, and a bow on hover;
+   - **idle bows:** when no character has been hovered for 5 seconds, a random character bows by itself, never
+     the same one twice in a row. The rules:
+     - it only happens while the hero is on screen and the tab is visible;
+     - it stops for good after 6 idle bows per page view (about 30 seconds). Any hover resets the
+       5-second idle timer but not that cap. This keeps it inside WCAG 2.2.2, which covers content that moves on
+       its own for more than 5 seconds;
+     - it is off entirely under `prefers-reduced-motion`;
    - eyebrow, H1 (draft: "Your agents need a director.") and a subhead;
    - main call to action "★ Watch on GitHub", and a disabled "Install: coming".
 3. **Problem:** four cards:
@@ -180,6 +187,9 @@ troupe-run.github.io/
   - It draws the reflection: the same shape, inverted, fading from 45% opacity to transparent by about 75% of
     its height.
   - The bow on hover is turned off under `prefers-reduced-motion`.
+- **`CastIdle`** is a small client script that runs the idle bows (§3).
+  - It uses an IntersectionObserver for "hero on screen" and `visibilitychange` for "tab visible".
+  - It triggers the same bow as hover by toggling a class, so there is one animation definition.
 - **`Mark.astro`** draws the mark (circle, triangle, square, with round eyes) and the lock-up.
 - **`TopicIcon.astro`** draws the topic line icons, in a 36px tile with a `--soft` border and `--tomato-text`
   strokes.
@@ -263,7 +273,13 @@ We move to a hand-built docs layout if any of these happens:
     serious or critical violations;
   - this includes colour contrast, so a token change that fails WCAG AA fails the build.
 - **Viewport:** at 320px and 390px wide, the page doesn't scroll horizontally.
-- **Reduced motion:** with reduced motion emulated, hovering a character doesn't animate it.
+- **Reduced motion:** with reduced motion emulated, hovering a character doesn't animate it, and no idle bow
+  fires.
+- **Idle bows** (with a fake clock):
+  - after 5 seconds with no hover, exactly one character bows;
+  - a hover resets the timer;
+  - no bow fires once the hero has scrolled out of view;
+  - the bows stop after the sixth one.
 - **Token discipline:** no hex colour values appear in `src/components/` or `src/pages/`. Only `tokens.css`
   holds them.
 - **Test naming:** each test's name says exactly what its assertions check, and no more.

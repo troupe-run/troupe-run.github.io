@@ -148,7 +148,9 @@ would pass as text in dark mode unchanged, but gets a lighter `-text` shade too,
   soft sunflower radial wash) and the curtain-call line-up. Use at most one device per section.
 - **Motion:**
   - Characters may "bow" on hover: a small dip and tilt of about 200ms.
-  - Nothing moves on its own.
+  - **Idle bows:** in a cast line-up, if nothing has been hovered for 5 seconds, one random character bows by
+    itself. They run only while the cast is on screen, and stop after 6 per page view.
+  - Nothing else moves on its own.
   - Every animation is turned off under `prefers-reduced-motion`.
 
 ## 6. The theatre metaphor
