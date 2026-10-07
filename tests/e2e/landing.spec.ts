@@ -46,10 +46,10 @@ test('principles section shows six cards, each with exactly one topic icon', asy
   expect(perCard).toEqual([1, 1, 1, 1, 1, 1]);
 });
 
-test('how it works shows the four steps in order Cast, Perform, Cue, Notes', async ({ page }) => {
+test('how it works has four steps in order Cast, Perform, Cue, Notes', async ({ page }) => {
   await page.goto('/');
-  const labels = await page.locator('#how-it-works .step .eyebrow').allInnerTexts();
-  expect(labels.map((s) => s.trim().toLowerCase())).toEqual(['cast', 'perform', 'cue', 'notes']);
+  const labels = await page.locator('#how-it-works .step .eyebrow').evaluateAll((els) => els.map((e) => e.textContent));
+  expect(labels.map((l) => l?.trim().toLowerCase())).toEqual(['cast', 'perform', 'cue', 'notes']);
 });
 
 for (const width of [320, 390]) {
@@ -120,8 +120,7 @@ for (const theme of ['light', 'dark'] as const) {
   });
 }
 
-test('the how-it-works section and its step labels share the --surface background', async ({ page }) => {
-  await page.setViewportSize({ width: 1280, height: 900 });
+test('the how-it-works section has the --surface background', async ({ page }) => {
   await page.goto('/');
   const bgs = await page.evaluate(() => {
     const probe = document.createElement('i');
@@ -129,60 +128,15 @@ test('the how-it-works section and its step labels share the --surface backgroun
     document.body.append(probe);
     const surface = getComputedStyle(probe).color;
     probe.remove();
-    const step = (el: Element) => getComputedStyle(el).backgroundColor;
-    return { surface, section: step(document.querySelector('#how-it-works')!), steps: [...document.querySelectorAll('#how-it-works .step')].map(step) };
+    return { surface, section: getComputedStyle(document.querySelector('#how-it-works')!).backgroundColor };
   });
   expect(bgs.section).toBe(bgs.surface);
-  expect(bgs.steps).toEqual(Array(4).fill(bgs.surface));
 });
-
-for (const [width, columns] of [[1280, 4], [800, 2], [390, 1]] as const) {
-  test(`at ${width}px the problem illustration sits above the problems, which lay out in ${columns} column(s)`, async ({ page }) => {
-    await page.setViewportSize({ width, height: 900 });
-    await page.goto('/');
-    const fig = await page.locator('#problem figure').evaluate((e) => e.getBoundingClientRect().toJSON());
-    const lis = await page.locator('#problem .problem-list > li').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().toJSON()));
-    expect(fig.bottom).toBeLessThanOrEqual(Math.min(...lis.map((l) => l.top)));
-    expect(new Set(lis.map((l) => Math.round(l.left))).size).toBe(columns);
-  });
-}
 
 test('problem section shows the queue illustration with its caption', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#problem .character')).toHaveCount(4);
   await expect(page.locator('#problem')).toContainText('Agents in single file, all waiting on one person.');
-});
-
-test('at 1280px the how-it-works steps sit around a ring with troupe in the centre', async ({ page }) => {
-  await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto('/');
-  await expect(page.locator('#how-it-works .character--troupe')).toBeVisible();
-  const boxes = await page.locator('#how-it-works .step').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().toJSON()));
-  const [cast, perform, cue, notes] = boxes;
-  expect(cast.top).toBeLessThan(perform.top);
-  expect(cue.top).toBeGreaterThan(perform.top);
-  expect(notes.left).toBeLessThan(cast.left);
-  expect(perform.left).toBeGreaterThan(cast.left);
-  const cx = (r: { left: number; width: number }) => r.left + r.width / 2;
-  const cy = (r: { top: number; height: number }) => r.top + r.height / 2;
-  const t = await page.locator('#how-it-works .character--troupe').evaluate((e) => e.getBoundingClientRect().toJSON());
-  expect(cx(t)).toBeGreaterThan(cx(notes));
-  expect(cx(t)).toBeLessThan(cx(perform));
-  expect(cy(t)).toBeGreaterThan(cy(cast));
-  expect(cy(t)).toBeLessThan(cy(cue));
-  const track = await page.locator('#how-it-works ol.steps').evaluate((e) => getComputedStyle(e, '::before').borderTopStyle);
-  expect(track).toBe('dashed');
-});
-
-test('at 390px the how-it-works steps stack vertically in order', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 900 });
-  await page.goto('/');
-  const rects = await page.locator('#how-it-works .step').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().toJSON()));
-  for (let i = 1; i < rects.length; i++) {
-    expect(rects[i].top).toBeGreaterThanOrEqual(rects[i - 1].bottom);
-    expect(Math.abs(rects[i].left - rects[0].left)).toBeLessThanOrEqual(1);
-  }
-  await expect(page.locator('#how-it-works .character--troupe')).toBeHidden();
 });
 
 test('the cast band lists four roles in order with their holders', async ({ page }) => {

@@ -81,13 +81,28 @@ One page, top to bottom. The copy is drafted in the brand voice and **approved b
    - owner review 2026-10-08 (round 3): the four problems are dark cards (ink background, page-colour text, 14px
      radius, 16px padding, no border, 12px gap, equal height per row). Titles use the display face in the
      inverse accent. There are no bullet dots.
-4. **How it works:** "A season, not a single show." (owner review 2026-10-08; was "A long run, not one night.") A **loop diagram**, with no boxes. The whole
-   section has a full-bleed `--surface` background under the curtain stripe (owner review 2026-10-08, round 3), and the
-   step labels use the same colour to mask the dashed track:
-   - the four steps, Cast → Perform → Cue → Notes, sit around a circular track, with the troupe triangle in the
-     centre and "↺ and again, every showing" beneath;
-   - step labels use the eyebrow style, with one plain line of body text per step;
-   - below 720px, the ring is replaced by a vertical list with a connecting line.
+4. **How it works:** "A season, not a single show." (owner review 2026-10-08; was "A long run, not one night.").
+   The whole section has a full-bleed `--surface` background under the curtain stripe (owner review 2026-10-08,
+   round 3). Owner review 2026-10-08, round 4: the ring diagram became an **auto-advancing carousel with a loop
+   dial**:
+   - a tab strip of the four step labels (Cast, Perform, Cue, Notes) in the eyebrow style, the current one
+     highlighted; on the right a loop dial (a ring with four dots at 12, 3, 6 and 9 o'clock, the current one
+     tomato, with a small arrowhead showing the direction of travel). There are no previous, next or
+     pause/play buttons (owner amendment 2026-10-08, "just automate it");
+   - one slide at a time, as a card with the step label, title, body and a small scene of characters. The
+     troupe triangle is in every scene at a different position: left (Cast), right (Perform), centre (Cue), top
+     (Notes);
+   - it advances every 6s, wrapping Notes to Cast. It pauses on hover, while a tab has keyboard focus, while off
+     screen or with the tab hidden. Under `prefers-reduced-motion` it never advances on its own. Activating a
+     tab or a dial dot (or using the arrow, Home and End keys on the tablist) jumps to that step and stops the
+     auto-advance for the rest of the page view. That is the WCAG 2.2.2 stop mechanism, as in the APG carousel
+     pattern where rotation stops once the user activates a control. The slide change is a 250ms fade and
+     slide, and none under reduced motion;
+   - accessibility: a group with `aria-roledescription="carousel"`, a `tablist` with roving tabindex and
+     Left/Right/Home/End keys, `tabpanel` slides labelled "N of 4: Step", and a live region that is `off` while
+     rotating and `polite` once it has stopped;
+   - without JavaScript all four slides show stacked and the controls are hidden;
+   - "↺ and again, every showing" stays beneath the carousel.
 5. **The cast (replaces "In your repo", owner review 2026-10-08):** a dark ink band with two columns, id `#the-cast`:
    - **left:** the eyebrow "The cast", the heading "Your process, as a cast list." and a short paragraph;
    - **right:** a playbill-style list of four roles (product owner, engineer, reviewer, QA). Each row has a

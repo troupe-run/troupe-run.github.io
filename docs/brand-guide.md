@@ -153,6 +153,11 @@ would pass as text in dark mode unchanged, but gets a lighter `-text` shade too,
   - Characters may "bow" on hover: a small dip and tilt of about 200ms.
   - **Idle bows:** in a cast line-up, if nothing has been hovered for 5 seconds, one random character bows by
     itself. They run only while the cast is on screen, and stop after 6 per page view.
+  - **The "season" carousel** is the second, and only other, self-moving element (owner, 2026-10-08). It
+    advances one step every 6 seconds. It pauses on hover, while a tab has keyboard focus, while it is off
+    screen and while the tab is hidden, and activating any tab or dial dot stops it for the rest of the page
+    view (the WCAG 2.2.2 stop mechanism; there is no Pause button). Under `prefers-reduced-motion` it never
+    advances on its own.
   - Nothing else moves on its own.
   - Every animation is turned off under `prefers-reduced-motion`.
 
