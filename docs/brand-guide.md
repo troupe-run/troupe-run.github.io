@@ -30,7 +30,8 @@ social posts. If something here is wrong or missing, fix this file first, then t
   - the gap between heads is about 0.1h–0.15h;
   - the corner radius of the agent square is 0.28h.
 - **Eyes:**
-  - two white dots on the circle and the triangle, and two small white rounded rectangles on the square;
+  - every head has two round white eyes, whatever its shape. Shape-matched eyes were tried (square eyes on
+    the square, triangle eyes on the triangle) and rejected on 2026-10-07: triangle eyes did not read as eyes;
   - the triangle's eyes sit lower, in the wide part of the shape. That reads as deliberate with the triangle in
     the middle, which is why it goes there.
 - **Clear space:** keep one head's width (h) clear on every side of the mark or lock-up.
@@ -133,7 +134,7 @@ would pass as text in dark mode unchanged, but gets a lighter `-text` shade too,
   - **reflections:** each character's body is a copy of its head at the same size, flipped upside down
     below it. It starts at 45% opacity and fades to transparent by about 75% of its height. This is the only
     gradient in the style;
-  - faces are optional and minimal: two dots at most;
+  - faces are optional and minimal: two round eyes, never shaped to match the head;
   - props (a tick, a diff, a clipboard) are simple shapes in `--ink` or `--sunflower`.
 - **Characters are not icons.** Topic icons (for example on feature cards) are separate line icons:
   - 2px strokes in `--tomato-text`;
