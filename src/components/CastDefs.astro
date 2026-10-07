@@ -1,0 +1,13 @@
+---
+const kinds = [['human', 'lilac'], ['agent', 'teal'], ['troupe', 'tomato']] as const;
+---
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    {kinds.map(([kind, colour]) => (
+      <linearGradient id={`cast-fade-${kind}`} x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0" style={`stop-color: var(--${colour}); stop-opacity: .45`} />
+        <stop offset="0.75" style={`stop-color: var(--${colour}); stop-opacity: 0`} />
+      </linearGradient>
+    ))}
+  </defs>
+</svg>
