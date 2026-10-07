@@ -1,4 +1,5 @@
 ---
+import ProblemQueue from '../ProblemQueue.astro';
 import { getCopy } from '../../lib/copy';
 const copy = await getCopy('problem');
 ---
@@ -6,15 +7,26 @@ const copy = await getCopy('problem');
   <div class="wrap">
     <p class="eyebrow">{copy.eyebrow}</p>
     <h2 id="problem-title">{copy.title}</h2>
-    <ul class="cards">{copy.cards.map((c) => <li><strong>{c.title}</strong><span>{c.body}</span></li>)}</ul>
+    <div class="grid">
+      <ProblemQueue />
+      <ul class="problem-list">
+        {copy.cards.map((c) => (
+          <li><span class="dot" aria-hidden="true"></span><div><strong>{c.title}</strong><span class="body">{c.body}</span></div></li>
+        ))}
+      </ul>
+    </div>
   </div>
 </section>
 <style>
   .problem { padding: 40px 0; }
-  h2 { font-size: clamp(24px, 4vw, 34px); max-width: 26ch; }
-  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; list-style: none; padding: 0; margin: 20px 0 0; }
-  @media (max-width: 900px) { .cards { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 479px) { .cards { grid-template-columns: 1fr; } }
-  li { background: var(--ink); color: var(--bg); border-radius: 12px; padding: 14px 16px; }
-  strong { display: block; font-family: var(--font-display); font-size: 17px; color: var(--inverse-accent); margin-bottom: 4px; }
+  h2 { font-size: clamp(24px, 4vw, 34px); max-width: 24ch; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 20px; align-items: start; }
+  @media (max-width: 719px) { .grid { grid-template-columns: 1fr; } }
+  .problem-list { list-style: none; padding: 0; margin: 0; }
+  .problem-list li { display: flex; gap: 12px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .problem-list li:first-child { padding-top: 0; }
+  .problem-list li:last-child { border-bottom: 0; }
+  .dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--tomato); margin-top: 9px; }
+  strong { display: block; font-family: var(--font-display); font-size: 17px; margin-bottom: 2px; }
+  .body { color: var(--muted); }
 </style>

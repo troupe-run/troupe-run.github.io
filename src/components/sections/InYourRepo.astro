@@ -1,0 +1,29 @@
+---
+import { getCopy } from '../../lib/copy';
+const copy = await getCopy('repo');
+---
+<section id="in-your-repo" class="repo" aria-labelledby="repo-title">
+  <div class="wrap grid">
+    <div class="text">
+      <p class="eyebrow">{copy.eyebrow}</p>
+      <h2 id="repo-title">{copy.title}</h2>
+      <p class="body">{copy.body}</p>
+    </div>
+    <div class="code">
+      <pre tabindex="0"><code>{copy.snippet}</code></pre>
+      <p class="caption">{copy.caption}</p>
+    </div>
+  </div>
+</section>
+<style>
+  .repo { background: var(--ink); color: var(--bg); padding: 48px 0; }
+  .grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 32px; align-items: center; }
+  @media (max-width: 719px) { .grid { grid-template-columns: 1fr; } }
+  .code { min-width: 0; }
+  .eyebrow { color: var(--inverse-accent); }
+  h2 { font-size: clamp(24px, 4vw, 34px); margin: 6px 0 12px; color: var(--bg); }
+  .body { margin: 0; }
+  pre { margin: 0; background: color-mix(in srgb, var(--bg) 8%, var(--ink)); border-radius: 12px; padding: 16px; overflow-x: auto; font-family: var(--font-mono); font-size: 14px; line-height: 1.6; }
+  code { font-family: inherit; }
+  .caption { margin: 10px 0 0; font-size: 13px; color: color-mix(in srgb, var(--bg) 70%, var(--ink)); }
+</style>

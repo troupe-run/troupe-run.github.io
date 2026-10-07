@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-const SECTIONS = ['#top', '#problem', '#how-it-works', '#principles', '#follow'];
+const SECTIONS = ['#top', '#problem', '#how-it-works', '#in-your-repo', '#principles', '#follow'];
 const REPO = 'https://github.com/troupe-run/troupe.run';
 
-test('renders header, all five sections and the footer', async ({ page }) => {
+test('renders the header, the six landing sections and the footer', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('header.site-header')).toBeVisible();
   for (const id of SECTIONS) await expect(page.locator(id)).toBeVisible();
@@ -86,4 +86,49 @@ test('page has exactly one h1, and it is the hero title', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('h1')).toHaveCount(1);
   await expect(page.locator('#top h1')).toHaveText('Your agents need a director.');
+});
+
+test('problem section lists four problems as a plain list, with no card grid', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#problem .problem-list > li')).toHaveCount(4);
+  await expect(page.locator('#problem .cards')).toHaveCount(0);
+});
+
+test('problem section shows the queue illustration with its caption', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#problem .character')).toHaveCount(4);
+  await expect(page.locator('#problem')).toContainText('Agents in single file, all waiting on one person.');
+});
+
+test('at 1280px the how-it-works steps sit around a ring with troupe in the centre', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+  await expect(page.locator('#how-it-works .character--troupe')).toBeVisible();
+  const boxes = await page.locator('#how-it-works .step').evaluateAll((els) => els.map((e) => e.getBoundingClientRect()));
+  const [cast, perform, cue, notes] = boxes;
+  expect(cast.top).toBeLessThan(perform.top);
+  expect(cue.top).toBeGreaterThan(perform.top);
+  expect(notes.left).toBeLessThan(cast.left);
+  expect(perform.left).toBeGreaterThan(cast.left);
+});
+
+test('at 390px the how-it-works steps stack vertically in order', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 900 });
+  await page.goto('/');
+  const tops = await page.locator('#how-it-works .step').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().top));
+  expect([...tops].sort((a, b) => a - b)).toEqual(tops);
+  await expect(page.locator('#how-it-works .character--troupe')).toBeHidden();
+});
+
+test('"in your repo" band shows the illustrative snippet and caption', async ({ page }) => {
+  await page.goto('/');
+  const band = page.locator('#in-your-repo');
+  await expect(band.locator('pre code')).toContainText('# .troupe/theatre.yaml (illustrative)');
+  await expect(band).toContainText('Illustrative: the syntax isn’t final.');
+});
+
+test('sections appear in the order hero, problem, how, in-your-repo, principles, follow', async ({ page }) => {
+  await page.goto('/');
+  const ids = await page.locator('main > section').evaluateAll((els) => els.map((e) => e.id));
+  expect(ids).toEqual(['top', 'problem', 'how-it-works', 'in-your-repo', 'principles', 'follow']);
 });

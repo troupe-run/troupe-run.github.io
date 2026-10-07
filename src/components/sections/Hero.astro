@@ -1,5 +1,4 @@
 ---
-import CastDefs from '../CastDefs.astro';
 import Character from '../Character.astro';
 import { getCopy } from '../../lib/copy';
 const copy = await getCopy('hero');
@@ -7,7 +6,6 @@ const cast = ['human', 'agent', 'troupe', 'agent', 'human'] as const;
 ---
 <section id="top" class="hero">
   <div class="wrap">
-    <CastDefs />
     <div class="cast" data-cast>{cast.map((k) => <Character kind={k} />)}</div>
     <p class="eyebrow">{copy.eyebrow}</p>
     <h1>{copy.title}</h1>

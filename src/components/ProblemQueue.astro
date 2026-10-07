@@ -1,0 +1,19 @@
+---
+import Character from './Character.astro';
+---
+<figure class="queue">
+  <div class="line" aria-hidden="true">
+    <Character kind="agent" size={40} /><span class="arrow">→</span>
+    <Character kind="agent" size={40} /><span class="arrow">→</span>
+    <Character kind="agent" size={40} /><span class="arrow">→</span>
+    <span class="human"><Character kind="human" size={56} /></span>
+  </div>
+  <figcaption>Agents in single file, all waiting on one person.</figcaption>
+</figure>
+<style>
+  .queue { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px; }
+  .line { display: flex; align-items: flex-end; justify-content: center; gap: 10px; flex-wrap: wrap; }
+  .arrow { color: var(--muted); align-self: center; font-size: 18px; }
+  .human { display: inline-flex; border-radius: 50%; box-shadow: 0 0 0 4px color-mix(in srgb, var(--sunflower) 55%, transparent); padding: 0; }
+  figcaption { color: var(--muted); font-size: 13px; text-align: center; margin-top: 28px; }
+</style>
