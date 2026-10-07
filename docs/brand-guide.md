@@ -192,6 +192,8 @@ check.
     no record kept;
   - label anything unbuilt as intent ("pre-alpha", "illustrative");
   - allow one wry line per section at most.
+  - say "project", not "repo", "YAML" or "config", in user-facing copy, except where the technical term is
+    genuinely necessary (owner review, 2026-10-08);
 - **Don't:**
   - use hype ("revolutionise", "supercharge", "10x", "the future of");
   - borrow authority (logo walls, "trusted by");

@@ -19,9 +19,10 @@ const copy = await getCopy('principles');
   .principles { padding: 40px 0; }
   h2 { font-size: clamp(24px, 4vw, 34px); margin: 6px 0; }
   .intro { color: var(--muted); }
-  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; list-style: none; padding: 0; margin: 18px 0 0; }
-  @media (max-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 479px) { .grid { grid-template-columns: 1fr; } }
+  .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; list-style: none; padding: 0; margin: 18px 0 0; }
+  .principle { flex: 0 1 calc((100% - 24px) / 3); box-sizing: border-box; }
+  @media (max-width: 900px) { .principle { flex-basis: calc((100% - 12px) / 2); } }
+  @media (max-width: 479px) { .principle { flex-basis: 100%; } }
   .principle { background: var(--surface); border: 2px solid var(--line); border-radius: 14px; padding: 16px; }
   .principle h3 { font-size: 17px; font-weight: 700; margin: 10px 0 4px; }
   .principle p { margin: 0; color: var(--muted); font-size: 15px; }

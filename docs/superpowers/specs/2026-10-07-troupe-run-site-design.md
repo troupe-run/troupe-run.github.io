@@ -55,7 +55,7 @@ One page, top to bottom. The copy is drafted in the brand voice and **approved b
    - the lock-up (mark plus wordmark), linking to `/`;
    - navigation: How it works · Principles · Docs · GitHub;
    - a theme toggle;
-   - a status pill, "pre-alpha · building in the open".
+   - no status pill (removed, owner review 2026-10-08).
 2. **Hero:**
    - the curtain-call cast: human, agent, troupe (the triangle, centred), agent, human, each with its
      reflection, and a bow on hover;
@@ -66,15 +66,18 @@ One page, top to bottom. The copy is drafted in the brand voice and **approved b
        5-second idle timer but not that cap. This keeps it inside WCAG 2.2.2, which covers content that moves on
        its own for more than 5 seconds;
      - it is off entirely under `prefers-reduced-motion`;
-   - eyebrow, H1 (draft: "Your agents need a director.") and a subhead;
-   - main call to action "★ Watch on GitHub", and a disabled "Install: coming".
-3. **Problem** (layout "P2", owner 2026-10-07):
-   - the heading spans the full width;
-   - below it, two columns:
-     - **left:** an illustration in the cast style: agents in single file, each passing work to the next, all
-       waiting on one highlighted person;
-     - **right:** the four problems as a plain list, with no boxes: one agent, one line · one bottleneck · no
-       homework · no record.
+   - H1 ("Your agents need a director.") and a subhead. There is no eyebrow line and no "pre-alpha" badge
+     (both removed, owner review 2026-10-08). The H1 has no width cap, so it sits on one line at 1024px and
+     above; the subhead measure is about 60ch;
+   - main call to action "★ Watch on GitHub", and a disabled "Install: coming", with their labels centred
+     vertically on one baseline.
+3. **Problem** (layout "P2", owner 2026-10-07; revised, owner review 2026-10-08):
+   - the heading spans the full content column and wraps only if it must;
+   - below it, the illustration in the cast style, centred across the full column: agents in single file,
+     each passing work to the next, all waiting on one highlighted person;
+   - below that, the four problems as a small grid with no boxes (a dot, a bold title and muted body text):
+     one agent, one line · one bottleneck · no homework · no record. It has four columns at 1024px and above,
+     two from 600 to 1023px, and one below 600px.
 4. **How it works:** "A long run, not one night." A **loop diagram**, with no boxes:
    - the four steps, Cast → Perform → Cue → Notes, sit around a circular track, with the troupe triangle in the
      centre and "↺ and again, every showing" beneath;
@@ -84,21 +87,26 @@ One page, top to bottom. The copy is drafted in the brand voice and **approved b
    - **left:** the heading "Your process, as plain config." and a short paragraph;
    - **right:** a short YAML snippet showing roles, who holds them and where a decision goes.
    - It's labelled "illustrative: the syntax isn't final" in both the caption and the snippet's first comment.
-6. **Principles:** six cards, each with a topic line icon in a faint-bordered tile. This is the only card grid
+6. **Principles:** five cards (a sixth is pending an owner decision, owner review 2026-10-08), each with a topic line icon in a faint-bordered tile. This is the only card grid
    on the page:
-   - local-first, everything in your repo;
-   - humans are roles, not a loop;
+   - local-first, everything in your project;
+   - built for teams of agents and people;
    - escalation that does its homework;
-   - full lineage from the first event;
-   - config that survives hand-editing;
+   - lineage for every decision;
    - bring your own agent.
+
+   The heading is "What we're building." The cards are centred, three then two, so five never leaves a lone
+   orphan. "Config that survives hand-editing" was removed (owner review 2026-10-08).
 7. **Closing call to action:** "Watch on GitHub to follow the build."
 8. **Footer:**
-   - "a project by hps.gd";
+   - "a project by hps.gd", linking to https://hps.gd (new tab);
    - links to GitHub and the docs;
-   - the privacy line ("No cookies. Cookieless page counts via GoatCounter.");
-   - the site licence line;
-   - copyright HPS.GD PTY LTD.
+   - copyright HPS.GD PTY LTD, also linking to https://hps.gd (new tab).
+   - The privacy line and the licence line were removed (owner review 2026-10-08).
+
+**Owner review 2026-10-08 (round 1):** landing copy says "project", not "repo", "YAML" or "config" (see the
+brand guide, section 7). The Cast step reads "Agents and people, each in a named role." Pending owner decisions:
+the "How it works" heading, the "In your repo" band, a sixth principle and the principles intro sentence.
 
 **Layout rules:**
 - Each section has a different shape, so no two neighbouring sections repeat a row of boxes (owner,

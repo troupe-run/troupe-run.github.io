@@ -7,25 +7,22 @@ const copy = await getCopy('problem');
   <div class="wrap">
     <p class="eyebrow">{copy.eyebrow}</p>
     <h2 id="problem-title">{copy.title}</h2>
-    <div class="grid">
-      <ProblemQueue caption={copy.queueCaption} />
-      <ul class="problem-list">
+    <div class="queue"><ProblemQueue caption={copy.queueCaption} /></div>
+    <ul class="problem-list">
         {copy.items.map((c) => (
           <li><span class="dot" aria-hidden="true"></span><div><strong>{c.title}</strong><span class="body">{c.body}</span></div></li>
         ))}
-      </ul>
-    </div>
+    </ul>
   </div>
 </section>
 <style>
   .problem { padding: 40px 0; }
-  h2 { font-size: clamp(24px, 4vw, 34px); max-width: 24ch; }
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 20px; align-items: start; }
-  @media (max-width: 719px) { .grid { grid-template-columns: 1fr; } }
-  .problem-list { list-style: none; padding: 0; margin: 0; }
-  .problem-list li { display: flex; gap: 12px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid var(--line); }
-  .problem-list li:first-child { padding-top: 0; }
-  .problem-list li:last-child { border-bottom: 0; }
+  h2 { font-size: clamp(24px, 4vw, 34px); }
+  .queue { margin-top: 20px; }
+  .problem-list { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  @media (max-width: 1023px) { .problem-list { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 599px) { .problem-list { grid-template-columns: 1fr; } }
+  .problem-list li { display: flex; gap: 12px; align-items: flex-start; }
   .dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--tomato); margin-top: 9px; }
   strong { display: block; font-family: var(--font-display); font-size: 17px; margin-bottom: 2px; }
   .body { color: var(--muted); }

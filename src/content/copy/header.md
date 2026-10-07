@@ -1,6 +1,5 @@
 ---
 section: header
-status: "pre-alpha · building in the open"
 nav:
   - { label: "How it works", href: "/#how-it-works" }
   - { label: "Principles", href: "/#principles" }

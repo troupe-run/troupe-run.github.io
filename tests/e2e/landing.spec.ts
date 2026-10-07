@@ -39,11 +39,11 @@ test('hero cast is human, agent, troupe, agent, human', async ({ page }) => {
   expect(kinds).toEqual(['human', 'agent', 'troupe', 'agent', 'human']);
 });
 
-test('principles section shows six cards, each with exactly one topic icon', async ({ page }) => {
+test('principles section shows five cards, each with exactly one topic icon', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('#principles .principle')).toHaveCount(6);
+  await expect(page.locator('#principles .principle')).toHaveCount(5);
   const perCard = await page.locator('#principles .principle').evaluateAll((els) => els.map((e) => e.querySelectorAll('.topic-icon').length));
-  expect(perCard).toEqual([1, 1, 1, 1, 1, 1]);
+  expect(perCard).toEqual([1, 1, 1, 1, 1]);
 });
 
 test('how it works shows the four steps in order Cast, Perform, Cue, Notes', async ({ page }) => {
@@ -90,20 +90,31 @@ test('page has exactly one h1, and it is the hero title', async ({ page }) => {
   await expect(page.locator('#top h1')).toHaveText('Your agents need a director.');
 });
 
-test('problem section lists four problems as a plain list: not a grid, and items have no card background, border or shadow', async ({ page }) => {
+test('problem items are a grid with no card background, border or shadow', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#problem .problem-list > li')).toHaveCount(4);
   const list = page.locator('#problem .problem-list');
-  expect(await list.evaluate((e) => getComputedStyle(e).display)).not.toMatch(/grid/);
+  expect(await list.evaluate((e) => getComputedStyle(e).display)).toBe('grid');
   const items = await list.locator('> li').evaluateAll((els) => els.map((e) => {
     const s = getComputedStyle(e);
-    return { bg: s.backgroundColor, top: s.borderTopWidth, left: s.borderLeftWidth, right: s.borderRightWidth, shadow: s.boxShadow };
+    return { bg: s.backgroundColor, top: s.borderTopWidth, left: s.borderLeftWidth, right: s.borderRightWidth, bottom: s.borderBottomWidth, shadow: s.boxShadow };
   }));
   for (const i of items) {
     expect(i.bg).toBe('rgba(0, 0, 0, 0)');
-    expect([i.top, i.left, i.right, i.shadow]).toEqual(['0px', '0px', '0px', 'none']);
+    expect([i.top, i.left, i.right, i.bottom, i.shadow]).toEqual(['0px', '0px', '0px', '0px', 'none']);
   }
 });
+
+for (const [width, columns] of [[1280, 4], [800, 2], [390, 1]] as const) {
+  test(`at ${width}px the problem illustration sits above the problems, which lay out in ${columns} column(s)`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+    const fig = await page.locator('#problem figure').evaluate((e) => e.getBoundingClientRect().toJSON());
+    const lis = await page.locator('#problem .problem-list > li').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().toJSON()));
+    expect(fig.bottom).toBeLessThanOrEqual(Math.min(...lis.map((l) => l.top)));
+    expect(new Set(lis.map((l) => Math.round(l.left))).size).toBe(columns);
+  });
+}
 
 test('problem section shows the queue illustration with its caption', async ({ page }) => {
   await page.goto('/');
@@ -159,4 +170,55 @@ test('sections appear in the order hero, problem, how, in-your-repo, principles,
   await page.goto('/');
   const ids = await page.locator('main > section').evaluateAll((els) => els.map((e) => e.id));
   expect(ids).toEqual(['top', 'problem', 'how-it-works', 'in-your-repo', 'principles', 'follow']);
+});
+
+test('the hero has no eyebrow line, no status badge and the header has no status pill', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#top .eyebrow, #top .badge')).toHaveCount(0);
+  await expect(page.locator('header.site-header .pill')).toHaveCount(0);
+  await expect(page.locator('body')).not.toContainText('pre-alpha · ');
+});
+
+test('at 1280px the hero headline sits on one line', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+  const lines = await page.locator('#top h1').evaluate((e) => Math.round(e.getBoundingClientRect().height / parseFloat(getComputedStyle(e).lineHeight)));
+  expect(lines).toBe(1);
+});
+
+test('the hero buttons and the closing button centre their text, and the hero pair share a baseline', async ({ page }) => {
+  await page.goto('/');
+  const btns = page.locator('#top .btn, #follow .btn');
+  await expect(btns).toHaveCount(3);
+  const info = await btns.evaluateAll((els) => els.map((e) => {
+    const s = getComputedStyle(e);
+    return { display: s.display, align: s.alignItems, height: e.getBoundingClientRect().height };
+  }));
+  for (const i of info) {
+    expect(i.display).toMatch(/flex/); // blockified to flex inside the hero's flex row
+    expect(i.align).toBe('center');
+  }
+  expect(new Set(info.map((i) => Math.round(i.height))).size).toBe(1);
+  const tops = await page.locator('#top .btn').evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
+  expect(new Set(tops).size).toBe(1);
+});
+
+test('the footer drops the privacy and licence lines and links hps.gd twice, in new tabs', async ({ page }) => {
+  await page.goto('/');
+  const footer = page.locator('footer.site-footer');
+  await expect(footer).not.toContainText('GoatCounter');
+  await expect(footer).not.toContainText('CC BY');
+  await expect(footer).toContainText('© 2026 HPS.GD PTY LTD');
+  const links = footer.locator('a[href="https://hps.gd"]');
+  await expect(links).toHaveCount(2);
+  await expect(footer.getByRole('link', { name: 'a project by hps.gd' })).toHaveAttribute('target', '_blank');
+  await expect(footer.getByRole('link', { name: '© 2026 HPS.GD PTY LTD' })).toHaveAttribute('rel', /noopener/);
+});
+
+test('five principles lay out without a lone orphan row at 1280px (three then two)', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+  const tops = await page.locator('#principles .principle').evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
+  const rows = [...new Set(tops)].map((t) => tops.filter((x) => x === t).length);
+  expect(rows).toEqual([3, 2]);
 });

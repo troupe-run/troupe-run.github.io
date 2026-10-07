@@ -9,11 +9,11 @@ const cta = z.object({ label: z.string(), href: z.string().optional() });
 import { TOPIC_ICONS } from './lib/topic-icons';
 
 const copySchema = z.discriminatedUnion('section', [
-  z.object({ section: z.literal('header'), status: z.string(), nav: z.array(link).min(1) }),
+  z.object({ section: z.literal('header'), nav: z.array(link).min(1) }),
   z.object({
     section: z.literal('hero'),
-    eyebrow: z.string(), title: z.string(), subtitle: z.string(),
-    primary: cta.extend({ href: z.string().url() }), secondary: cta, badge: z.string(),
+    title: z.string(), subtitle: z.string(),
+    primary: cta.extend({ href: z.string().url() }), secondary: cta,
   }),
   z.object({
     section: z.literal('problem'),
@@ -33,7 +33,7 @@ const copySchema = z.discriminatedUnion('section', [
   z.object({
     section: z.literal('principles'),
     eyebrow: z.string(), title: z.string(), intro: z.string(),
-    items: z.array(z.object({ icon: z.enum(TOPIC_ICONS), title: z.string(), body: z.string() })).length(6),
+    items: z.array(z.object({ icon: z.enum(TOPIC_ICONS), title: z.string(), body: z.string() })).length(5),
   }),
   z.object({
     section: z.literal('closing'),
@@ -41,7 +41,7 @@ const copySchema = z.discriminatedUnion('section', [
   }),
   z.object({
     section: z.literal('footer'),
-    attribution: z.string(), privacy: z.string(), licence: z.string(), copyright: z.string(),
+    attribution: z.string(), copyright: z.string(),
     links: z.array(link),
   }),
 ]);

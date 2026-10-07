@@ -16,9 +16,9 @@ by an agent or a person, and your process runs through them: specify, build, tes
 - **Work branches.** Tasks fork, join, swarm and loop, instead of one agent working in a line.
 - **Decisions go to the right person.** When a call needs making, the agent does the research first (the
   issues, the docs, the relevant standard) and brings a decision brief to whoever holds that role.
-- **Everything is recorded.** Every change carries its lineage: who made it, human or agent, who approved it,
-  and when.
-- **It lives in your repo.** Config is plain YAML you can edit by hand. There is no hosted service.
+- **Everything is recorded.** Every decision carries its lineage: who made it, human or agent, what it was
+  based on, who approved it, and where its results went.
+- **It lives in your project.** Everything is kept in git, on your machine. There is no hosted service.
 
 ## Where it is now
 
