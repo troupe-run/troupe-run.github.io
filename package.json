@@ -12,7 +12,7 @@
     "test:e2e": "playwright test",
     "assets:render": "node scripts/render-assets.mjs",
     "assets:verify": "node scripts/verify-assets.mjs",
-    "linkcheck": "linkinator dist --recurse --skip \"^https?://\""
+    "linkcheck": "node scripts/linkcheck.mjs"
   },
   "dependencies": {
     "astro": "7.3.6",
