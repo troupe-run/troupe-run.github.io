@@ -92,7 +92,7 @@ test('page has exactly one h1, and it is the hero title', async ({ page }) => {
 
 for (const theme of ['light', 'dark'] as const) {
   test(`problem items are dark cards (background equals --ink, no border or shadow) with no bullet dots (${theme})`, async ({ page }) => {
-    await page.addInitScript((t) => localStorage.setItem('starlight-theme', t), theme);
+    await page.emulateMedia({ colorScheme: theme });
     await page.goto('/');
     await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
     await expect(page.locator('#problem .problem-list > li')).toHaveCount(4);

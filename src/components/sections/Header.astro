@@ -1,6 +1,5 @@
 ---
 import Mark from '../Mark.astro';
-import ThemeToggle from '../ThemeToggle.astro';
 import { getCopy } from '../../lib/copy';
 const copy = await getCopy('header');
 ---
@@ -10,9 +9,6 @@ const copy = await getCopy('header');
     <nav aria-label="Main">
       <ul>{copy.nav.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
     </nav>
-    <div class="tools">
-      <ThemeToggle />
-    </div>
   </div>
 </header>
 <style>
@@ -21,5 +17,4 @@ const copy = await getCopy('header');
   ul { display: flex; flex-wrap: wrap; gap: 4px 16px; list-style: none; margin: 0; padding: 0; }
   nav a { color: var(--ink); text-decoration: none; font-size: 15px; }
   nav a:hover { color: var(--tomato-text); text-decoration: underline; }
-  .tools { display: flex; gap: 10px; align-items: center; }
 </style>

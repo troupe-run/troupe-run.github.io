@@ -28,12 +28,11 @@ const { title, description } = Astro.props;
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
     <script is:inline>
       (() => {
-        let stored = null;
-        try { stored = localStorage.getItem('starlight-theme'); } catch {}
-        const theme = stored === 'light' || stored === 'dark'
-          ? stored
-          : (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-        document.documentElement.dataset.theme = theme;
+        // Always follow the system colour scheme (owner 2026-10-08); nothing is stored or read.
+        const mq = matchMedia('(prefers-color-scheme: light)');
+        const apply = () => { document.documentElement.dataset.theme = mq.matches ? 'light' : 'dark'; };
+        apply();
+        mq.addEventListener('change', apply);
       })();
     </script>
     <Analytics />

@@ -29,6 +29,8 @@ export default defineConfig({
       components: {
         Head: './src/components/docs/Head.astro',
         MarkdownContent: './src/components/docs/MarkdownContent.astro',
+        ThemeProvider: './src/components/docs/ThemeProvider.astro',
+        ThemeSelect: './src/components/docs/ThemeSelect.astro',
       },
       sidebar: [
         { label: 'Programme', items: [

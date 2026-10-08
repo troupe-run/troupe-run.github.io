@@ -54,7 +54,7 @@ One page, top to bottom. The copy is drafted in the brand voice and **approved b
 1. **Header:**
    - the lock-up (mark plus wordmark), linking to `/`;
    - navigation: How it works · Principles · Docs · GitHub;
-   - a theme toggle;
+   - no theme toggle (the theme follows the system, owner 2026-10-08);
    - no status pill (removed, owner review 2026-10-08).
 2. **Hero:**
    - the curtain-call cast: human, agent, troupe (the triangle, centred), agent, human, each with its
@@ -219,7 +219,7 @@ troupe-run.github.io/
 │  ├─ styles/tokens.css      The one source of colour and type tokens (light and dark)
 │  ├─ styles/starlight.css   Maps Starlight's variables onto tokens.css
 │  ├─ components/            Header, Hero, Problem, HowItWorks, Principles, ClosingCta, Footer,
-│  │                         Character, Mark, TopicIcon, ThemeToggle
+│  │                         Character, Mark, TopicIcon
 │  ├─ content/copy/          Landing-page copy, one file per section (what the owner reviews)
 │  ├─ content/docs/docs/     Docs pages (served at /docs/…)
 │  └─ pages/index.astro      The landing page
@@ -265,11 +265,12 @@ troupe-run.github.io/
 
 ### 5.4 Theme
 
-- The default follows the system setting.
-- The toggle in the landing-page header and Starlight's own toggle **share one stored preference**: Starlight's
-  `starlight-theme` key in localStorage. A choice made on either side holds on the other.
-- Reading and writing that key are wrapped so the site still works if storage is unavailable.
-- An inline script in the head sets the theme before first paint, so the page never flashes the wrong theme.
+- **The theme follows the system; there is no picker** (owner 2026-10-08). The landing page has no toggle, and
+  Starlight's theme select is replaced by an empty component.
+- Nothing is stored or read: any `starlight-theme` value left in localStorage is ignored.
+- Inline scripts in the head (the landing layout, and an overridden Starlight `ThemeProvider` on the docs) set
+  `data-theme` from `prefers-color-scheme` before first paint, and update it live on the media query's `change`
+  event, so the page never flashes the wrong theme. `tokens.css` also covers no-JavaScript.
 
 ### 5.5 Fonts and analytics
 
@@ -317,8 +318,8 @@ We move to a hand-built docs layout if any of these happens:
   - the landing page renders every section;
   - the GitHub call to action has a real URL;
   - the "Install: coming" button is disabled;
-  - the theme toggle switches theme, and the choice holds across a reload and between the landing page and
-    the docs;
+  - the landing page and a docs page follow an emulated light or dark scheme, ignore a stale stored theme, have no
+    theme picker, and update when the scheme changes at runtime;
   - a docs page and a stub page both render;
   - the stub shows its "Planned" note and its "Help write this page" link;
   - every docs page has an "Improve this page" link pointing at its own source file.

@@ -48,8 +48,9 @@ social posts. If something here is wrong or missing, fix this file first, then t
 
 ## 3. Colour
 
-The tokens are CSS custom properties. The dark values apply under `prefers-color-scheme: dark` and under
-an explicit dark theme.
+The tokens are CSS custom properties. The theme follows the system colour scheme, with no picker (owner,
+2026-10-08). The dark values apply under `prefers-color-scheme: dark` and under `[data-theme='dark']`, which
+the site sets from the system scheme.
 
 | Token | Role | Light | Dark |
 |---|---|---|---|

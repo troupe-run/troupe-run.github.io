@@ -11,8 +11,7 @@ const PAGES = [
 for (const theme of ['light', 'dark'] as const) {
   for (const [name, path] of PAGES) {
     test(`axe reports no serious or critical violations (WCAG 2.2 AA rule tags) on the ${name} (${theme})`, async ({ page }) => {
-      await page.addInitScript((t) => localStorage.setItem('starlight-theme', t), theme);
-      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' });
       await page.goto(path);
       await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
       const results = await new AxeBuilder({ page })
