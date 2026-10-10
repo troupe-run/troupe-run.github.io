@@ -1,6 +1,8 @@
 ---
 import Default from '@astrojs/starlight/components/MarkdownContent.astro';
+import BlogMarkdownContent from 'starlight-blog/overrides/MarkdownContent.astro';
 const { entry, editUrl } = Astro.locals.starlightRoute;
+const isPost = entry.id.startsWith('blog/');
 const isDoc = entry.id.startsWith('docs/');
 const { status, prerelease, purpose } = entry.data;
 ---
@@ -15,4 +17,4 @@ const { status, prerelease, purpose } = entry.data;
     <p>Pre-alpha: this page describes intended behaviour.</p>
   </aside>
 )}
-<Default><slot /></Default>
+{isPost ? <BlogMarkdownContent><slot /></BlogMarkdownContent> : <Default><slot /></Default>}

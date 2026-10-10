@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import starlightBlog from 'starlight-blog';
 
 export default defineConfig({
   site: 'https://troupe.run',
@@ -10,6 +11,7 @@ export default defineConfig({
       title: 'troupe docs',
       editLink: { baseUrl: 'https://github.com/troupe-run/troupe-run.github.io/edit/main/' },
       lastUpdated: true,
+      plugins: [starlightBlog({ title: 'Notes', prefix: 'blog', navigation: 'none', recentPostCount: 5 })],
       favicon: '/favicon.svg',
       head: [
         { tag: 'link', attrs: { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' } },

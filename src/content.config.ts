@@ -3,6 +3,7 @@ import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 import { docsLoader, i18nLoader } from '@astrojs/starlight/loaders';
 import { docsSchema, i18nSchema } from '@astrojs/starlight/schema';
+import { blogSchema } from 'starlight-blog/schema';
 
 const link = z.object({ label: z.string(), href: z.string() });
 const cta = z.object({ label: z.string(), href: z.string().optional() });
@@ -52,7 +53,7 @@ export const collections = {
   docs: defineCollection({
     loader: docsLoader(),
     schema: docsSchema({
-      extend: z.object({
+      extend: (context) => blogSchema(context).extend({
         status: z.enum(['written', 'planned']).default('planned'),
         prerelease: z.boolean().default(true),
         purpose: z.string().optional(),
