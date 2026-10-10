@@ -41,10 +41,11 @@ scored.
 ## Scoring
 
 Each arm got a score out of 100, made up of eight weighted parts. Correctness, worth 20, came from hidden
-tests the arms never saw. Code quality, worth 15, combined mutation testing, type checking, linting, and how
-well the test names describe what they check. I rated every design decision the arms made, on what the
-software did when we ran it. The other parts covered coping with change, approval requests, tracing a
-change back to its reason, fit with Claude Code, and time taken.
+tests the arms never saw. Code quality, worth 15, combined mutation testing, type errors, lint findings, how
+much code the arm wrote, and how well the test names describe what they check. I rated every design decision
+the arms made, on what the software did when we ran it. The other parts covered coping with change, approval
+requests, tracing a change back to its reason, fit with Claude Code, and time and cost. Where a part compares
+arms with each other, such as time, cost, or code size, it compares each arm with the median arm.
 
 Three model judges, each told to read from a different perspective, scored the judged parts from anonymised
 material, and I decided the cases where they disagreed. The anonymising only went so far, because each
@@ -54,16 +55,17 @@ method's vocabulary tends to give it away.
 
 | Arm | Total /100 | Code quality /15 | Interaction /10 | Traceability /10 | Cost |
 |---|---:|---:|---:|---:|---:|
-| **OpenSpec** | **77.6** | 9.1 | 6.0 | 8.5 | $142 |
-| cc-sdd | 76.3 | 8.0 | 6.8 | 8.4 | $741 |
-| Spec Kit | 75.2 | 10.2 | 5.1 | 8.1 | $273 |
-| Spec Kitty | 74.1 | 7.9 | 8.0 | 8.1 | $1,543 |
-| Superpowers | 70.9 | 6.5 | 3.3 | 6.5 | $27 |
-| Control | 66.9 | 3.8 | 4.7 | 5.3 | $13 |
+| **OpenSpec** | **83.6** | 12.2 | 6.7 | 8.9 | $142 |
+| cc-sdd | 81.5 | 11.6 | 7.4 | 8.7 | $741 |
+| Spec Kit | 78.8 | 11.3 | 5.7 | 8.1 | $273 |
+| Spec Kitty | 78.5 | 11.7 | 8.0 | 8.2 | $1,543 |
+| Superpowers | 74.6 | 8.3 | 2.7 | 6.9 | $27 |
+| Control | 72.6 | 6.4 | 4.5 | 6.3 | $13 |
 
-Spec Kit and Spec Kitty are too close to separate. We also moved each part's weight five points up and down
-and pushed every disputed judgement to its extremes. OpenSpec stayed first throughout, though its range
-(74.6 to 80.5) overlaps cc-sdd's (72.3 to 80.3).
+The scores fall into three groups. OpenSpec and cc-sdd are too close to separate, and so are Spec Kit, Spec
+Kitty, and Superpowers. We moved each part's weight five points up and down and pushed every disputed
+judgement to its extremes. OpenSpec stayed first in all but one case: if time and cost count for five points
+less, cc-sdd moves ahead. OpenSpec's range was 82.3 to 84.9, and cc-sdd's 78.0 to 85.0.
 
 ## Correctness
 
@@ -81,9 +83,9 @@ almost none of the spread in the table.
 | Spec Kitty | 23 h 44 min | $1,543 |
 | cc-sdd | 40 h 57 min | $741 |
 
-The cheapest arm cost about a hundredth of the most expensive one. Most of that money bought a record of why
-things changed. We could trace the control's changes to a stated reason about a third of the time, and the
-methods managed between 70% and 92%.
+The cheapest arm cost about a hundredth of the most expensive one. Part of what the extra money bought was a
+record of why things changed. With the code, the specs, and the commit messages to go on, the judges gave
+the control about 0.6 out of 1 for tracing changes to a stated reason. OpenSpec and cc-sdd scored full marks.
 
 ## Questions and approvals
 
@@ -107,11 +109,51 @@ scored runs alone would make it look as if it never asked anything. We counted b
 
 ## Code quality
 
-Only Spec Kit and OpenSpec kept type-checker and linter errors low enough to earn points there. OpenSpec
-earned fewer at each step as errors built up, and from step 6 it earned none. Mutation scores were steadier,
-from 0.72 to 0.87. Test names ranged from
+Four of the methods finished every step with no type errors. Superpowers and the control did not: by step 7
+they had 94 and 87, in about 2,000 lines of source each, and the count rose at every step.
+
+Lint looked worse than it was. OpenSpec went from 8 findings to 34 under our ruleset, but 31 of the 34 were
+unsorted imports, which the linter fixes in one command, and under OpenSpec's own lint settings it had none at
+all. We now count a finding the linter can safely fix itself as a tenth of one, and measure findings per
+thousand lines. Mutation scores ranged from 0.72 to 0.87. Test names ranged from
 `test_get_of_a_collection_exits_5_naming_the_path_and_pointing_to_show`, which tells you exactly what broke,
 to a single `test_watch` that checked six unrelated behaviours.
+
+## Code size
+
+Every arm built the same features and passed the same hidden tests. They wrote very different amounts of code
+to get there:
+
+| Arm | Source lines | Test lines |
+|---|---:|---:|
+| Control | 1,965 | 461 |
+| Superpowers | 1,994 | 1,187 |
+| OpenSpec | 3,382 | 4,063 |
+| Spec Kit | 3,408 | 4,867 |
+| Spec Kitty | 7,403 | 16,665 |
+| cc-sdd | 9,773 | 34,701 |
+
+cc-sdd wrote five times as much source as the control for the same behaviour, plus a test suite three and a
+half times the size of its source. Smaller code is generally easier to reason about and usually means better
+use of libraries, so we score source size against the median arm, with no extra credit below half the median.
+Very terse code doesn't get rewarded for being terse. Test lines aren't counted, so thorough testing isn't
+penalised.
+
+## What got in each method's way
+
+Most of the friction came from the methods' own tooling rather than from Claude Code.
+
+OpenSpec drives its real work through a separate command-line tool that the model has to call and parse from
+the shell, and its archive step stops to ask an interactive question, which halts an unattended run. cc-sdd
+was the slowest by far, and the model had to remember its phase order and record approvals by hand. Spec Kit
+expects a branch per feature, so the model kept hand-writing a feature pointer file to work on the main branch
+instead. Spec Kitty's own status checks blocked it, and the model wrote and carried helper scripts through
+every step to get past them. Its tracker also needed an undocumented configuration edit before it would
+connect. Superpowers barely ran at all: in six of seven steps the model went straight to code without
+entering its workflow, which is why it scored close to the control.
+
+None of the GitHub-based methods has a step that writes back to the issue tracker, which is why the step 6
+issue stayed open.
 
 ## The step 6 issue
 
@@ -133,10 +175,10 @@ that isn't acceptable either. All of these are on troupe's list now.
 
 ## What we're doing next
 
-We'll build troupe with OpenSpec for now. It came first under every weighting we tried, did best on
-traceability, and cost about a tenth of the most expensive arm. We'll enforce linting in the pipeline
-instead of relying on the method, and troupe's own approval gates can make up for the questions OpenSpec
-didn't ask.
+We'll build troupe with OpenSpec for now. It came first under all but one weighting we tried, did best on
+traceability, wrote moderate amounts of code, and cost about a fifth of what cc-sdd did. We'll answer its
+archive question up front so unattended runs don't stall, run the linter and type checker in the pipeline,
+and let troupe's own approval gates make up for the questions OpenSpec didn't ask.
 
 The results also changed parts of troupe's design. The configuration file will be generated from recorded
 events, and a hand edit gets recorded as a change the next time any command runs, `history` included.
