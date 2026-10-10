@@ -103,21 +103,11 @@ test('the how-it-works section has the --surface background', async ({ page }) =
   expect(bgs.section).toBe(bgs.surface);
 });
 
-test('each how-it-works step names the problem it replaces, at body size', async ({ page }) => {
+test('each how-it-works step names the problem it fixes inside its own sentence, with no separate label', async ({ page }) => {
   await page.goto('/');
-  const lines = page.locator('#how-it-works .step .instead');
-  await expect(lines).toHaveCount(4);
-  const texts = await lines.evaluateAll((els) => els.map((e) => e.textContent?.replace(/\s+/g, ' ').trim()));
-  expect(texts[1]).toBe('Instead of one agent working in a line, step after step.');
-  const size = await lines.first().evaluate((e) => parseFloat(getComputedStyle(e).fontSize));
-  expect(size).toBeGreaterThanOrEqual(16);
-});
-
-test('the Perform step shows the single-file queue illustration with its caption', async ({ page }) => {
-  await page.goto('/');
-  const perform = page.locator('#how-it-works #step-panel-1');
-  await expect(perform.locator('.queue .character')).toHaveCount(4);
-  await expect(perform).toContainText('One agent in a line, all waiting on one person.');
+  await expect(page.locator('#how-it-works .instead')).toHaveCount(0);
+  await expect(page.locator('#how-it-works #step-panel-1 .body')).toHaveText(
+    "Tasks fork, join, swarm and loop, so the work isn't stuck behind one agent at a time.");
 });
 
 test('the home page has no standalone problem section', async ({ page }) => {

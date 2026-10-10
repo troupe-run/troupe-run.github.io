@@ -11,7 +11,7 @@ body {
 a { color: var(--tomato-text); }
 :focus-visible { outline: 3px solid var(--tomato-text); outline-offset: 2px; }
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
-.eyebrow, .eyebrow-like {
+.eyebrow {
   font-family: var(--font-mono); font-weight: 400; font-size: 12px; letter-spacing: .06em;
   text-transform: uppercase; color: var(--tomato-text);
 }

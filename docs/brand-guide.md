@@ -240,5 +240,5 @@ The source SVGs live in this repo under `brand/`. The built copies the site serv
 
 ## 10. Open points
 
-- **Problem section (resolved 2026-10-10):** the standalone section restated How it works in the negative and its text was too small, so each How-it-works step now carries an "Instead of" line naming the problem it replaces, and the single-file queue illustration sits in the Perform step (owner).
+- **Problem section (resolved 2026-10-10):** the standalone section restated How it works in the negative and its text was too small. Each How-it-works step now names the problem it fixes inside its own sentence ("…, so the work isn't stuck behind one agent at a time"). A separate "Instead of" label read as mashed together (owner).
 - **"The house" and "house rules":** not yet agreed as names.

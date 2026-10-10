@@ -19,7 +19,7 @@ const copySchema = z.discriminatedUnion('section', [
   z.object({
     section: z.literal('how'),
     eyebrow: z.string(), title: z.string(), intro: z.string(), loop: z.string(),
-    steps: z.array(z.object({ label: z.string(), title: z.string(), body: z.string(), instead: z.string() })).length(4),
+    steps: z.array(z.object({ label: z.string(), title: z.string(), body: z.string() })).length(4),
   }),
   z.object({
     section: z.literal('cast'),
