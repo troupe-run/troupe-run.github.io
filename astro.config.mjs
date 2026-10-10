@@ -11,7 +11,7 @@ export default defineConfig({
       title: 'troupe docs',
       editLink: { baseUrl: 'https://github.com/troupe-run/troupe-run.github.io/edit/main/' },
       lastUpdated: true,
-      plugins: [starlightBlog({ title: 'Notes', prefix: 'blog', navigation: 'none', recentPostCount: 5 })],
+      plugins: [starlightBlog({ title: 'Blog', prefix: 'blog', navigation: 'header-start', recentPostCount: 5 })],
       favicon: '/favicon.svg',
       head: [
         { tag: 'link', attrs: { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' } },

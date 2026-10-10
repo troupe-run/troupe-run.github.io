@@ -1,81 +1,79 @@
 ---
 title: Six ways to build the same thing
 date: 2026-10-10
-excerpt: We ran five spec-driven development methods and plain Claude Code through the same seven-step build, then scored how they got there. They all got there. How they got there differed a lot.
+excerpt: We ran five spec-driven development methods and plain Claude Code through the same seven-step build. All six produced working software. They differed in cost, in how they handled decisions, and in what they left behind to explain the work.
 tags:
   - bake-off
   - methods
 ---
 
-Troupe will eventually build itself. Until then, something else has to. To choose that something, we ran a
-bake-off: five spec-driven development methods, plus plain Claude Code as a control, building the same
-software through the same seven steps.
+We need a development method to build troupe with until troupe can run its own builds. To pick one, we ran
+five spec-driven methods and plain Claude Code through the same seven-step build and scored the results.
 
-This is what we found. It is one pass, of one task, on our harness. Read it as a field note, not a verdict
-on any of these projects.
+It was one pass, on one task, using our own harness and rubrics. Treat the numbers as a single data point.
 
-## What we ran
+## The arms
 
-Six arms, each in its own project, with the same model and the same harness:
+Each arm had its own project, the same model, and the same harness.
 
-| Arm | What it is |
+| Arm | How it works |
 |---|---|
 | OpenSpec | Change proposals with delta specs, archived when done |
-| cc-sdd | Requirements, design and tasks phases, each approved before the next |
+| cc-sdd | Requirements, design, and tasks, each approved before the next |
 | Spec Kit | Specify, plan, tasks, implement |
-| Spec Kitty | Spec Kit with work packages, lanes and its own issue tracker |
-| Superpowers | Skills for brainstorming, planning and subagent-driven development |
+| Spec Kitty | Spec Kit plus work packages, lanes, and its own issue tracker |
+| Superpowers | Skills for brainstorming, planning, and subagent-driven development |
 | Control | Claude Code with nothing installed |
 
-The task was a configuration tool for troupe itself: load a YAML file, read and set values without
-disturbing the user's formatting, record every change in a history, follow includes, watch for hand edits,
-handle aliases, then fetch remote includes against a schema. Each step arrived as a change request on top of
-the last, so the arms had to live with their earlier decisions. Step 6 was a bug filed as a GitHub issue.
-One step slipped in a teammate's commit made outside the arm's workflow.
+## The task
 
-Before writing code, each step ran once in a discovery run that stopped at the first question or gate. The
-answers went into the brief, and a fresh scored run built the step.
+The arms built a configuration tool for troupe. It loads a YAML file, reads and sets values while keeping the
+user's formatting and comments, and records every change in a history. Later steps added includes, a
+watcher for hand edits, YAML aliases, and remote includes checked against a schema.
 
-## How it was scored
+Each step arrived as a change request on top of the previous one, so earlier decisions had consequences.
+Step 2 included a commit from a "teammate" made outside the arm's workflow. Step 6 was a bug reported as a
+GitHub issue.
 
-Eight dimensions, 100 points:
+Every step ran twice. A discovery run stopped at the arm's first question or approval gate, and we answered
+it. Then a fresh scored run built the step with those answers in its brief.
 
-- **Correctness (20):** hidden tests the arms never saw.
-- **Coping (20):** churn, hand edits, regressions across steps.
-- **Code quality (15):** mutation testing, mypy and ruff, and test names you can triage from.
-- **Decision quality (10):** the owner rated each design decision the arms made, blind, by what it did
-  rather than how it was justified.
-- **Interaction (10):** were gates in the right place, were questions worth asking, was research done first.
-- **Traceability (10):** can a change be traced to a reason, and a requirement to a test.
-- **Setup (10):** how naturally the method fits Claude Code.
-- **Time (5):** wall-clock time per step.
+## Scoring
 
-Three judges with different lenses scored each judged item from anonymised material. Where they disagreed,
-the owner decided. Blinding was partial: a method's vocabulary can give it away.
+We scored eight dimensions out of 100. Correctness came from hidden tests the arms never saw. Code quality
+combined mutation testing, mypy, ruff, and how readable the test names were. Coping covered churn, the hand
+edit, and regressions between steps. Decision quality was my own rating of every design decision the arms
+made, judged on what the software actually did. The rest covered how well the arms
+used approval gates and questions, whether changes could be traced to a reason, how naturally each method
+fits Claude Code, and time taken.
 
-## The scorecard
+Three model judges with different perspectives scored each judged item from anonymised material. I settled
+the items where they disagreed. The anonymising was only partial: each method's vocabulary tends to give it
+away.
 
-| Arm | Total | Correctness | Coping | Code | Decisions | Interaction | Setup | Time | Trace |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| **OpenSpec** | **77.6** | 19.8 | 17.8 | 9.1 | 7.2 | 6.0 | 8.0 | 1.1 | 8.5 |
-| cc-sdd | 76.3 | 19.8 | 16.8 | 8.0 | 7.5 | 6.8 | 9.0 | 0.0 | 8.4 |
-| Spec Kit | 75.2 | 19.8 | 16.8 | 10.2 | 6.9 | 5.1 | 8.0 | 0.4 | 8.1 |
-| Spec Kitty | 74.1 | 19.5 | 17.3 | 7.9 | 7.3 | 8.0 | 6.0 | 0.0 | 8.1 |
-| Superpowers | 70.9 | 19.7 | 16.6 | 6.5 | 6.8 | 3.3 | 9.0 | 2.4 | 6.5 |
-| Control | 66.9 | 19.7 | 16.4 | 3.8 | 5.6 | 4.7 | 9.0 | 2.5 | 5.3 |
+## Results
 
-Spec Kit and Spec Kitty are within noise of each other. We varied every dimension's weight by five points
-either way and pushed every disputed judgement to each judge's extreme. OpenSpec stayed first in every
-variant. The top three are close, though: OpenSpec's range was 74.6 to 80.5, and cc-sdd's 72.3 to 80.3.
+| Arm | Total | Code quality /15 | Interaction /10 | Traceability /10 | Cost |
+|---|---:|---:|---:|---:|---:|
+| **OpenSpec** | **77.6** | 9.1 | 6.0 | 8.5 | $142 |
+| cc-sdd | 76.3 | 8.0 | 6.8 | 8.4 | $741 |
+| Spec Kit | 75.2 | 10.2 | 5.1 | 8.1 | $273 |
+| Spec Kitty | 74.1 | 7.9 | 8.0 | 8.1 | $1,543 |
+| Superpowers | 70.9 | 6.5 | 3.3 | 6.5 | $27 |
+| Control | 66.9 | 3.8 | 4.7 | 5.3 | $13 |
 
-## What we found
+Spec Kit and Spec Kitty are within noise of each other. We moved each dimension's weight five points either
+way and pushed every disputed judgement to its extremes. OpenSpec came first in every variant, but the top
+three ranges overlap. OpenSpec scored between 74.6 and 80.5, and cc-sdd between 72.3 and 80.3.
 
-### Everyone shipped working software
+## Findings
 
-Hidden-test pass rates ran from 97% to 99% for every arm, at every step. The control passed as many as
-anyone. The differences are almost entirely in how the software was built, not whether it works.
+### Correctness barely varied
 
-### The process costs up to 120 times as much
+Every arm passed between 97% and 99% of the hidden tests at every step, the control included. The
+differences in the table come from how the software was built.
+
+### Cost varied by a factor of 120
 
 | Arm | Time, all steps | Cost, scored runs |
 |---|---:|---:|
@@ -86,78 +84,69 @@ anyone. The differences are almost entirely in how the software was built, not w
 | Spec Kitty | 23 h 44 min | $1,543 |
 | cc-sdd | 40 h 57 min | $741 |
 
-What the extra spend buys is mostly a record. The control's work could be traced to a reason a third of the
-time. The methods managed between 70% and 92%.
+Most of the extra money bought a paper trail. We could trace the control's changes to a reason about a third
+of the time. The methods managed 70% to 92%.
 
-### Asking, or deciding and mentioning it later
+### Most decisions were reported after the code was written
 
-Two arms never stopped before writing code in any discovery run: the control and Superpowers. Neither asked
-a question before building. The others asked between 7 and 23 in discovery runs.
+The control and Superpowers started writing code straight away in every discovery run. They asked no
+questions before building. The other four asked between 7 and 23 questions across their discovery runs.
 
-Asking was not the main difference, though. The most common failure we scored was a design choice made
-alone, built, committed, and then disclosed in the final summary: "Calls I made where the contract left
-room." The choices were often reasonable. The point is that a person could no longer change them cheaply.
-OpenSpec placed its gates best (0.89 of the available score); Superpowers least well (0.32).
+The most common problem we found was a design decision made by the arm alone, built, committed, and only
+then listed in the final summary. One summary was headed "Calls I made where the contract left room." Many
+of those calls were sensible, but by then they were expensive to change. OpenSpec timed its approval gates
+best, at 0.89 of the available score. Superpowers scored 0.32.
 
-One arm asked us a question, then answered it itself in its decision log before we replied.
+In one step, an arm asked us a question and then answered it in its own decision log before we had replied.
 
-### Where the questions were
+### Spec Kitty asked the best questions
 
-Spec Kitty asked the most useful questions, in discovery and scored runs alike. That cost something: 36
-minutes of the owner's time at gates, against under four minutes for every other arm.
+Spec Kitty's questions were the most useful, in both kinds of run. They also took the most of my time: 36
+minutes at its gates, compared with under four minutes for any other arm.
 
-Spec Kit asked almost all of its questions in discovery runs, then built without stopping. Judged on its
-scored runs alone, it would have looked as if it never asked anything. We count both runs.
+Spec Kit asked nearly all its questions in discovery runs and then built without stopping. If we had only
+looked at its scored runs, it would have seemed never to ask anything, so we counted both.
 
-### Code quality drifted where nothing enforced it
+### Lint went unchecked
 
-Only Spec Kit and OpenSpec kept mypy and ruff anywhere near clean. OpenSpec started reasonably and decayed to
-zero by step 6. Mutation scores were steadier, from 0.72 to 0.87. Test names ranged from readable
-specifications (`test_get_of_a_collection_exits_5_naming_the_path_and_pointing_to_show`) to one test called
-`test_watch` that checked six unrelated behaviours.
+Only Spec Kit and OpenSpec kept mypy and ruff close to clean, and OpenSpec's score fell to zero by step 6.
+Mutation scores held steadier, between 0.72 and 0.87. The best test names read like requirements, for
+example `test_get_of_a_collection_exits_5_naming_the_path_and_pointing_to_show`. The worst was a single test
+called `test_watch` that checked six unrelated behaviours.
 
-### The bug stayed open
+### Nobody closed the issue
 
-Step 6 arrived as a GitHub issue. Every arm on GitHub fixed the bug and left the issue open, with no comment
-and no link to the fix. Only Spec Kitty, with its own tracker, closed the loop.
+Every arm that used GitHub fixed the step 6 bug and left the issue open, with no comment and no link to the
+fix. Spec Kitty, which uses its own tracker, was the only arm to close it.
 
-### The same answer did not mean the same behaviour
+### Stated design and actual behaviour often differed
 
-Arms often gave the same answer to a design question and then behaved differently: one kept a comment, the
-other dropped it; one refused a write with exit 3, the other with exit 4. We ended up rating observed
-behaviour, re-running examples against every arm's final code, rather than the reasons they gave. This
-mattered more than we expected.
+Several arms described the same approach to a design question and then behaved differently in practice. One
+kept a comment that another dropped. Two refused the same bad input with different exit codes. We ended up
+re-running examples against every arm's final code and rating what actually happened.
 
-### Blind spots every arm shared
+### Some problems were universal
 
-Some problems turned up in all six arms:
+Every arm had a few blind spots that the spec never mentioned. Some printed values don't read back the same
+way when you paste them into the file. The history can show an out-of-date value until another command runs.
+A command waiting for a lock waits indefinitely. We've added each of these to troupe's list.
 
-- `get` printed `-inf` for a value written `-.inf`. Paste it back and you get a string.
-- A tab in a value was written raw, invisible inside quotes, rather than as `\t`.
-- An editor that saves by emptying the file first was recorded as deleting every key, then adding them back.
-- `history` showed stale values until some other command ran.
-- A command waiting on the lock waited forever.
-- With no user identity available, changes were recorded as an anonymous human rather than refused.
+## What we're doing next
 
-None of these was in the contract. All of them are now on troupe's list.
+We'll build troupe with OpenSpec for now. It came first under every weighting, scored highest on
+traceability, and cost about a tenth of the most expensive arm. Lint will be enforced by the pipeline. Where
+OpenSpec asks too few questions, troupe's own approval gates will cover the gap.
 
-## What it means for troupe
+The bake-off also changed some of troupe's design:
 
-We will build troupe with OpenSpec until troupe can build itself. It came first under every weighting we
-tried, its strongest dimension was traceability, and it cost about a tenth of the most expensive arm. We will enforce lint
-in the pipeline rather than trust the method to, and lean on troupe's own gates where OpenSpec's questions
-ran thin.
+- The configuration file becomes a projection of recorded events. A hand edit is recorded as a change the
+  next time any command runs.
+- State is stored as text that git can merge, so no SQLite.
+- Every command refreshes from the files first, including `history`.
+- Anything troupe prints can be pasted back and means the same thing.
 
-The bake-off also changed troupe's design:
+## Limits
 
-- **Events first.** The configuration file is a projection of recorded events, kept in sync. A hand edit
-  becomes a recorded change the next time anything runs.
-- **History that merges.** State lives in text that git can merge. No SQLite.
-- **Every command refreshes first,** history included, so nothing shows a stale value.
-- **Output reads back as what it means.** If you can copy it, you can paste it back.
-
-## Caveats
-
-One task, a command-line tool. One model. One pass. One person rated the decisions. Our harness, our
-rubrics, and some of those rubrics were written after the first five steps had run. The arms' projects are
-not public yet. A season, not a single show: there will be another pass.
+This covered one task, a command-line tool, with one model and one pass. One person rated the decisions. Some
+rubrics were written after the first five steps had run. The arms' projects aren't public yet. We plan a
+second pass.
