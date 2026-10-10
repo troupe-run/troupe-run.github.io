@@ -1,5 +1,6 @@
 ---
 import Character from '../Character.astro';
+import ProblemQueue from '../ProblemQueue.astro';
 import { getCopy } from '../../lib/copy';
 const copy = await getCopy('how');
 type Kind = 'human' | 'agent' | 'troupe';
@@ -46,6 +47,8 @@ const n = copy.steps.length;
               <p class="eyebrow">{s.label}</p>
               <h3>{s.title}</h3>
               <p class="body">{s.body}</p>
+              <p class="instead"><span class="eyebrow-like">Instead of</span> {s.instead}</p>
+              {i === 1 && <ProblemQueue compact caption="One agent in a line, all waiting on one person." />}
             </div>
             <div class="scene" data-troupe-pos={SCENES[i].pos} aria-hidden="true">
               {SCENES[i].kinds.map((k) => <Character kind={k} size={44} />)}
@@ -252,6 +255,8 @@ const n = copy.steps.length;
   [data-enhanced] .slide:not(.is-current):not(.is-moving) { visibility: hidden; }
   .slide h3 { font-size: 22px; margin: 4px 0; }
   .slide .body { margin: 0; color: var(--muted); max-width: 46ch; }
+  .instead { margin: 14px 0 0; font-size: 17px; color: var(--ink); max-width: 46ch; }
+  .instead .eyebrow-like { display: inline; color: var(--tomato-text); margin-right: 6px; }
   .scene { display: flex; align-items: flex-end; gap: 12px; width: 220px; min-height: 120px; padding-bottom: 28px; }
   .scene[data-troupe-pos='left'] { justify-content: flex-start; }
   .scene[data-troupe-pos='right'] { justify-content: flex-end; }

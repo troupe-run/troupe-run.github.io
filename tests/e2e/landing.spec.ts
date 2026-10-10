@@ -1,6 +1,6 @@
 import { test, expect, BLOCKED_EXTERNAL } from './fixtures';
 
-const SECTIONS = ['#top', '#problem', '#how-it-works', '#the-cast', '#principles', '#follow'];
+const SECTIONS = ['#top', '#how-it-works', '#the-cast', '#principles', '#follow'];
 const REPO = 'https://github.com/troupe-run/troupe.run';
 
 test('renders the header, the six landing sections and the footer', async ({ page }) => {
@@ -90,36 +90,6 @@ test('page has exactly one h1, and it is the hero title', async ({ page }) => {
   await expect(page.locator('#top h1')).toHaveText('Your agents need a director.');
 });
 
-for (const theme of ['light', 'dark'] as const) {
-  test(`problem items are dark cards (background equals --ink, no border or shadow) with no bullet dots (${theme})`, async ({ page }) => {
-    await page.emulateMedia({ colorScheme: theme });
-    await page.goto('/');
-    await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
-    await expect(page.locator('#problem .problem-list > li')).toHaveCount(4);
-    const list = page.locator('#problem .problem-list');
-    expect(await list.evaluate((e) => getComputedStyle(e).display)).toBe('grid');
-    const ink = await page.evaluate(() => {
-      const probe = document.createElement('i');
-      probe.style.color = 'var(--ink)';
-      document.body.append(probe);
-      const c = getComputedStyle(probe).color;
-      probe.remove();
-      return c;
-    });
-    const items = await list.locator('> li').evaluateAll((els) => els.map((e) => {
-      const s = getComputedStyle(e);
-      return { bg: s.backgroundColor, border: [s.borderTopWidth, s.borderLeftWidth, s.borderRightWidth, s.borderBottomWidth], radius: s.borderTopLeftRadius, shadow: s.boxShadow };
-    }));
-    for (const i of items) {
-      expect(i.bg).toBe(ink);
-      expect(i.border).toEqual(['0px', '0px', '0px', '0px']);
-      expect(i.radius).toBe('14px');
-      expect(i.shadow).toBe('none');
-    }
-    await expect(page.locator('#problem .dot')).toHaveCount(0);
-  });
-}
-
 test('the how-it-works section has the --surface background', async ({ page }) => {
   await page.goto('/');
   const bgs = await page.evaluate(() => {
@@ -133,10 +103,26 @@ test('the how-it-works section has the --surface background', async ({ page }) =
   expect(bgs.section).toBe(bgs.surface);
 });
 
-test('problem section shows the queue illustration with its caption', async ({ page }) => {
+test('each how-it-works step names the problem it replaces, at body size', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('#problem .character')).toHaveCount(4);
-  await expect(page.locator('#problem')).toContainText('Agents in single file, all waiting on one person.');
+  const lines = page.locator('#how-it-works .step .instead');
+  await expect(lines).toHaveCount(4);
+  const texts = await lines.evaluateAll((els) => els.map((e) => e.textContent?.replace(/\s+/g, ' ').trim()));
+  expect(texts[1]).toBe('Instead of one agent working in a line, step after step.');
+  const size = await lines.first().evaluate((e) => parseFloat(getComputedStyle(e).fontSize));
+  expect(size).toBeGreaterThanOrEqual(16);
+});
+
+test('the Perform step shows the single-file queue illustration with its caption', async ({ page }) => {
+  await page.goto('/');
+  const perform = page.locator('#how-it-works #step-panel-1');
+  await expect(perform.locator('.queue .character')).toHaveCount(4);
+  await expect(perform).toContainText('One agent in a line, all waiting on one person.');
+});
+
+test('the home page has no standalone problem section', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#problem')).toHaveCount(0);
 });
 
 test('the cast band lists four roles in order with their holders', async ({ page }) => {
@@ -187,10 +173,10 @@ test('the how-it-works heading reads "A season, not a single show."', async ({ p
   await expect(page.locator('#how-it-works h2')).toHaveText('A season, not a single show.');
 });
 
-test('sections appear in the order hero, problem, how, the-cast, principles, follow', async ({ page }) => {
+test('sections appear in the order hero, how, the-cast, principles, follow', async ({ page }) => {
   await page.goto('/');
   const ids = await page.locator('main > section').evaluateAll((els) => els.map((e) => e.id));
-  expect(ids).toEqual(['top', 'problem', 'how-it-works', 'the-cast', 'principles', 'follow']);
+  expect(ids).toEqual(['top', 'how-it-works', 'the-cast', 'principles', 'follow']);
 });
 
 test('the hero has no eyebrow line, no status badge and the header has no status pill', async ({ page }) => {

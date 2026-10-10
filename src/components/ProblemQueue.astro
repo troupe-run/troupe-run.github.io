@@ -1,14 +1,16 @@
 ---
 import Character from './Character.astro';
-interface Props { caption: string }
-const { caption } = Astro.props;
+interface Props { caption: string; compact?: boolean }
+const { caption, compact = false } = Astro.props;
+const a = compact ? 24 : 40;
+const h = compact ? 32 : 56;
 ---
-<figure class="queue">
+<figure class:list={["queue", { compact }]}>
   <div class="line" aria-hidden="true">
-    <Character kind="agent" size={40} /><span class="arrow">→</span>
-    <Character kind="agent" size={40} /><span class="arrow">→</span>
-    <Character kind="agent" size={40} /><span class="arrow">→</span>
-    <span class="human"><Character kind="human" size={56} /></span>
+    <Character kind="agent" size={a} /><span class="arrow">→</span>
+    <Character kind="agent" size={a} /><span class="arrow">→</span>
+    <Character kind="agent" size={a} /><span class="arrow">→</span>
+    <span class="human"><Character kind="human" size={h} /></span>
   </div>
   <figcaption>{caption}</figcaption>
 </figure>
@@ -18,4 +20,8 @@ const { caption } = Astro.props;
   .arrow { color: var(--muted); align-self: center; font-size: 18px; }
   .human { display: inline-flex; border-radius: 50%; box-shadow: 0 0 0 4px color-mix(in srgb, var(--sunflower) 55%, transparent); padding: 0; }
   figcaption { color: var(--muted); font-size: 13px; text-align: center; margin-top: 28px; }
+  .compact { background: none; border: 0; padding: 0; margin-top: 12px; }
+  .compact .line { justify-content: flex-start; gap: 6px; }
+  .compact .arrow { font-size: 14px; }
+  .compact figcaption { text-align: left; margin-top: 18px; }
 </style>
