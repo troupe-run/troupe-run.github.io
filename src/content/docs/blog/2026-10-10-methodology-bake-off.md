@@ -43,7 +43,7 @@ scored.
 Each arm got a score out of 100, made up of eight weighted parts. Correctness, worth 20, came from hidden
 tests the arms never saw. Code quality, worth 15, combined mutation testing, type errors, lint findings, how
 much code the arm wrote, and how well the test names describe what they check. I rated every design decision
-the arms made, on what the software did when we ran it. The other parts covered coping with change, approval
+the arms made, on what the software did when we ran it, and that's worth 15. The other parts covered coping with change, approval
 requests, tracing a change back to its reason, fit with Claude Code, and time and cost. Where a part compares
 arms with each other, such as time, cost, or code size, it compares each arm with the median arm.
 
@@ -53,19 +53,19 @@ method's vocabulary tends to give it away.
 
 ## Results
 
-| Arm | Total /100 | Code quality /15 | Interaction /10 | Traceability /10 | Cost |
-|---|---:|---:|---:|---:|---:|
-| **OpenSpec** | **83.6** | 12.2 | 6.7 | 8.9 | $142 |
-| cc-sdd | 81.5 | 11.6 | 7.4 | 8.7 | $741 |
-| Spec Kit | 78.8 | 11.3 | 5.7 | 8.1 | $273 |
-| Spec Kitty | 78.5 | 11.7 | 8.0 | 8.2 | $1,543 |
-| Superpowers | 74.6 | 8.3 | 2.7 | 6.9 | $27 |
-| Control | 72.6 | 6.4 | 4.5 | 6.3 | $13 |
+| Arm | Total /100 | Code quality /15 | Decisions /15 | Interaction /10 | Time and cost /10 | Cost |
+|---|---:|---:|---:|---:|---:|---:|
+| **OpenSpec** | **81.7** | 12.2 | 10.9 | 6.7 | 5.8 | $142 |
+| cc-sdd | 77.1 | 11.6 | 11.2 | 7.4 | 1.4 | $741 |
+| Spec Kit | 76.5 | 11.3 | 10.3 | 5.7 | 4.5 | $273 |
+| Spec Kitty | 75.6 | 11.7 | 10.9 | 8.0 | 1.0 | $1,543 |
+| Superpowers | 74.5 | 8.3 | 10.3 | 2.7 | 9.0 | $27 |
+| Control | 72.4 | 6.4 | 8.5 | 4.5 | 9.3 | $13 |
 
-The scores fall into three groups. OpenSpec and cc-sdd are too close to separate, and so are Spec Kit, Spec
-Kitty, and Superpowers. We moved each part's weight five points up and down and pushed every disputed
-judgement to its extremes. OpenSpec stayed first in all but one case: if time and cost count for five points
-less, cc-sdd moves ahead. OpenSpec's range was 82.3 to 84.9, and cc-sdd's 78.0 to 85.0.
+OpenSpec finished clearly ahead. The other five are too close to rank against each other. We moved each
+dimension's weight five points up and down and pushed every disputed judgement to its extremes, and OpenSpec
+stayed first in every combination. Its score ranged from 80.4 to 83.0, and the next best range, cc-sdd's,
+from 73.6 to 80.6.
 
 ## Correctness
 
@@ -175,7 +175,7 @@ that isn't acceptable either. All of these are on troupe's list now.
 
 ## What we're doing next
 
-We'll build troupe with OpenSpec for now. It came first under all but one weighting we tried, did best on
+We'll build troupe with OpenSpec for now. It came first under every weighting we tried, did best on
 traceability, wrote moderate amounts of code, and cost about a fifth of what cc-sdd did. We'll answer its
 archive question up front so unattended runs don't stall, run the linter and type checker in the pipeline,
 and let troupe's own approval gates make up for the questions OpenSpec didn't ask.
