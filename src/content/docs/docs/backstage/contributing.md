@@ -15,6 +15,14 @@ There's no extra agreement to sign.
 
 ## troupe itself
 
-When troupe's source is published, contributions will need a contributor licence agreement with HPS.GD PTY LTD,
-based on the Apache Software Foundation's individual and corporate agreements. You keep the copyright in your
-work, and grant us a licence to use it. Details will be here when the repository opens.
+troupe's source is at [github.com/troupe-run/troupe.run](https://github.com/troupe-run/troupe.run).
+Contributions are accepted under its licence, Apache-2.0, with a sign-off under the
+[Developer Certificate of Origin](https://developercertificate.org/) (DCO). The sign-off is one line in each
+commit, which `git commit -s` adds for you:
+
+```
+Signed-off-by: Your Name <you@example.com>
+```
+
+It certifies that you wrote the change, or otherwise have the right to submit it under the project's licence. You
+keep the copyright in your work. There's no separate agreement to sign.
