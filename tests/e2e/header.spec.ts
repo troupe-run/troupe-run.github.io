@@ -27,6 +27,23 @@ for (const p of PAGES) {
   });
 }
 
+for (const path of ['/docs/programme/what-is-troupe/', '/blog/']) {
+  test(`on ${path} "troupe" and the section name share a baseline`, async ({ page }) => {
+    await page.goto(path);
+    const baseline = (sel: string) => page.locator(sel).evaluate((el) => {
+      const probe = document.createElement('span');
+      probe.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+      el.appendChild(probe);
+      const y = probe.getBoundingClientRect().top;
+      probe.remove();
+      return y;
+    });
+    const word = await baseline('.site-header .wordmark');
+    const section = await baseline('.site-header .section');
+    expect(Math.abs(word - section)).toBeLessThanOrEqual(0.5);
+  });
+}
+
 for (const path of ['/blog/', BLOG_POST]) {
   test(`${path} has no left-hand sidebar`, async ({ page }) => {
     await page.goto(path);

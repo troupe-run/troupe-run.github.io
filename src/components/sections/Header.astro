@@ -26,7 +26,9 @@ const Tag = embedded ? 'div' : 'header';
 </Tag>
 <style>
   .bar { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; padding-block: 14px; }
-  .brand { display: inline-flex; align-items: baseline; gap: .35em; white-space: nowrap; }
+  /* Centre, not baseline: the wordmark's flex box takes its baseline from the logo SVG, which put "docs" 2px
+     low. Both words share a font size and line height, so centring lines their baselines up exactly. */
+  .brand { display: inline-flex; align-items: center; gap: .35em; white-space: nowrap; }
   .home, .section { text-decoration: none; }
   /* Same size as the wordmark (Mark.astro: 1.5em), lighter, so it reads "troupe docs" as one name. */
   .section { font-family: var(--font-display); font-weight: 500; font-size: 1.5em; letter-spacing: -.02em; color: var(--muted); }
