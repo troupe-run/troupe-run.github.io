@@ -18,8 +18,9 @@ GitHub makes a fork and a pull request for you.
 ## Licensing of contributions
 
 Contributions to this repo are accepted under its own licences: MIT for code (`LICENSE`) and CC BY 4.0 for
-content (`LICENSE-CONTENT`). There's no separate agreement to sign. troupe's product repo will require a
-contributor licence agreement when it's published; this site does not.
+content (`LICENSE-CONTENT`). There's no separate agreement to sign. troupe's product repo
+([troupe-run/troupe.run](https://github.com/troupe-run/troupe.run)) asks for a Developer Certificate of Origin
+sign-off on each commit (`git commit -s`); this site does not.
 
 The troupe name, logo, mark and characters are trademarks of HPS.GD PTY LTD and aren't covered by either
 licence.
