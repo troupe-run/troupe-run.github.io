@@ -1,0 +1,7 @@
+---
+// Replaces Starlight's header with the site header, so docs and blog pages share the landing page's.
+import Search from '@astrojs/starlight/components/Search.astro';
+import SiteHeader from '../sections/Header.astro';
+import { siteSection } from '../../lib/site-section';
+---
+<SiteHeader section={siteSection(Astro.locals.starlightRoute.id)} embedded><Search /></SiteHeader>

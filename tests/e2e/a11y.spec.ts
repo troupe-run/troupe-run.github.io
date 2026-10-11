@@ -6,6 +6,8 @@ const PAGES = [
   ['written docs page', '/docs/programme/what-is-troupe/'],
   ['stub docs page', '/docs/the-company/roles-and-actors/'],
   ['licensing (tables)', '/docs/backstage/licensing/'],
+  ['blog index', '/blog/'],
+  ['blog post', '/blog/2026-10-10-methodology-bake-off/'],
 ] as const;
 
 for (const theme of ['light', 'dark'] as const) {

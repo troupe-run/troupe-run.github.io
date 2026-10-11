@@ -11,7 +11,7 @@ export default defineConfig({
       title: 'troupe docs',
       editLink: { baseUrl: 'https://github.com/troupe-run/troupe-run.github.io/edit/main/' },
       lastUpdated: true,
-      plugins: [starlightBlog({ title: 'Blog', prefix: 'blog', navigation: 'header-start', recentPostCount: 5 })],
+      plugins: [starlightBlog({ title: 'Blog', prefix: 'blog', navigation: 'none', recentPostCount: 5 })],
       favicon: '/favicon.svg',
       head: [
         { tag: 'link', attrs: { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' } },
@@ -28,7 +28,10 @@ export default defineConfig({
         './src/styles/tokens.css',
         './src/styles/starlight.css',
       ],
+      routeMiddleware: './src/route-middleware.ts',
       components: {
+        Header: './src/components/docs/Header.astro',
+        MobileMenuFooter: './src/components/docs/MobileMenuFooter.astro',
         Head: './src/components/docs/Head.astro',
         MarkdownContent: './src/components/docs/MarkdownContent.astro',
         ThemeProvider: './src/components/docs/ThemeProvider.astro',

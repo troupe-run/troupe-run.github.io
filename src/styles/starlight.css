@@ -19,6 +19,9 @@
   --sl-color-bg-nav: var(--surface);
   --sl-color-bg-sidebar: var(--surface);
 }
+/* Starlight widens the column to 67.5rem on any page without a sidebar (meant for splash pages). Here that
+   means the blog, which reads better at the docs' width. */
+:root:not([data-has-sidebar]) { --sl-content-width: 45rem; }
 .sl-markdown-content h1, .sl-markdown-content h2, .sl-markdown-content h3, h1#_top {
   font-family: var(--font-display); font-weight: 800; letter-spacing: -.02em;
 }
