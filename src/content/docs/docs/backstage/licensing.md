@@ -16,7 +16,7 @@ Different parts of troupe are licensed differently, each to suit what it's for.
 | This website's content and the docs | CC BY 4.0 |
 | The troupe name, logo and characters | Trademarks, not licensed |
 
-troupe's source is public at [github.com/troupe-run/troupe.run](https://github.com/troupe-run/troupe.run) and
+troupe's source is public at [github.com/troupe-run/troupe](https://github.com/troupe-run/troupe) and
 carries the licence above. There's nothing to install yet.
 
 The troupe name, logo, mark and characters are trademarks of HPS.GD PTY LTD. You're welcome to use the name to

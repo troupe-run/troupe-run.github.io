@@ -996,7 +996,7 @@ Claude-Session: https://claude.ai/code/session_01ASzaj4mttbfmLs561Bca3g"
 import { test, expect } from '@playwright/test';
 
 const SECTIONS = ['#top', '#problem', '#how-it-works', '#principles', '#follow'];
-const REPO = 'https://github.com/troupe-run/troupe.run';
+const REPO = 'https://github.com/troupe-run/troupe';
 
 test('renders header, all five sections and the footer', async ({ page }) => {
   await page.goto('/');
@@ -1100,7 +1100,7 @@ nav:
   - { label: "How it works", href: "/#how-it-works" }
   - { label: "Principles", href: "/#principles" }
   - { label: "Docs", href: "/docs/" }
-  - { label: "GitHub", href: "https://github.com/troupe-run/troupe.run" }
+  - { label: "GitHub", href: "https://github.com/troupe-run/troupe" }
 ---
 ```
 
@@ -1111,7 +1111,7 @@ section: hero
 eyebrow: "For agents and the people who run them"
 title: "Your agents need a director."
 subtitle: "troupe runs your development process with agents and people in named roles. Work branches and loops, decisions go to whoever owns them, and every change records who made it."
-primary: { label: "★ Watch on GitHub", href: "https://github.com/troupe-run/troupe.run" }
+primary: { label: "★ Watch on GitHub", href: "https://github.com/troupe-run/troupe" }
 secondary: { label: "Install: coming" }
 badge: "pre-alpha · Oct 2026"
 ---
@@ -1170,7 +1170,7 @@ items:
 section: closing
 title: "Follow the build."
 body: "troupe is being built in the open. Watch the repo to see it take shape."
-cta: { label: "★ Watch on GitHub", href: "https://github.com/troupe-run/troupe.run" }
+cta: { label: "★ Watch on GitHub", href: "https://github.com/troupe-run/troupe" }
 ---
 ```
 
@@ -2851,7 +2851,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - run: npx linkinator dist --recurse --skip "github.com/troupe-run/troupe.run" --skip "gc.zgo.at"
+      - run: npx linkinator dist --recurse --skip "github\.com/troupe-run/troupe(/|$)" --skip "gc.zgo.at"
 ```
 
 Before writing the files, confirm the action major versions still exist:
@@ -3120,5 +3120,5 @@ something outside this machine needs the owner's explicit go-ahead at the time i
 - [ ] **Step 10: Manual uploads (the owner does these).** GitHub has no API for either:
   - the org avatar: `brand/out/github-avatar.png` → github.com/organizations/troupe-run/settings/profile;
   - the repo social preview: `brand/out/repo-preview.png` → this repo's Settings → Social preview.
-- [ ] **Step 11: Before driving any traffic,** `github.com/troupe-run/troupe.run` must exist and be public (spec
+- [ ] **Step 11: Before driving any traffic,** `github.com/troupe-run/troupe` must exist and be public (spec
   §10). Until then, leave the site unannounced.

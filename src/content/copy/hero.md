@@ -2,6 +2,6 @@
 section: hero
 title: "Your agents need a director."
 subtitle: "troupe runs your development process with agents and people in named roles. Work branches and loops, decisions go to whoever owns them, and every decision records who made it."
-primary: { label: "★ Watch on GitHub", href: "https://github.com/troupe-run/troupe.run" }
+primary: { label: "★ Watch on GitHub", href: "https://github.com/troupe-run/troupe" }
 secondary: { label: "Install: coming" }
 ---
