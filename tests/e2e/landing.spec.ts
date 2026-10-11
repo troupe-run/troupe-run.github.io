@@ -1,7 +1,7 @@
 import { test, expect, BLOCKED_EXTERNAL } from './fixtures';
 
 const SECTIONS = ['#top', '#how-it-works', '#the-cast', '#principles', '#follow'];
-const REPO = 'https://github.com/troupe-run/troupe.run';
+const REPO = 'https://github.com/troupe-run/troupe';
 
 test('renders the header, the six landing sections and the footer', async ({ page }) => {
   await page.goto('/');

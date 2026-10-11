@@ -15,7 +15,7 @@ There's no extra agreement to sign.
 
 ## troupe itself
 
-troupe's source is at [github.com/troupe-run/troupe.run](https://github.com/troupe-run/troupe.run).
+troupe's source is at [github.com/troupe-run/troupe](https://github.com/troupe-run/troupe).
 Contributions are accepted under its licence, Apache-2.0, with a sign-off under the
 [Developer Certificate of Origin](https://developercertificate.org/) (DCO). The sign-off is one line in each
 commit, which `git commit -s` adds for you:

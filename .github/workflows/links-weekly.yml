@@ -17,4 +17,4 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - run: npx linkinator dist --recurse --skip "github.com/troupe-run/troupe.run" --skip "gc.zgo.at"
+      - run: npx linkinator dist --recurse --skip "github\.com/troupe-run/troupe(/|$)" --skip "gc.zgo.at"
