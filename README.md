@@ -1,6 +1,6 @@
 ![troupe](brand/out/readme-banner.png)
 
-# troupe-run.github.io
+# website
 troupe.run — website and landing page
 
 ## Development

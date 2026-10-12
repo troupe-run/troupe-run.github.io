@@ -3,7 +3,7 @@ import { readdirSync, statSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const ROOT = 'src/content/docs/docs';
-const EDIT_BASE = 'https://github.com/troupe-run/troupe-run.github.io/edit/main/';
+const EDIT_BASE = 'https://github.com/troupe-run/website/edit/main/';
 function mdFiles(dir: string): string[] {
   return readdirSync(dir).flatMap((n) => {
     const p = join(dir, n);
