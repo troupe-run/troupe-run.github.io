@@ -9,7 +9,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'troupe docs',
-      editLink: { baseUrl: 'https://github.com/troupe-run/troupe-run.github.io/edit/main/' },
+      editLink: { baseUrl: 'https://github.com/troupe-run/website/edit/main/' },
       lastUpdated: true,
       plugins: [starlightBlog({ title: 'Blog', prefix: 'blog', navigation: 'none', recentPostCount: 5 })],
       favicon: '/favicon.svg',
