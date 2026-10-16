@@ -5,7 +5,9 @@ troupe.run — website and landing page
 
 ## Development
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Design: `docs/superpowers/specs/2026-10-07-troupe-run-site-design.md`.
+See [CONTRIBUTING.md](CONTRIBUTING.md): you need uv and Node, and `uv run scripts/check.py` runs every check CI
+runs. Every change goes through an issue and an OpenSpec change ([CLAUDE.md](CLAUDE.md) has the workflow).
+Design: `docs/superpowers/specs/2026-10-07-troupe-run-site-design.md`.
 Brand: `docs/brand-guide.md`.
 
 ## Licence
