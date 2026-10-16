@@ -80,7 +80,7 @@
 
 ## 5. Follow-ups, design spec and docs
 
-- [ ] 5.1 Open two follow-up issues in troupe-run/infrastructure, each with `--project "troupe roadmap"`:
+- [x] 5.1 Open two follow-up issues in troupe-run/infrastructure, each with `--project "troupe roadmap"`:
   - a GitHub App token, declared there, so `links-weekly.yml` can add its issue to the troupe roadmap board;
   - a scheduled watcher that checks troupe-run/website's `links-weekly.yml` is enabled and has a run under 8 days
     old, and opens an issue when either isn't true. Explain why it can't live in website (60-day schedule rule) and
@@ -88,7 +88,7 @@
 
   Link both from troupe-run/website#5. Verify: `gh issue view <n> -R troupe-run/infrastructure --json projectItems`
   shows the board for each.
-- [ ] 5.2 Update `docs/superpowers/specs/2026-10-07-troupe-run-site-design.md`:
+- [x] 5.2 Update `docs/superpowers/specs/2026-10-07-troupe-run-site-design.md`:
   - §6.1 item 4: external links are checked weekly; a broken one fails that run and opens or updates one issue, and
     a clean run closes it. Point at `openspec/specs/link-checking`. Note that GitHub turns the schedule off after 60
     days without repository activity, and that the watcher for that lives in troupe-run/infrastructure (link the
@@ -96,9 +96,9 @@
   - §10: strike the product-repo exclusion, noting it was public by 2026-10-16 and is checked from this change.
 
   Verify: `git grep -n "only warn\|excludes that one URL" docs` is empty.
-- [ ] 5.3 Mention the weekly check and its issue in `CONTRIBUTING.md` only if CONTRIBUTING already describes CI's
+- [x] 5.3 Mention the weekly check and its issue in `CONTRIBUTING.md` only if CONTRIBUTING already describes CI's
   checks. Otherwise leave it. Verify: decision noted in the commit.
-- [ ] 5.4 Commit.
+- [x] 5.4 Commit.
 
 ## 6. End-to-end check on the branch (integration)
 

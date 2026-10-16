@@ -285,7 +285,11 @@ troupe-run.github.io/
 1. `astro check`
 2. `astro build`
 3. The asset-render check (§5.3)
-4. A link check over the built site, internal links only. External links are checked weekly and only warn
+4. A link check over the built site, internal links only. External links are checked weekly, outside pull
+   requests (`links-weekly.yml`). A broken one fails that run and opens or updates one "Broken external links"
+   issue, and a clean run closes it (replaced by `openspec/specs/link-checking`, troupe-run/website#5). GitHub
+   turns the schedule off after 60 days without repository activity. The watcher for that lives in
+   troupe-run/infrastructure (troupe-run/infrastructure#60).
 5. Playwright smoke tests with axe (§7)
 
 ### 6.2 Deploy (`deploy.yml`, on pushes to main)
@@ -360,8 +364,7 @@ We move to a hand-built docs layout if any of these happens:
 
 ## 10. Open points
 
-- **Before driving any traffic to the site,** `github.com/troupe-run/troupe` must exist and be public.
-  - Until then, the GitHub call to action leads to a 404. That's accepted (§2).
-  - The link checker excludes that one URL until the repo is published.
+- ~~**Before driving any traffic to the site,** `github.com/troupe-run/troupe` must exist and be public.~~
+  Done: it was public by 2026-10-16, and the weekly link check requests it (troupe-run/website#5).
 - **Pushing the local brand-guide commits:** these are held until the owner has read the guide.
 - **"The house" and "house rules":** not yet agreed as names. The docs page title carries "name TBC".
