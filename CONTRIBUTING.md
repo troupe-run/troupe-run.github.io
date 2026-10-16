@@ -17,7 +17,7 @@ anything else.
 ## Setting up
 
 - [uv](https://docs.astral.sh/uv/getting-started/installation/), which runs the check (`brew install uv` on a Mac).
-- Node 22 or later (the version in `.nvmrc`), then `npm install`.
+- Node 22 or later (the version in `.nvmrc`), then `npm ci`, which installs exactly what `package-lock.json` lists.
 
 ## Running it locally
 
