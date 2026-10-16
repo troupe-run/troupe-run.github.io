@@ -41,14 +41,14 @@
 
 ## 4. Contributor docs
 
-- [ ] 4.1 Update `CONTRIBUTING.md` (spec `contributing`, D8, D9): install uv and Node; `uv run scripts/check.py`
+- [x] 4.1 Update `CONTRIBUTING.md` (spec `contributing`, D8, D9): install uv and Node; `uv run scripts/check.py`
   before every commit and in CI, and that it reinstalls `node_modules`; the workflow's five steps with a rebase merge;
   Conventional Commits; no sign-off, no CLA; the licences and trademark exception (kept); how an outside
   **Improve this page** fix is carried, with `Co-authored-by:`. Verify each `contributing` scenario against the text.
-- [ ] 4.2 Write `CLAUDE.md` (D9): what this repository is, pointing at `openspec/config.yaml`; the workflow; the check;
+- [x] 4.2 Write `CLAUDE.md` (D9): what this repository is, pointing at `openspec/config.yaml`; the workflow; the check;
   Conventional Commits with no sign-off; the guard's files come from troupe-run/infrastructure; follow a refusal's
   fix. Verify the "An agent starts a session" scenario against the text.
-- [ ] 4.3 Point `README.md`'s Development section at the check and CONTRIBUTING. Verify `npm run linkcheck` still
+- [x] 4.3 Point `README.md`'s Development section at the check and CONTRIBUTING. Verify `npm run linkcheck` still
   passes (README isn't in the build, so also check its links by eye).
 - [ ] 4.4 Follow CONTRIBUTING's set-up steps literally in a fresh clone of this branch and verify
   `uv run scripts/check.py` runs to completion. Then show the owner CONTRIBUTING.md and CLAUDE.md as text for review
