@@ -2,18 +2,18 @@
 
 ## 1. Shared linkinator parsing (D6)
 
-- [ ] 1.1 Before touching anything, run `npm ci && npm run build && npm run linkcheck` on this branch and save the
+- [x] 1.1 Before touching anything, run `npm ci && npm run build && npm run linkcheck` on this branch and save the
   stdout and exit code (scratchpad) as the baseline. Verify: file saved, exit code 0.
-- [ ] 1.2 Move run-and-parse into `scripts/linkinator-lib.mjs`: `runLinkinator(dir, skips, extraArgs)` and a pure
+- [x] 1.2 Move run-and-parse into `scripts/linkinator-lib.mjs`: `runLinkinator(dir, skips, extraArgs)` and a pure
   `summarise(result)` that returns `{ scanned, skipped, broken }`. Add `tests/unit/linkinator-lib.test.ts`, with
   fixtures copied from a real `linkinator --format json` run (not hand-written). Cover: broken links are counted,
   skipped links are excluded from `scanned`, and a result with no `links` gives zero scanned. Verify: `npm run
   test:unit` passes.
-- [ ] 1.3 Change `scripts/linkcheck.mjs` to use the library, keeping its skip, thresholds and messages. Verify: rerun
+- [x] 1.3 Change `scripts/linkcheck.mjs` to use the library, keeping its skip, thresholds and messages. Verify: rerun
   build + `npm run linkcheck`. The stdout and exit code match the 1.1 baseline line for line, apart from link counts
   if the build changed. Then point it at an empty directory and confirm it still exits 1 with the "not checking
   anything" message.
-- [ ] 1.4 Commit ("share linkinator parsing so the weekly check reuses CI's empty-scan guard").
+- [x] 1.4 Commit ("share linkinator parsing so the weekly check reuses CI's empty-scan guard").
 
 ## 2. Skip list (D7)
 

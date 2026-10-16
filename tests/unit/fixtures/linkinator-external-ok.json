@@ -1,0 +1,47 @@
+{
+  "links": [
+    {
+      "url": "dist",
+      "status": 200,
+      "state": "OK",
+      "failureDetails": []
+    },
+    {
+      "url": "dist/favicon.svg",
+      "status": 200,
+      "state": "OK",
+      "parent": "dist",
+      "failureDetails": []
+    },
+    {
+      "url": "dist/favicon.ico",
+      "status": 200,
+      "state": "OK",
+      "parent": "dist",
+      "failureDetails": []
+    },
+    {
+      "url": "https://hps.gd/",
+      "status": 200,
+      "state": "OK",
+      "parent": "dist",
+      "failureDetails": [],
+      "displayText": "a project by hps.gd"
+    },
+    {
+      "url": "https://troupe.run/",
+      "status": 200,
+      "state": "OK",
+      "parent": "dist",
+      "failureDetails": []
+    },
+    {
+      "url": "https://troupe.run/docs/the-company/flows/",
+      "status": 200,
+      "state": "OK",
+      "parent": "dist/docs/the-company/flows/",
+      "failureDetails": []
+    }
+  ],
+  "passed": true
+}
