@@ -20,7 +20,7 @@
 ## 4. Integration
 
 - [x] 4.1 Run CI's checks locally (`npm run check`, `npm run test:unit`, `npm run build`, `npm run assets:verify`, `npm run linkcheck`, `npm run test:e2e`) and verify all pass, showing the output
-- [ ] 4.2 Open the pull request with `Closes #4`, and verify CI passes on it. Note in the PR that the deploy step itself can only be exercised after merge (see 4.3)
+- [x] 4.2 Open the pull request with `Closes #4`, and verify CI passes on it. Note in the PR that the deploy step itself can only be exercised after merge (see 4.3)
 - [ ] 4.3 After merge, verify on the first deploy run that the reader step logged the version and that `withastro/action`'s "Setup Node" resolved the same Node version as CI's "Setup Node" for the same commit; record both versions and run links on troupe-run/website#4. The owner or the implementer does this by reading the two run logs; it can't be automated before merge
 
 ## Workflow follow-up
