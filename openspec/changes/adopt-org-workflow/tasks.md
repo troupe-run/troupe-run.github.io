@@ -69,15 +69,30 @@
 
 ## 5. Integration
 
-- [ ] 5.1 Time the full check on macOS from a clean `node_modules` (`rm -rf node_modules dist && time uv run
+- [x] 5.1 Time the full check on macOS from a clean `node_modules` (`rm -rf node_modules dist && time uv run
   scripts/check.py`), with each gate's time (D7). Verify it's under 600 s; if it's over about 420 s, stop and raise the
   e2e double build with the owner before going on.
-- [ ] 5.2 Verify the branch adds none of the delivered paths: `git diff --name-only main... -- scripts/guard.py
+  Result (Apple M1 Max, macOS 27.0.1, Node 26.12.0, uv 0.13.1, in a Claude Code session): 38.3 s in all, exit 0.
+
+  | Gate | Time |
+  |---|---|
+  | check.py tests | 0.3 s |
+  | npm ci | 4.3 s |
+  | playwright chromium | 1.6 s |
+  | astro check | 5.9 s |
+  | unit tests | 2.6 s |
+  | build | 3.6 s |
+  | assets verify | 0.5 s |
+  | link check | 1.4 s |
+  | e2e tests | 18.1 s |
+
+  A fresh clone set up by CONTRIBUTING's steps passed in 40.8 s (task 4.4).
+- [x] 5.2 Verify the branch adds none of the delivered paths: `git diff --name-only main... -- scripts/guard.py
   scripts/guard_pytest.py .githooks .claude/settings.json .github/workflows/guard.yml .github/guard-delivery.json`
   prints nothing.
-- [ ] 5.3 Verify every commit on the branch is a Conventional Commit with no `Signed-off-by:`:
+- [x] 5.3 Verify every commit on the branch is a Conventional Commit with no `Signed-off-by:`:
   `git log --format=%s main..` and `git log --format=%b main.. | grep -c Signed-off-by` (0).
-- [ ] 5.4 Run `openspec validate adopt-org-workflow --strict` and verify it passes.
+- [x] 5.4 Run `openspec validate adopt-org-workflow --strict` and verify it passes.
 
 ## Workflow follow-up
 
