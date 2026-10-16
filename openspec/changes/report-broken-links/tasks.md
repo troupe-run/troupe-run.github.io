@@ -104,16 +104,16 @@
 
 - [x] 6.1 Run CI's full set locally (`npm run check && npm run test:unit && npm run build && npm run assets:verify
   && npm run linkcheck && npm run test:e2e`). Verify: all pass, output shown.
-- [ ] 6.2 Tell the owner this step opens a real issue in troupe-run/website, then go ahead. Push the branch. On a
+- [x] 6.2 Tell the owner this step opens a real issue in troupe-run/website, then go ahead. Push the branch. On a
   throwaway commit, add a link to `https://troupe.run/definitely-not-here-404` on one docs page. Run `gh workflow run
   links-weekly.yml --ref report-broken-links`. Verify: the run is red, its summary lists the link, and one
   `Broken external links` issue is opened with the table and run link.
-- [ ] 6.3 Run it again. Verify: a comment is added to the same issue, and `gh issue list --search "Broken external
+- [x] 6.3 Run it again. Verify: a comment is added to the same issue, and `gh issue list --search "Broken external
   links in:title" --state open` shows exactly one.
-- [ ] 6.4 Drop the throwaway commit, push, and run it again. Verify: the run is green, the issue is closed with a
+- [x] 6.4 Drop the throwaway commit, push, and run it again. Verify: the run is green, the issue is closed with a
   comment linking to the clean run, and the run actually requested `github.com/troupe-run/troupe` (seen in the run's
   log or summary).
-- [ ] 6.5 Comment on the test issue that it was this change's end-to-end test.
+- [x] 6.5 Comment on the test issue that it was this change's end-to-end test.
 
 ## Workflow follow-up
 
