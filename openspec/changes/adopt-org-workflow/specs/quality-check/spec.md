@@ -83,3 +83,25 @@ commit needs the full check.
 #### Scenario: CI ignores the declaration
 - **WHEN** a pull request changes only skipped paths
 - **THEN** CI's `test` job still runs the full check
+
+### Requirement: The end-to-end tests run wherever the check runs
+The end-to-end tests SHALL start their own preview server in the foreground and stop it when they finish, including
+inside a coding agent's session. Each run SHALL use a port that's free when it starts, unless `E2E_PORT` names one, so
+runs in two worktrees at once don't collide. An `E2E_PORT` that isn't a whole number from 1024 to 65535 SHALL be
+refused, naming the variable, its value and what's valid.
+
+#### Scenario: Inside a coding agent's session
+- **WHEN** the check runs in a Claude Code session (`CLAUDECODE=1`)
+- **THEN** the end-to-end tests pass, and no preview server is left running afterwards
+
+#### Scenario: Two worktrees at once
+- **WHEN** another worktree's preview server is listening on the port an earlier run used
+- **THEN** this run's end-to-end tests use a different port and pass
+
+#### Scenario: A chosen port
+- **WHEN** `E2E_PORT=4329` is set
+- **THEN** the preview server listens on 4329 and the tests use it
+
+#### Scenario: A malformed port
+- **WHEN** `E2E_PORT` is `abc`, empty, `80` or `70000`
+- **THEN** the end-to-end tests refuse to start, with an error naming `E2E_PORT`, the value and the valid range

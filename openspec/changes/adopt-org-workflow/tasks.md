@@ -31,13 +31,23 @@
   stand-in hid: a module loaded from a path must be in `sys.modules` before it runs, or the guard's dataclasses fail
   under `from __future__ import annotations`. Fixed, and the stand-in now has both, so the tests catch it.
 
-## 3. CI
+## 3. CI and the e2e server
 
 - [ ] 3.1 Change `.github/workflows/ci.yml`'s `test` job (D6): keep checkout and `setup-node`, add `astral-sh/setup-uv`
   pinned to `1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0`, replace the eight `run` steps with
   `uv run scripts/check.py`, keep the report upload on failure and the job name `test`. Verify with
   `grep -c "run: npm" .github/workflows/ci.yml` (0) and on the pull request: the `test` job's log shows check.py's
   gate lines and it passes.
+
+- [ ] 3.2 Write `tests/unit/e2e-port.test.ts` first (design D11): an unset `E2E_PORT` gives a port that can be
+  listened on and is written back to the environment; `E2E_PORT=4329` gives 4329; `abc`, empty, `80` and `70000` throw
+  an error naming `E2E_PORT`, the value and the range; and the preview command carries `--ignore-lock`. Verify they
+  fail before `tests/e2e/port.ts` exists.
+- [ ] 3.3 Write `tests/e2e/port.ts` and use it in `playwright.config.ts`; update CONTRIBUTING's mention of port 4329.
+  Verify the 3.2 tests pass.
+- [ ] 3.4 In this Claude Code session (`CLAUDECODE=1`), with another `astro preview` listening on 4329, run
+  `npm run test:e2e` and verify it passes on another port and that `lsof -iTCP -sTCP:LISTEN` shows no preview server
+  of this worktree's left afterwards. Run it with `E2E_PORT=4339` and verify the server listened on 4339.
 
 ## 4. Contributor docs
 

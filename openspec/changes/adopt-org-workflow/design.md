@@ -148,6 +148,24 @@ One more test runs only once `scripts/guard.py` exists: it asks `guard.check_sco
 mixed commit need. Until the delivery it's skipped with the reason "the guard isn't delivered yet", and during apply
 it's run once against troupe's `guard.py` copied into a temporary directory, with the result recorded in the task.
 
+### D11. The e2e server stays in the foreground, on a free port
+
+Found while verifying task 4.4. Astro 7's `astro preview` moves itself into the background when it detects a coding
+agent (`CLAUDECODE`, `AI_AGENT`). Playwright's `webServer` then sees its process exit, fails with "exited early", and
+the server is left running, holding its port. Every agent commit runs the check through the guard, so every one would
+be refused. A server left behind this way by another session was found holding 4329.
+
+- **`--ignore-lock`** on the `webServer` command. Astro turns off agent backgrounding when it's set, and it starts
+  without checking for another preview server, so Playwright owns the process and stops it. Chosen over setting
+  `ASTRO_PREVIEW_BACKGROUND` in `check.py`, which would fix only runs made through the check.
+- **A free port per run** (owner, 2026-10-16). Every commit now runs e2e, so two worktrees running it at once is
+  ordinary. `tests/e2e/port.ts` resolves the port once: `E2E_PORT` if it's set, otherwise a port the OS reports free,
+  which it writes back to `E2E_PORT`. Playwright loads the config again in each worker, and the workers inherit that
+  environment, so they all get the same port. A set but malformed `E2E_PORT` is an error, never a fall-through to a
+  free port. The free port is found by a short `node` child process, because Playwright loads its config synchronously.
+  Between that process freeing the port and Astro binding it, another process could take it. Then Playwright's
+  `reuseExistingServer: false` refuses to start ("already used"), so the run fails loudly and never tests another site.
+
 ## Risks / Trade-offs
 
 - [The full check is over the guard's limit on a slow machine] → D7 measures and records it; the e2e double build is
