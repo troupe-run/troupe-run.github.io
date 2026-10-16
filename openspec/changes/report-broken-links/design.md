@@ -131,5 +131,6 @@ roll back, revert the commit. Any open tracking issue can be closed by hand.
 
 ## Open Questions
 
-- Does `gc.zgo.at` still need skipping? Settled during apply by requesting it (D7). Neither answer changes the
-  approach.
+- ~~Does `gc.zgo.at` still need skipping?~~ Settled during apply (2026-10-16): no. `https://gc.zgo.at/count.js`
+  answers 200 to curl and to linkinator, fetching it records no visit, and the commit that added the skip (bd8d4e4)
+  gave no reason. The skip list starts empty.
