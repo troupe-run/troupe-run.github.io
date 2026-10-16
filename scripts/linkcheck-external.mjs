@@ -43,7 +43,9 @@ const gh = (...args) => {
 let reportFailed = false;
 if (GITHUB_ACTIONS) {
   try {
-    const listed = JSON.parse(gh('issue', 'list', '--state', 'open', '--author', 'app/github-actions', '--limit', '100',
+    // List every open issue and filter in code. `--author` (or `--search`) goes through GitHub's search API, which
+    // didn't return a bot-opened issue minutes after it was created, so the second run opened a duplicate.
+    const listed = JSON.parse(gh('issue', 'list', '--state', 'open', '--limit', '1000',
       '--json', 'number,title,author,createdAt,state'));
     const openIssues = matchTrackingIssues(listed);
     if (openIssues.length > 1) console.warn(`! ${openIssues.length} open "${TRACKING_TITLE}" issues; updating #${openIssues[0].number}, the oldest`);
