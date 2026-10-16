@@ -14,8 +14,8 @@
 
 ## 3. Wire the deploy
 
-- [ ] 3.1 In `deploy.yml`, add a step `id: node-version` after checkout that runs `node scripts/node-version.mjs`, and set `withastro/action`'s `node-version: ${{ steps.node-version.outputs.version }}`. Verify the wiring test from 1.2 now passes and `npm run test:unit` is green
-- [ ] 3.2 Check the edited workflow is valid before pushing (`npx --yes @action-validator/cli@<exact version> .github/workflows/deploy.yml`, or `actionlint` if installed) and verify it reports no errors
+- [x] 3.1 In `deploy.yml`, add a step `id: node-version` after checkout that runs `node scripts/node-version.mjs`, and set `withastro/action`'s `node-version: ${{ steps.node-version.outputs.version }}`. Verify the wiring test from 1.2 now passes and `npm run test:unit` is green
+- [x] 3.2 Check the edited workflow is valid before pushing (`npx --yes @action-validator/cli@<exact version> .github/workflows/deploy.yml`, or `actionlint` if installed) and verify it reports no errors
 
 ## 4. Integration
 

@@ -15,9 +15,12 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 0   # Starlight's "Last updated" reads git history
+      # withastro/action can't read .nvmrc, and without node-version it builds on its own default.
+      - id: node-version
+        run: node scripts/node-version.mjs
       - uses: withastro/action@v6
         with:
-          node-version: 22
+          node-version: ${{ steps.node-version.outputs.version }}
   deploy:
     needs: build
     runs-on: ubuntu-latest
