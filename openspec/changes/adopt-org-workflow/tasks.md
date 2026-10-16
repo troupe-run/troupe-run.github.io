@@ -33,11 +33,13 @@
 
 ## 3. CI and the e2e server
 
-- [ ] 3.1 Change `.github/workflows/ci.yml`'s `test` job (D6): keep checkout and `setup-node`, add `astral-sh/setup-uv`
+- [x] 3.1 Change `.github/workflows/ci.yml`'s `test` job (D6): keep checkout and `setup-node`, add `astral-sh/setup-uv`
   pinned to `1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0`, replace the eight `run` steps with
   `uv run scripts/check.py`, keep the report upload on failure and the job name `test`. Verify with
   `grep -c "run: npm" .github/workflows/ci.yml` (0) and on the pull request: the `test` job's log shows check.py's
   gate lines and it passes.
+  Result: on PR #14 the `test` job ran `uv run scripts/check.py`, logged all nine gates, and passed in 1m38s
+  (run 38890703060).
 
 - [x] 3.2 Write `tests/unit/e2e-port.test.ts` first (design D11): an unset `E2E_PORT` gives a port that can be
   listened on and is written back to the environment; `E2E_PORT=4329` gives 4329; `abc`, empty, `80` and `70000` throw
