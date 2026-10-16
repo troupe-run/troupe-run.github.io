@@ -135,8 +135,17 @@ class Arguments(unittest.TestCase):
             gates.assert_not_called()
 
 
+# The real guard defines dataclasses at import, which needs the module in sys.modules while it
+# loads; the stand-in does too, so a loader that skips that fails here and not on delivery day.
 STAND_IN_GUARD = """\
+from __future__ import annotations
+
+from dataclasses import dataclass
 from pathlib import Path
+
+@dataclass(frozen=True)
+class Decision:
+    rule: str
 
 def activate_hooks(root):
     (Path(root) / "activated").write_text(str(root))
@@ -194,6 +203,77 @@ class Hooks(unittest.TestCase):
         self.assertIn("check: Activated the repository's git hooks (stand-in).", out.getvalue())
         gates.assert_called_once()
         run_gates.assert_called_once_with([], self.root)
+
+
+CHECK_PATHS = ROOT / "scripts" / "check-paths.toml"
+
+GATE_SOURCES = [
+    *sorted((ROOT / "src").rglob("*")),
+    *sorted((ROOT / "tests").rglob("*")),
+    *sorted((ROOT / "scripts").glob("*.mjs")),
+    ROOT / "astro.config.mjs",
+    ROOT / "playwright.config.ts",
+    ROOT / "vitest.config.ts",
+    ROOT / "package.json",
+]
+"""What the gates read, besides the packages: the site, its tests, its scripts and its config."""
+
+
+def declaration() -> dict:
+    import tomllib
+
+    return tomllib.loads(CHECK_PATHS.read_text())
+
+
+def skipped_files(entry: str) -> list[str]:
+    """The files a skip entry covers today, as repository-relative paths."""
+    if entry.endswith("/**"):
+        base = ROOT / entry[:-3]
+        return sorted(p.relative_to(ROOT).as_posix() for p in base.rglob("*") if p.is_file())
+    return [entry]
+
+
+class CheckPaths(unittest.TestCase):
+    def test_the_declaration_is_version_1_skips_openspec_and_declares_no_scopes(self) -> None:
+        data = declaration()
+        self.assertEqual(data["version"], 1)
+        self.assertIn("openspec/**", data["skip"]["paths"])
+        self.assertNotIn("scopes", data)
+
+    def test_no_gate_source_names_a_skipped_file(self) -> None:
+        # The guard skips the check for a commit that stages only these, so a gate that read one
+        # could break unchecked until CI (design D5). Directory entries are also matched by their
+        # prefix (`openspec/`); docs/ only by its files, since the site's routes say /docs/.
+        needles = set()
+        for entry in declaration()["skip"]["paths"]:
+            needles.update(skipped_files(entry))
+            if entry.endswith("/**") and entry != "docs/**":
+                needles.add(entry[:-2])
+        found = [
+            f"{source.relative_to(ROOT)} names {needle}"
+            for source in GATE_SOURCES
+            if source.is_file()
+            for text in [source.read_text(errors="ignore")]
+            for needle in sorted(needles)
+            if needle in text
+        ]
+        self.assertEqual(found, [])
+
+    @unittest.skipUnless(
+        (ROOT / "scripts" / "guard.py").exists(), "the guard isn't delivered yet"
+    )
+    def test_the_guard_skips_an_openspec_only_commit_and_fully_checks_one_touching_src(
+        self,
+    ) -> None:
+        sys.path.insert(0, str(ROOT / "scripts"))
+        import guard
+
+        parsed = guard.check_paths(CHECK_PATHS.read_text())
+        only_openspec = guard.check_scope(["openspec/changes/x/tasks.md"], parsed)
+        self.assertFalse(only_openspec.full)
+        self.assertEqual(only_openspec.names, ())
+        mixed = guard.check_scope(["openspec/changes/x/tasks.md", "src/pages/index.astro"], parsed)
+        self.assertTrue(mixed.full)
 
 
 if __name__ == "__main__":
