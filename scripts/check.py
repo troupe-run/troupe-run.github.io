@@ -71,6 +71,8 @@ def activate_git_hooks(root: Path) -> str | None:
     spec = importlib.util.spec_from_file_location("guard", guard_py)
     assert spec is not None and spec.loader is not None
     guard = importlib.util.module_from_spec(spec)
+    # Registered before it runs: the guard's dataclasses look their module up while it loads.
+    sys.modules["guard"] = guard
     spec.loader.exec_module(guard)
     notice: str | None = guard.activate_hooks(root)
     return notice

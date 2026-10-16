@@ -16,15 +16,20 @@
 
 ## 2. What needs no check
 
-- [ ] 2.1 Add tests to `scripts/tests/test_check.py` for `scripts/check-paths.toml` (D5, D10): it parses with
+- [x] 2.1 Add tests to `scripts/tests/test_check.py` for `scripts/check-paths.toml` (D5, D10): it parses with
   `tomllib`, `version = 1`, `skip` includes `openspec/**`, no `scopes`; no gate source names a skipped path; and the
   guard-backed scope test, skipped with "the guard isn't delivered yet" when `scripts/guard.py` is absent. Verify they
   fail without the file.
-- [ ] 2.2 Write `scripts/check-paths.toml` (D5), with a header comment saying what reads it and why each path is
+- [x] 2.2 Write `scripts/check-paths.toml` (D5), with a header comment saying what reads it and why each path is
   skipped. Verify the 2.1 tests pass.
-- [ ] 2.3 Copy troupe's `scripts/guard.py` into a temporary copy of this repository (never into this working tree) and
+- [x] 2.3 Copy troupe's `scripts/guard.py` into a temporary copy of this repository (never into this working tree) and
   run the guard-backed test there. Verify an OpenSpec-only commit needs no check and an OpenSpec-plus-`src/` commit
   needs the full check, and record the output here.
+  Result (troupe's `guard.py` at fa7f74b, delivered from infrastructure df48cf5d7e94): the guard-backed test and
+  all 14 others pass, none skipped. Through the real guard, `check.activate_git_hooks` set `core.hooksPath` to
+  `.githooks` and printed its notice, and a second call returned `None`. That run found a loader bug the first
+  stand-in hid: a module loaded from a path must be in `sys.modules` before it runs, or the guard's dataclasses fail
+  under `from __future__ import annotations`. Fixed, and the stand-in now has both, so the tests catch it.
 
 ## 3. CI
 
