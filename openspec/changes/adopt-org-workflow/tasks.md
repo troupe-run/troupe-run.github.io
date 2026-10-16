@@ -2,16 +2,16 @@
 
 ## 1. The check
 
-- [ ] 1.1 Write `scripts/tests/test_check.py` first (design D10): gate order and labels (D2), stop at the first failure
+- [x] 1.1 Write `scripts/tests/test_check.py` first (design D10): gate order and labels (D2), stop at the first failure
   with `check: <label> failed (exit N)`, a missing `npm`/`npx` exits before any gate, any argument (`--scope docs`)
   is refused before any gate, `--with-deps` only when `CI` is set (D3), and hook activation with a stand-in
   `guard.py` (called in a git checkout including a worktree's `.git` file, not called without `.git`, not attempted
   without `guard.py`). Verify each test fails for the right reason before `check.py` exists:
   `uv run --no-project python -m unittest discover -s scripts/tests`.
-- [ ] 1.2 Write `scripts/check.py` (D1–D4): PEP 723 metadata with no dependencies, the nine gates, timed and announced,
+- [x] 1.2 Write `scripts/check.py` (D1–D4): PEP 723 metadata with no dependencies, the nine gates, timed and announced,
   optional guard activation. Verify the 1.1 tests pass, and that `head -20 scripts/check.py` shows no third-party
   import.
-- [ ] 1.3 Run `uv run scripts/check.py` with a gate broken on purpose (a temporary failing unit test, not committed)
+- [x] 1.3 Run `uv run scripts/check.py` with a gate broken on purpose (a temporary failing unit test, not committed)
   and verify the last line is `check: unit tests failed (exit 1) …`, no later gate ran, and the exit code is 1.
 
 ## 2. What needs no check
