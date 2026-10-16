@@ -17,14 +17,14 @@
 
 ## 2. Skip list (D7)
 
-- [ ] 2.1 Settle the `gc.zgo.at` question: `curl -sI https://gc.zgo.at/count.js` and a local
+- [x] 2.1 Settle the `gc.zgo.at` question: `curl -sI https://gc.zgo.at/count.js` and a local
   `npx linkinator https://gc.zgo.at/count.js`. Record the result in the skip's reason, or drop the entry if it
   answers 200 and no reason holds. Verify: the outcome is written in the commit message.
-- [ ] 2.2 Create `scripts/external-skips.mjs` exporting `[{ pattern, reason }]`, with no `troupe-run/troupe` entry.
+- [x] 2.2 Create `scripts/external-skips.mjs` exporting `[{ pattern, reason }]`, with no `troupe-run/troupe` entry.
   Add `tests/unit/external-skips.test.ts`, testing that every entry has a non-empty pattern and reason, that each
   pattern compiles as a RegExp, and that `https://github.com/troupe-run/troupe` matches no skip. Verify: `npm run
   test:unit` passes. Temporarily re-add the troupe skip and confirm the last test fails, then revert.
-- [ ] 2.3 Commit.
+- [x] 2.3 Commit.
 
 ## 3. Report formatting and issue decision (D3, D4, D8)
 
