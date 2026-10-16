@@ -54,9 +54,10 @@ The owner chose this option over "fail only" and "issue only" when asked during 
 
 ### D3. Find the tracking issue by exact title among open issues opened by the workflow
 
-The title is fixed as `Broken external links` and the issue carries the existing `bug` label. The script lists open
-issues by `app/github-actions` and filters for an exact title match in code. GitHub search's `in:title` is fuzzy, so
-the script doesn't rely on it for the match.
+The title is fixed as `Broken external links` and the issue carries the existing `bug` label. The script lists all open
+issues and filters on the exact title and the `app/github-actions` author in code. It never uses search
+(`--author`, `--search`, `in:title`). Search is fuzzy, and in the end-to-end test it didn't return the bot-opened
+issue minutes after it was created, so the second run opened a duplicate (fixed in 3af1d08).
 
 - *Alternative:* a dedicated label such as `links:broken`. That's cleaner to query, but labels are declared in
   infrastructure, so it would need a change there first. Matching on the exact title and the author is enough for a
