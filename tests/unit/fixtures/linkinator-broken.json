@@ -1,0 +1,33 @@
+{
+  "links": [
+    {
+      "url": "dist",
+      "status": 200,
+      "state": "OK",
+      "failureDetails": []
+    },
+    {
+      "url": "https://no-such-host.invalid/",
+      "status": 0,
+      "state": "BROKEN",
+      "parent": "dist",
+      "displayText": "dns"
+    },
+    {
+      "url": "https://github.com/troupe-run/troupe",
+      "status": 200,
+      "state": "OK",
+      "parent": "dist",
+      "failureDetails": [],
+      "displayText": "ok"
+    },
+    {
+      "url": "https://troupe.run/definitely-not-here-404",
+      "status": 404,
+      "state": "BROKEN",
+      "parent": "dist",
+      "displayText": "x"
+    }
+  ],
+  "passed": false
+}
