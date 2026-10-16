@@ -28,7 +28,7 @@
 
 ## 3. Report formatting and issue decision (D3, D4, D8)
 
-- [ ] 3.1 In `scripts/linkcheck-external-lib.mjs`, write a pure `decide({ broken, scanned, crashed, openIssues })`
+- [x] 3.1 In `scripts/linkcheck-external-lib.mjs`, write a pure `decide({ broken, scanned, crashed, openIssues })`
   that returns `{ action: 'open' | 'comment' | 'close' | 'none', issue? }`. Add `tests/unit/linkcheck-external.test.ts`
   with one test per spec scenario, each named for what it asserts:
   - broken and no open issue → `open`
@@ -40,20 +40,20 @@
   - crashed → `none`
 
   Verify: `npm run test:unit` passes.
-- [ ] 3.2 Add a pure `matchTrackingIssues(issues)`: exact title `Broken external links`, author
+- [x] 3.2 Add a pure `matchTrackingIssues(issues)`: exact title `Broken external links`, author
   `app/github-actions`, open, sorted oldest first. Test that a near-miss title ("Broken external links (old)") and
   an issue by a person are excluded. Verify: unit tests pass.
-- [ ] 3.3 Add a pure `formatReport({ broken, runUrl })` that returns Markdown: a table of URL | status | found on, a
+- [x] 3.3 Add a pure `formatReport({ broken, runUrl })` that returns Markdown: a table of URL | status | found on, a
   run link, the "closes itself after a clean weekly run" line, and the note that triage adds the issue to the roadmap
   board by hand. Cap it at 100 rows with "+N more". Test the table rows against fixture links, that a `|` in a URL is
   escaped, and the cap with 101 links. Verify: unit tests pass.
-- [ ] 3.4 Add a pure `exitCode({ broken, scanned, crashed, reportFailed })`: 1 when any input is bad, 0 otherwise.
+- [x] 3.4 Add a pure `exitCode({ broken, scanned, crashed, reportFailed })`: 1 when any input is bad, 0 otherwise.
   Test each case. Verify: unit tests pass.
-- [ ] 3.5 Commit.
+- [x] 3.5 Commit.
 
 ## 4. The external check script and workflow (D2, D4, D5)
 
-- [ ] 4.1 Confirm linkinator 8.1.0 supports `--retry`, `--retry-errors`, `--retry-errors-count`,
+- [x] 4.1 Confirm linkinator 8.1.0 supports `--retry`, `--retry-errors`, `--retry-errors-count`,
   `--retry-errors-jitter` and `--timeout` (`npx linkinator --help`). If any is missing, note it in design D5 and use
   the nearest supported flag. Verify: `--help` output pasted into the commit message.
 - [ ] 4.2 Write `scripts/linkcheck-external.mjs` to wire it together:
