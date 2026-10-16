@@ -1,0 +1,37 @@
+# troupe.run
+
+This repository is the troupe.run website: the landing page, the docs at /docs and the blog. troupe itself lives in
+troupe-run/troupe. See [openspec/config.yaml](openspec/config.yaml) for the constraints every change respects, and
+[CONTRIBUTING.md](CONTRIBUTING.md) for setting up.
+
+## How work happens here
+
+Every change, however small, follows one path.
+
+1. **An issue** says what and why.
+2. **An OpenSpec change** says how: `/opsx:propose <name>`, on a branch named exactly `<name>`. Its proposal cites
+   the issue. Design decisions are surfaced in the proposal or design before code depends on them.
+3. **`/opsx:apply`** builds it. A task is ticked only when its verification has run and passed.
+4. **A pull request** closes the issue (`Closes #n`). CI's `test` job passes.
+5. **`/opsx:archive`** runs on the branch before merging, so the pull request lands code, tests and specs together.
+   It's merged by rebase.
+6. **After the merge**, comment on the issue with the pull request and the archived change.
+
+Commits are Conventional Commits (`feat(docs): ...`), with **no sign-off**: this repository takes no DCO and no
+CLA. `uv run scripts/check.py` passes before each commit; it's the same check CI runs.
+
+## Guardrails
+
+Git hooks and Claude Code hooks enforce the path above. They're delivered from troupe-run/infrastructure, and
+[development-workflow.md](https://github.com/troupe-run/infrastructure/blob/main/docs/development-workflow.md) lists
+every rule. Their files (`scripts/guard.py`, `scripts/guard_pytest.py`, `.githooks/`, `.claude/settings.json`,
+`.github/workflows/guard.yml`, `.github/guard-delivery.json`) are changed there, never here. When a guardrail refuses
+an action:
+
+- **Follow its fix.** Don't look for another route to the same action. The hooks aren't a security boundary, so
+  getting round one is possible, and it's exactly the shortcut they exist to stop.
+- **If the rule seems wrong for the situation, stop and ask the owner.** Only a person, in their own terminal, can
+  grant an override, and every use is logged.
+
+This repository's GitHub settings (rulesets, required checks, labels, Pages) and troupe.run's DNS are declared in
+troupe-run/infrastructure too. Change them there, by an issue in that repository.
