@@ -1,0 +1,69 @@
+// Weekly external link check over a built site. A broken link fails the run, writes the job summary, and opens
+// or updates one tracking issue; a clean run closes it. Outside GitHub Actions it only prints what it would do.
+// The decisions are in linkcheck-external-lib.mjs; this file runs linkinator and gh.
+import { spawnSync } from 'node:child_process';
+import { appendFileSync } from 'node:fs';
+import { runLinkinator, summarise } from './linkinator-lib.mjs';
+import { EXTERNAL_SKIPS } from './external-skips.mjs';
+import { TRACKING_TITLE, decide, exitCode, formatReport, matchTrackingIssues, sitePath } from './linkcheck-external-lib.mjs';
+
+const dir = process.argv[2] ?? 'dist';
+// Retry 429s that send retry-after, and 5xx or no response up to 3 times; give up on a request after 15 s.
+const RETRIES = ['--retry', '--retry-errors', '--retry-errors-count', '3', '--retry-errors-jitter', '3000', '--timeout', '15000'];
+const { GITHUB_ACTIONS, GITHUB_STEP_SUMMARY, GITHUB_SERVER_URL, GITHUB_REPOSITORY, GITHUB_RUN_ID } = process.env;
+const runUrl = GITHUB_RUN_ID ? `${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}` : '(local run)';
+
+const run = runLinkinator(dir, EXTERNAL_SKIPS.map((s) => s.pattern), RETRIES);
+const crashed = Boolean(run.error);
+const summarised = crashed ? { broken: [], external: 0 } : summarise(run.result);
+// Broken local paths are CI's internal check's job; this check and its issue are about external links only.
+const broken = summarised.broken.filter((l) => /^https?:\/\//.test(l.url));
+const { external } = summarised;
+
+if (crashed) {
+  console.error(run.stdout, run.stderr);
+  console.error(`✗ ${run.error}`);
+} else {
+  console.log(`Checked ${external} external links in ${dir} (${EXTERNAL_SKIPS.length} skip pattern(s))`);
+  for (const l of broken) console.error(`✗ ${l.status || 'no response'} ${l.url} (on ${sitePath(l.parent, dir)})`);
+  if (external === 0) console.error('✗ checked no external links: the external link check is not checking anything');
+}
+
+const summary = crashed ? `The external link check failed to run: ${run.error}.\n\nRun: ${runUrl}`
+  : external === 0 ? `The external link check checked no external links, so it proves nothing.\n\nRun: ${runUrl}`
+  : formatReport({ broken, external, runUrl, dir });
+if (GITHUB_STEP_SUMMARY) appendFileSync(GITHUB_STEP_SUMMARY, `## External links\n\n${summary}\n`);
+
+const gh = (...args) => {
+  const r = spawnSync('gh', args, { encoding: 'utf8' });
+  if (r.status !== 0) throw new Error(`gh ${args[0]} ${args[1]} failed: ${r.stderr.trim()}`);
+  return r.stdout;
+};
+
+let reportFailed = false;
+if (GITHUB_ACTIONS) {
+  try {
+    const listed = JSON.parse(gh('issue', 'list', '--state', 'open', '--author', 'app/github-actions', '--limit', '100',
+      '--json', 'number,title,author,createdAt,state'));
+    const openIssues = matchTrackingIssues(listed);
+    if (openIssues.length > 1) console.warn(`! ${openIssues.length} open "${TRACKING_TITLE}" issues; updating #${openIssues[0].number}, the oldest`);
+    const decision = decide({ broken, external, crashed, openIssues });
+    const body = formatReport({ broken, external, runUrl, dir, forIssue: true });
+    if (decision.action === 'open') console.log(`Opened ${gh('issue', 'create', '--title', TRACKING_TITLE, '--label', 'bug', '--body', body).trim()}`);
+    if (decision.action === 'comment') { gh('issue', 'comment', String(decision.issue.number), '--body', body); console.log(`Commented on #${decision.issue.number}`); }
+    if (decision.action === 'close') {
+      gh('issue', 'close', String(decision.issue.number), '--comment', `A clean run found no broken external links (${external} checked): ${runUrl}`);
+      console.log(`Closed #${decision.issue.number}`);
+    }
+    if (decision.action === 'none') console.log('Tracking issue: nothing to do');
+  } catch (e) {
+    reportFailed = true;
+    console.error(`✗ could not update the tracking issue: ${e.message}`);
+  }
+} else {
+  console.log(`Not in GitHub Actions: the tracking issue would get "${decide({ broken, external, crashed, openIssues: [] }).action}" (assuming none is open)`);
+}
+
+const code = exitCode({ broken, external, crashed, reportFailed });
+if (!code) console.log('✓ no broken external links');
+process.exit(code);
