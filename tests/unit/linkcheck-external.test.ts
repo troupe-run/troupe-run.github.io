@@ -57,7 +57,7 @@ describe('matchTrackingIssues', () => {
       issue(4, '2026-10-02T00:00:00Z', { state: 'CLOSED' }),
       issue(5, '2026-10-03T00:00:00Z'),
     ];
-    expect(matchTrackingIssues(issues).map((i) => i.number)).toEqual([5, 1]);
+    expect(matchTrackingIssues(issues).map((i: { number: number }) => i.number)).toEqual([5, 1]);
   });
 });
 

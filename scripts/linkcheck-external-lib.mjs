@@ -6,7 +6,15 @@ export const TRACKING_TITLE = 'Broken external links';
 export const WORKFLOW_AUTHOR = 'app/github-actions';
 export const MAX_ROWS = 100;
 
-/** Open issues that are this check's tracking issue, oldest first. Matches the exact title and the workflow's bot. */
+/**
+ * @typedef {{ url: string, status?: number, state?: string, parent?: string }} Link  linkinator's JSON for one link
+ * @typedef {{ number: number, title: string, createdAt: string, state?: string, author?: { login: string } }} Issue
+ */
+
+/**
+ * Open issues that are this check's tracking issue, oldest first. Matches the exact title and the workflow's bot.
+ * @param {Issue[]} issues
+ */
 export function matchTrackingIssues(issues) {
   return issues
     .filter((i) => i.title === TRACKING_TITLE && i.author?.login === WORKFLOW_AUTHOR && (i.state ?? 'OPEN') === 'OPEN')
@@ -16,6 +24,8 @@ export function matchTrackingIssues(issues) {
 /**
  * What to do with the tracking issue. Only broken links open or comment; a clean run closes. A run that crashed or
  * checked no external links is a fault in the check, not news about links, so it leaves the issue alone.
+ * @param {{ broken: Link[], external: number, crashed?: boolean, openIssues: Issue[] }} input
+ * @returns {{ action: 'open' | 'comment' | 'close' | 'none', issue?: Issue }}
  */
 export function decide({ broken, external, crashed, openIssues }) {
   if (crashed || external === 0) return { action: 'none' };
@@ -24,12 +34,18 @@ export function decide({ broken, external, crashed, openIssues }) {
   return issue ? { action: 'close', issue } : { action: 'none' };
 }
 
-/** 1 when any link is broken, nothing was checked, linkinator crashed, or reporting failed; otherwise 0. */
+/**
+ * 1 when any link is broken, nothing was checked, linkinator crashed, or reporting failed; otherwise 0.
+ * @param {{ broken: Link[], external: number, crashed?: boolean, reportFailed?: boolean }} input
+ */
 export function exitCode({ broken, external, crashed, reportFailed }) {
   return crashed || reportFailed || external === 0 || broken.length ? 1 : 0;
 }
 
-/** linkinator reports pages as paths on disk (`dist/docs/x/`); show them as the site path (`/docs/x/`). */
+/**
+ * linkinator reports pages as paths on disk (`dist/docs/x/`); show them as the site path (`/docs/x/`).
+ * @param {string | undefined} parent
+ */
 export function sitePath(parent, dir = 'dist') {
   if (!parent) return '(unknown)';
   const rel = parent === dir ? '' : parent.startsWith(`${dir}/`) ? parent.slice(dir.length + 1) : null;
@@ -42,6 +58,7 @@ const status = (l) => (l.status ? String(l.status) : 'no response');
 /**
  * The Markdown for the job summary, the issue body and its comments, so the three always agree. `forIssue` adds how
  * the issue closes and the note about the roadmap board.
+ * @param {{ broken: Link[], external: number, runUrl: string, dir?: string, forIssue?: boolean }} input
  */
 export function formatReport({ broken, external, runUrl, dir = 'dist', forIssue = false }) {
   const lines = [];

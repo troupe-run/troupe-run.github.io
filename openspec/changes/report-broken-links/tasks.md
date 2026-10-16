@@ -102,7 +102,7 @@
 
 ## 6. End-to-end check on the branch (integration)
 
-- [ ] 6.1 Run CI's full set locally (`npm run check && npm run test:unit && npm run build && npm run assets:verify
+- [x] 6.1 Run CI's full set locally (`npm run check && npm run test:unit && npm run build && npm run assets:verify
   && npm run linkcheck && npm run test:e2e`). Verify: all pass, output shown.
 - [ ] 6.2 Tell the owner this step opens a real issue in troupe-run/website, then go ahead. Push the branch. On a
   throwaway commit, add a link to `https://troupe.run/definitely-not-here-404` on one docs page. Run `gh workflow run
