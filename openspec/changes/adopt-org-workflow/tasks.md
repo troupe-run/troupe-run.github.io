@@ -39,15 +39,18 @@
   `grep -c "run: npm" .github/workflows/ci.yml` (0) and on the pull request: the `test` job's log shows check.py's
   gate lines and it passes.
 
-- [ ] 3.2 Write `tests/unit/e2e-port.test.ts` first (design D11): an unset `E2E_PORT` gives a port that can be
+- [x] 3.2 Write `tests/unit/e2e-port.test.ts` first (design D11): an unset `E2E_PORT` gives a port that can be
   listened on and is written back to the environment; `E2E_PORT=4329` gives 4329; `abc`, empty, `80` and `70000` throw
   an error naming `E2E_PORT`, the value and the range; and the preview command carries `--ignore-lock`. Verify they
   fail before `tests/e2e/port.ts` exists.
-- [ ] 3.3 Write `tests/e2e/port.ts` and use it in `playwright.config.ts`; update CONTRIBUTING's mention of port 4329.
+- [x] 3.3 Write `tests/e2e/port.ts` and use it in `playwright.config.ts`; update CONTRIBUTING's mention of port 4329.
   Verify the 3.2 tests pass.
-- [ ] 3.4 In this Claude Code session (`CLAUDECODE=1`), with another `astro preview` listening on 4329, run
+- [x] 3.4 In this Claude Code session (`CLAUDECODE=1`), with another `astro preview` listening on 4329, run
   `npm run test:e2e` and verify it passes on another port and that `lsof -iTCP -sTCP:LISTEN` shows no preview server
   of this worktree's left afterwards. Run it with `E2E_PORT=4339` and verify the server listened on 4339.
+  Result: with 4329 held by another listener, 182 passed (17.8s); with `E2E_PORT=4339`, the server listened on 4339
+  and the smoke tests passed; `E2E_PORT=abc` was refused with its fix. Afterwards nothing from this worktree was
+  listening.
 
 ## 4. Contributor docs
 
