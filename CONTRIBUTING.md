@@ -27,7 +27,8 @@ anything else.
   It stops at the first failure and says which one. `npm ci` reinstalls `node_modules`, so a dev server that's
   running at the time may need a restart.
 - `npm run test:unit` and `npm run test:e2e` run the tests on their own. The e2e suite builds the site and serves it
-  on its own port (4329), so it never reuses your dev server. `npm run preview` serves a build on 4321 for you.
+  on a port that's free at the time (`E2E_PORT` chooses one), so it never reuses your dev server or another
+  worktree's. `npm run preview` serves a build on 4321 for you.
 - Brand images are rendered from `brand/`. If you change anything there, run `npm run assets:render` and commit
   the results. The check makes sure they match.
 
