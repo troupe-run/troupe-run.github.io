@@ -63,9 +63,12 @@
   fix. Verify the "An agent starts a session" scenario against the text.
 - [x] 4.3 Point `README.md`'s Development section at the check and CONTRIBUTING. Verify `npm run linkcheck` still
   passes (README isn't in the build, so also check its links by eye).
-- [ ] 4.4 Follow CONTRIBUTING's set-up steps literally in a fresh clone of this branch and verify
+- [x] 4.4 Follow CONTRIBUTING's set-up steps literally in a fresh clone of this branch and verify
   `uv run scripts/check.py` runs to completion. Then show the owner CONTRIBUTING.md and CLAUDE.md as text for review
   (copy rule) and fold in their changes.
+  Result: the fresh clone passed in 40.8 s once `npm install` became `npm ci` (it had rewritten the lockfile) and
+  the e2e server was fixed (D11). The owner reviewed CONTRIBUTING.md and CLAUDE.md and asked for no changes
+  (2026-10-16).
 
 ## 5. Integration
 
