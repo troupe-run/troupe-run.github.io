@@ -20,7 +20,7 @@ describe('summarise', () => {
   });
 
   it('returns the 404 and the unreachable host as broken, and not the working link', () => {
-    expect(summarise(broken).broken.map((l) => l.url).sort()).toEqual([
+    expect(summarise(broken).broken.map((l: { url: string }) => l.url).sort()).toEqual([
       'https://no-such-host.invalid/',
       'https://troupe.run/definitely-not-here-404',
     ]);
