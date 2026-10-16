@@ -29,6 +29,7 @@
     "@playwright/test": "1.63.0",
     "@axe-core/playwright": "4.13.0",
     "png-to-ico": "3.0.2",
-    "linkinator": "8.1.0"
+    "linkinator": "8.1.0",
+    "yaml": "2.9.1"
   }
 }
