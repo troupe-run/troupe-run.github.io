@@ -1,0 +1,105 @@
+schema: spec-driven
+
+# Project context (optional)
+# Add only constraints that should guide OpenSpec artifacts and workflows.
+# Include constraints an agent cannot infer by reading the code.
+# Keep general project documentation and discoverable codebase facts out.
+# Example:
+#   context: |
+#     Designs and tasks must cover Windows, macOS, and Linux
+#     Write all artifacts in Spanish
+context: |
+  This repo is troupe.run: the landing page, the docs at /docs and the blog. It is troupe's public face, not the
+  product. troupe itself lives in troupe-run/troupe, and the org and its development workflow are run from
+  troupe-run/infrastructure. The site exists so that someone landing on it can say in one sentence what troupe
+  does, follow the build on GitHub, see where the docs are heading, and fix a docs page in two clicks.
+
+  Who reads it: solo developers who already run AI coding agents, small teams who want those agents to follow a
+  real process with accountable sign-off, and people following the build.
+
+  Where the decisions live:
+  - The brand guide (docs/brand-guide.md) is the source for name, mark, colour, type, characters, the theatre
+    metaphor, vocabulary and voice. A change that needs something the guide doesn't say changes the guide first.
+  - The site's original design is docs/superpowers/specs/2026-10-07-troupe-run-site-design.md, from before this
+    repo used OpenSpec. Treat its decisions as current unless an OpenSpec spec has replaced them.
+  - What troupe does is decided in troupe-run/troupe (its specs and decisions). The docs describe it and never
+    get ahead of it. A docs page about behaviour cites the troupe spec or decision it describes.
+  - This repo's GitHub settings (rulesets, required checks, labels, Pages, the github-pages environment) and
+    troupe.run's DNS are declared in troupe-run/infrastructure. Change them there, by an issue in that repo,
+    never on GitHub by hand. The guard's files here are delivered from infrastructure: change them there too.
+
+  Fixed constraints:
+  - Astro, with Starlight for /docs and starlight-blog for /blog, deployed by GitHub Actions to GitHub Pages on
+    the apex https://troupe.run (www redirects). A deploy runs only after CI passes on main. Every merge to main
+    deploys; there is no separate release.
+  - Customise Starlight through its CSS layer and its documented component overrides. Never fork it. If that
+    stops working (more than a handful of overrides, an override broken by a minor upgrade, or routing that
+    fights a feature), say so: it is the trigger to revisit a hand-built docs layout (design spec 6.4).
+  - Static output only. No server, no cookies, no consent banner. Analytics are GoatCounter (cookieless), on
+    production builds only. Fonts are self-hosted; no requests to third-party font or asset hosts.
+  - Colour and type come only from src/styles/tokens.css, in light and dark. Components and pages never hold hex
+    values. The theme follows the system: there is no picker and nothing is stored.
+  - Brand images are rendered from brand/ and the output is committed, so a deploy never depends on the renderer.
+    CI fails if the committed output differs.
+  - Accessibility is a requirement, not a polish step: WCAG 2.2 AA, axe with no serious or critical violations in
+    light and dark, keyboard operable, and no motion under prefers-reduced-motion. Anything that moves on its own
+    stops within 5 seconds or on the first interaction (WCAG 2.2.2).
+  - Mobile first: usable from 320px wide with no horizontal scroll and a 16px minimum gutter.
+  - Every docs page, written or stub, links to its own source ("Improve this page"). Stubs are real pages marked
+    `status: planned` in frontmatter. The pre-alpha note is driven by frontmatter, never hand-typed.
+  - Licences: site code is MIT, content is CC BY 4.0, and contributions come in on the same terms. No DCO and no
+    CLA here (owner, 2026-10-16, troupe-run/infrastructure#54). The troupe name, mark and characters are
+    trademarks of HPS.GD PTY LTD and are licensed under neither.
+
+  Content:
+  - Before 1.0, claims are principles and intent only. Nothing unbuilt is described as working; label it intent
+    ("pre-alpha", "Planned: not written yet", "Install: coming"). No benchmarks, customer claims, logo walls,
+    pricing, or licence statements beyond what has been decided and published.
+  - Voice: dry and precise, with a thread of warm wry humour (at most one wry line per section). Short sentences;
+    every claim is something a reader can check. No hype words, no exclamation marks.
+  - Theatre in headings and visuals, plain words in body copy, one stage device per section. Use the product
+    vocabulary with the brand guide's exact meanings, and mark unagreed terms ("the house") as TBC.
+  - User-facing copy says "project", not "repo", "YAML" or "config", unless the technical term is needed.
+  - The organisation is "hps.gd" in prose ("a project by hps.gd"); the legal name is HPS.GD PTY LTD.
+  - Landing-page copy and written docs pages are reviewed by the owner as text before they ship. Landing copy lives
+    in src/content/copy/, one file per section, so it can be.
+
+  Quality bar:
+  - Every behaviour has a test that fails when it breaks, and a test's name states exactly what its body checks.
+    A role or attribute is not a behaviour: "has role=status" is not "announces". Where a behaviour can't be
+    automated (a screen reader's output, how a motion feels), say so in the test or the task, and name who
+    verifies it by hand.
+  - CI's checks (astro check, unit tests, build, asset verification, internal link check, Playwright with axe)
+    pass before every commit. External links are checked weekly, outside the pull request's required checks.
+  - Done means verified: show the test output, and for visual or copy changes, the built page.
+
+  Working:
+  - Don't invent requirements, copy or claims. Research what you can reach first (the brand guide, troupe's specs
+    and decisions), then ask with findings, options and a recommendation.
+  - Surface design decisions in the proposal or design before code depends on them. Visual and copy changes show
+    the owner the result, at the widths that matter, before they're called done.
+  - Keep specs, code, tests and the brand guide in agreement; change them together.
+  - When a change fixes a tracked issue, comment on the issue with the change and close it.
+  - Commit in small steps with messages that say why.
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always state what is out of scope
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing
