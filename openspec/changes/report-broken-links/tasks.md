@@ -56,7 +56,7 @@
 - [x] 4.1 Confirm linkinator 8.1.0 supports `--retry`, `--retry-errors`, `--retry-errors-count`,
   `--retry-errors-jitter` and `--timeout` (`npx linkinator --help`). If any is missing, note it in design D5 and use
   the nearest supported flag. Verify: `--help` output pasted into the commit message.
-- [ ] 4.2 Write `scripts/linkcheck-external.mjs` to wire it together:
+- [x] 4.2 Write `scripts/linkcheck-external.mjs` to wire it together:
   - run linkinator over `dist` with the skips and retry flags, then summarise;
   - write `formatReport` to `$GITHUB_STEP_SUMMARY` when it's set;
   - list issues with `gh issue list --state open --author app/github-actions --json number,title,createdAt,author`,
@@ -67,7 +67,7 @@
   Without `GITHUB_ACTIONS`, skip the issue step and print the decision instead. Verify: run it locally on a built
   `dist`. It prints the scanned count, the decision (`none`) and exits 0. Point it at a dist with a link to
   `https://troupe.run/definitely-not-here-404` added, and it reports the link, prints decision `open` and exits 1.
-- [ ] 4.3 Add `"linkcheck:external": "node scripts/linkcheck-external.mjs"` to `package.json`. Update
+- [x] 4.3 Add `"linkcheck:external": "node scripts/linkcheck-external.mjs"` to `package.json`. Update
   `links-weekly.yml`:
   - rename it to "External links (weekly)";
   - remove `continue-on-error`;
@@ -76,7 +76,7 @@
   - keep the `schedule` and `workflow_dispatch` triggers and add no `pull_request` trigger.
 
   Verify: `gh workflow view` lists both triggers. `git grep -n continue-on-error .github` is empty.
-- [ ] 4.4 Commit.
+- [x] 4.4 Commit.
 
 ## 5. Follow-ups, design spec and docs
 

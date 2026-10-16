@@ -71,7 +71,8 @@ The order is: run linkinator → summarise → write the job summary → reconci
 The exit code is 1 when anything is broken, when nothing was scanned, or when linkinator produced no JSON. It is also
 1 when the issue step itself fails, so a reporting fault is never silent. Only broken links cause `open` or
 `comment`. An empty scan or a linkinator crash fails the run but leaves the issue alone (`none`): that is a fault in
-the check, not a broken link, and the red run and its summary say so.
+the check, not a broken link, and the red run and its summary say so. Only http(s) links count as broken here.
+A broken local path is CI's internal check's job, and linkinator reports an empty directory's root as a broken path.
 
 ### D5. Retry transient failures in linkinator, not in our code
 
