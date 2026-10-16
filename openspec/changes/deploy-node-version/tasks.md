@@ -2,7 +2,7 @@
 
 ## 1. The wiring test, failing on main first
 
-- [ ] 1.1 Add `yaml` 2.9.1 as an exact-pinned dev dependency (`npm install --save-exact -D yaml@2.9.1`) and verify `npm ci` installs it from the updated `package-lock.json`
+- [x] 1.1 Add `yaml` 2.9.1 as an exact-pinned dev dependency (`npm install --save-exact -D yaml@2.9.1`) and verify `npm ci` installs it from the updated `package-lock.json`
 - [ ] 1.2 Write `tests/unit/workflow-node-version.test.ts` per design D4 (setup-node uses `node-version-file: .nvmrc`; `withastro/action` takes `node-version` from an earlier reader step's `outputs.version` in the same job; no other `node-version` input; failures name file, job and step). Verify it fails on the current `deploy.yml` with a message naming `deploy.yml`, job `build` and the `withastro/action` step, and passes for `ci.yml` and `links-weekly.yml`
 - [ ] 1.3 Verify the test also fails when `withastro/action`'s `node-version` input is deleted rather than hard-coded (edit a temporary copy, or a fixture the test can be pointed at), so the default-24 case is caught; record the output in the commit message
 
